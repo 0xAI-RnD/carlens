@@ -6,7 +6,7 @@
       <title>CarLens 0.13.1</title>
       <sparkle:version>0.13.1</sparkle:version>
       <sparkle:shortVersionString>0.13.1</sparkle:shortVersionString>
-      <enclosure url="https://github.com/0xAI-RnD/carlens/releases/download/v0.13.1/carlens-0.13.1.apk" sparkle:version="0.13.1" />
+      <enclosure url="https://github.com/0xAI-RnD/carlens/releases/download/v0.13.1/CarLens-beta-0.13.1.apk" sparkle:version="0.13.1" />
     </item>
   </channel>
 </rss>
