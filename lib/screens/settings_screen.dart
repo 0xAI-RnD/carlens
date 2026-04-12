@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:carlens/services/notification_service.dart';
+import '../theme/app_colors.dart';
 
 class SettingsScreen extends StatefulWidget {
   const SettingsScreen({super.key});
@@ -9,13 +10,6 @@ class SettingsScreen extends StatefulWidget {
 }
 
 class _SettingsScreenState extends State<SettingsScreen> {
-  static const _bgColor = Color(0xFFFAFAF8);
-  static const _textPrimary = Color(0xFF1A1A1A);
-  static const _textSecondary = Color(0xFF8C8C8C);
-  static const _borderColor = Color(0xFFE8E8E6);
-  static const _surfaceColor = Color(0xFFF0F0EE);
-  static const _accentColor = Color(0xFFC4342D);
-
   bool _notificationsEnabled = true;
   bool _loading = true;
 
@@ -43,29 +37,29 @@ class _SettingsScreenState extends State<SettingsScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: _bgColor,
+      backgroundColor: context.colors.background,
       appBar: AppBar(
-        backgroundColor: _bgColor,
+        backgroundColor: context.colors.background,
         elevation: 0,
         centerTitle: true,
         leading: IconButton(
-          icon: const Icon(Icons.arrow_back_ios, size: 20, color: _textPrimary),
+          icon: Icon(Icons.arrow_back_ios, size: 20, color: context.colors.textPrimary),
           onPressed: () => Navigator.pop(context),
         ),
-        title: const Text(
+        title: Text(
           'Impostazioni',
           style: TextStyle(
             fontSize: 17,
             fontWeight: FontWeight.w600,
-            color: _textPrimary,
+            color: context.colors.textPrimary,
             letterSpacing: 0.5,
           ),
         ),
       ),
       body: _loading
-          ? const Center(
+          ? Center(
               child: CircularProgressIndicator(
-                color: _textPrimary,
+                color: context.colors.textPrimary,
                 strokeWidth: 1.5,
               ),
             )
@@ -73,21 +67,21 @@ class _SettingsScreenState extends State<SettingsScreen> {
               padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 16),
               children: [
                 // Notifications section
-                const Text(
+                Text(
                   'NOTIFICHE',
                   style: TextStyle(
                     fontSize: 12,
                     fontWeight: FontWeight.w600,
-                    color: _textSecondary,
+                    color: context.colors.textSecondary,
                     letterSpacing: 1.5,
                   ),
                 ),
                 const SizedBox(height: 12),
                 Container(
                   decoration: BoxDecoration(
-                    color: Colors.white,
+                    color: context.colors.surfaceCard,
                     borderRadius: BorderRadius.circular(12),
-                    border: Border.all(color: _borderColor, width: 1),
+                    border: Border.all(color: context.colors.border, width: 1),
                   ),
                   child: Padding(
                     padding: const EdgeInsets.symmetric(
@@ -97,21 +91,21 @@ class _SettingsScreenState extends State<SettingsScreen> {
                         Expanded(
                           child: Column(
                             crossAxisAlignment: CrossAxisAlignment.start,
-                            children: const [
+                            children: [
                               Text(
                                 'Curiosit\u00e0 del giorno',
                                 style: TextStyle(
                                   fontSize: 15,
                                   fontWeight: FontWeight.w500,
-                                  color: _textPrimary,
+                                  color: context.colors.textPrimary,
                                 ),
                               ),
-                              SizedBox(height: 4),
+                              const SizedBox(height: 4),
                               Text(
                                 'Ricevi ogni giorno una curiosit\u00e0 sulle auto storiche',
                                 style: TextStyle(
                                   fontSize: 13,
-                                  color: _textSecondary,
+                                  color: context.colors.textSecondary,
                                   height: 1.3,
                                 ),
                               ),
@@ -122,7 +116,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
                         Switch.adaptive(
                           value: _notificationsEnabled,
                           onChanged: _toggleNotifications,
-                          activeColor: _accentColor,
+                          activeColor: context.colors.accentRed,
                         ),
                       ],
                     ),
@@ -132,41 +126,41 @@ class _SettingsScreenState extends State<SettingsScreen> {
                 const SizedBox(height: 32),
 
                 // Info section
-                const Text(
+                Text(
                   'INFORMAZIONI',
                   style: TextStyle(
                     fontSize: 12,
                     fontWeight: FontWeight.w600,
-                    color: _textSecondary,
+                    color: context.colors.textSecondary,
                     letterSpacing: 1.5,
                   ),
                 ),
                 const SizedBox(height: 12),
                 Container(
                   decoration: BoxDecoration(
-                    color: Colors.white,
+                    color: context.colors.surfaceCard,
                     borderRadius: BorderRadius.circular(12),
-                    border: Border.all(color: _borderColor, width: 1),
+                    border: Border.all(color: context.colors.border, width: 1),
                   ),
                   child: Padding(
                     padding: const EdgeInsets.symmetric(
                         horizontal: 16, vertical: 14),
                     child: Row(
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: const [
+                      children: [
                         Text(
                           'Versione',
                           style: TextStyle(
                             fontSize: 15,
                             fontWeight: FontWeight.w500,
-                            color: _textPrimary,
+                            color: context.colors.textPrimary,
                           ),
                         ),
                         Text(
                           '0.13.1',
                           style: TextStyle(
                             fontSize: 15,
-                            color: _textSecondary,
+                            color: context.colors.textSecondary,
                           ),
                         ),
                       ],
@@ -186,7 +180,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
                           fontSize: 14,
                           fontWeight: FontWeight.w300,
                           letterSpacing: 6,
-                          color: _textSecondary.withValues(alpha: 0.6),
+                          color: context.colors.textSecondary.withValues(alpha: 0.6),
                         ),
                       ),
                       const SizedBox(height: 4),
@@ -194,7 +188,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
                         'Identifica la tua classica',
                         style: TextStyle(
                           fontSize: 12,
-                          color: _textSecondary.withValues(alpha: 0.4),
+                          color: context.colors.textSecondary.withValues(alpha: 0.4),
                         ),
                       ),
                     ],

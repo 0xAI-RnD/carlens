@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:image_picker/image_picker.dart';
+import '../theme/app_colors.dart';
 import 'results_screen.dart';
 import 'garage_screen.dart';
 import 'settings_screen.dart';
@@ -15,11 +16,6 @@ class HomeScreen extends StatefulWidget {
 class _HomeScreenState extends State<HomeScreen> {
   int _currentIndex = 0;
   final ImagePicker _picker = ImagePicker();
-
-  static const _bgColor = Color(0xFFFAFAF8);
-  static const _textPrimary = Color(0xFF1A1A1A);
-  static const _textSecondary = Color(0xFF8C8C8C);
-  static const _borderColor = Color(0xFFE8E8E6);
 
   Future<void> _pickImage(ImageSource source) async {
     if (source == ImageSource.gallery) {
@@ -97,21 +93,21 @@ class _HomeScreenState extends State<HomeScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: _bgColor,
+      backgroundColor: context.colors.background,
       body: _currentIndex == 0 ? _buildScanPage() : const GarageScreen(),
       bottomNavigationBar: Container(
-        decoration: const BoxDecoration(
-          color: _bgColor,
+        decoration: BoxDecoration(
+          color: context.colors.background,
           border: Border(
-            top: BorderSide(color: _borderColor, width: 1),
+            top: BorderSide(color: context.colors.border, width: 1),
           ),
         ),
         child: BottomNavigationBar(
           currentIndex: _currentIndex,
           onTap: (index) => setState(() => _currentIndex = index),
-          backgroundColor: _bgColor,
-          selectedItemColor: _textPrimary,
-          unselectedItemColor: _textSecondary,
+          backgroundColor: context.colors.background,
+          selectedItemColor: context.colors.textPrimary,
+          unselectedItemColor: context.colors.textSecondary,
           type: BottomNavigationBarType.fixed,
           elevation: 0,
           selectedLabelStyle: const TextStyle(
@@ -148,9 +144,9 @@ class _HomeScreenState extends State<HomeScreen> {
             top: 8,
             right: 8,
             child: IconButton(
-              icon: const Icon(
+              icon: Icon(
                 Icons.settings_outlined,
-                color: _textSecondary,
+                color: context.colors.textSecondary,
                 size: 22,
               ),
               onPressed: () {
@@ -172,24 +168,24 @@ class _HomeScreenState extends State<HomeScreen> {
               const Spacer(flex: 2),
 
               // Logo
-              const Text(
+              Text(
                 'CARLENS',
                 style: TextStyle(
                   fontSize: 28,
                   fontWeight: FontWeight.w300,
                   letterSpacing: 12,
-                  color: _textPrimary,
+                  color: context.colors.textPrimary,
                 ),
               ),
               const SizedBox(height: 8),
 
               // Tagline
-              const Text(
+              Text(
                 'Identifica la tua classica',
                 style: TextStyle(
                   fontSize: 15,
                   fontWeight: FontWeight.w300,
-                  color: _textSecondary,
+                  color: context.colors.textSecondary,
                 ),
               ),
               const SizedBox(height: 60),
@@ -202,9 +198,9 @@ class _HomeScreenState extends State<HomeScreen> {
                   height: 220,
                   decoration: BoxDecoration(
                     shape: BoxShape.circle,
-                    color: Colors.white,
+                    color: context.colors.surfaceCard,
                     border: Border.all(
-                      color: _borderColor,
+                      color: context.colors.border,
                       width: 1.5,
                     ),
                   ),
@@ -218,25 +214,25 @@ class _HomeScreenState extends State<HomeScreen> {
                         decoration: BoxDecoration(
                           borderRadius: BorderRadius.circular(12),
                           border: Border.all(
-                            color: _textPrimary,
+                            color: context.colors.textPrimary,
                             width: 2,
                           ),
                         ),
-                        child: const Center(
+                        child: Center(
                           child: Icon(
                             Icons.camera_alt_outlined,
                             size: 24,
-                            color: _textPrimary,
+                            color: context.colors.textPrimary,
                           ),
                         ),
                       ),
                       const SizedBox(height: 16),
-                      const Text(
+                      Text(
                         'Scatta una foto',
                         style: TextStyle(
                           fontSize: 15,
                           fontWeight: FontWeight.w400,
-                          color: _textPrimary,
+                          color: context.colors.textPrimary,
                         ),
                       ),
                     ],
@@ -250,16 +246,16 @@ class _HomeScreenState extends State<HomeScreen> {
                 onTap: () => _pickImage(ImageSource.gallery),
                 child: Container(
                   padding: const EdgeInsets.only(bottom: 2),
-                  decoration: const BoxDecoration(
+                  decoration: BoxDecoration(
                     border: Border(
-                      bottom: BorderSide(color: _borderColor, width: 1),
+                      bottom: BorderSide(color: context.colors.border, width: 1),
                     ),
                   ),
-                  child: const Text(
+                  child: Text(
                     'oppure carica dalla galleria (fino a 3 foto)',
                     style: TextStyle(
                       fontSize: 13,
-                      color: _textSecondary,
+                      color: context.colors.textSecondary,
                     ),
                   ),
                 ),
@@ -275,8 +271,8 @@ class _HomeScreenState extends State<HomeScreen> {
                   icon: const Icon(Icons.link, size: 20),
                   label: const Text('Incolla Link'),
                   style: OutlinedButton.styleFrom(
-                    foregroundColor: _textPrimary,
-                    side: const BorderSide(color: _borderColor, width: 1.5),
+                    foregroundColor: context.colors.textPrimary,
+                    side: BorderSide(color: context.colors.border, width: 1.5),
                     padding: const EdgeInsets.symmetric(vertical: 14),
                     shape: RoundedRectangleBorder(
                       borderRadius: BorderRadius.circular(12),

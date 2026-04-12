@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import '../theme/app_colors.dart';
 
 class VinHelperScreen extends StatefulWidget {
   const VinHelperScreen({super.key});
@@ -8,13 +9,6 @@ class VinHelperScreen extends StatefulWidget {
 }
 
 class _VinHelperScreenState extends State<VinHelperScreen> {
-  static const _bgColor = Color(0xFFFAFAF8);
-  static const _textPrimary = Color(0xFF1A1A1A);
-  static const _textSecondary = Color(0xFF8C8C8C);
-  static const _textTertiary = Color(0xFFB0B0B0);
-  static const _borderColor = Color(0xFFE8E8E6);
-  static const _surfaceLight = Color(0xFFF0F0EE);
-
   int _expandedIndex = -1;
 
   static const List<_VinLocation> _locations = [
@@ -66,16 +60,16 @@ class _VinHelperScreenState extends State<VinHelperScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: _bgColor,
+      backgroundColor: context.colors.background,
       appBar: AppBar(
-        backgroundColor: _bgColor,
-        foregroundColor: _textPrimary,
-        title: const Text(
+        backgroundColor: context.colors.background,
+        foregroundColor: context.colors.textPrimary,
+        title: Text(
           'Dove trovo il telaio?',
           style: TextStyle(
             fontSize: 18,
             fontWeight: FontWeight.w500,
-            color: _textPrimary,
+            color: context.colors.textPrimary,
           ),
         ),
         elevation: 0,
@@ -89,34 +83,34 @@ class _VinHelperScreenState extends State<VinHelperScreen> {
               width: 64,
               height: 64,
               decoration: BoxDecoration(
-                color: _surfaceLight,
+                color: context.colors.surfaceLight,
                 shape: BoxShape.circle,
-                border: Border.all(color: _borderColor, width: 1),
+                border: Border.all(color: context.colors.border, width: 1),
               ),
-              child: const Icon(
+              child: Icon(
                 Icons.search,
-                color: _textPrimary,
+                color: context.colors.textPrimary,
                 size: 32,
               ),
             ),
           ),
           const SizedBox(height: 16),
-          const Text(
+          Text(
             'Dove trovo il numero di telaio?',
             textAlign: TextAlign.center,
             style: TextStyle(
-              color: _textPrimary,
+              color: context.colors.textPrimary,
               fontSize: 22,
               fontWeight: FontWeight.w600,
             ),
           ),
           const SizedBox(height: 8),
-          const Text(
+          Text(
             'Il VIN (Vehicle Identification Number) pu\u00f2 trovarsi '
             'in diverse posizioni a seconda del modello e dell\'anno.',
             textAlign: TextAlign.center,
             style: TextStyle(
-              color: _textSecondary,
+              color: context.colors.textSecondary,
               fontSize: 14,
             ),
           ),
@@ -131,10 +125,10 @@ class _VinHelperScreenState extends State<VinHelperScreen> {
               padding: const EdgeInsets.only(bottom: 10),
               child: Container(
                 decoration: BoxDecoration(
-                  color: Colors.white,
+                  color: context.colors.surfaceCard,
                   borderRadius: BorderRadius.circular(12),
                   border: Border.all(
-                    color: isExpanded ? _textPrimary : _borderColor,
+                    color: isExpanded ? context.colors.textPrimary : context.colors.border,
                     width: isExpanded ? 1.5 : 1,
                   ),
                 ),
@@ -160,19 +154,19 @@ class _VinHelperScreenState extends State<VinHelperScreen> {
                       width: 42,
                       height: 42,
                       decoration: BoxDecoration(
-                        color: _surfaceLight,
+                        color: context.colors.surfaceLight,
                         borderRadius: BorderRadius.circular(10),
                       ),
                       child: Icon(
                         location.icon,
-                        color: _textPrimary,
+                        color: context.colors.textPrimary,
                         size: 22,
                       ),
                     ),
                     title: Text(
                       location.title,
-                      style: const TextStyle(
-                        color: _textPrimary,
+                      style: TextStyle(
+                        color: context.colors.textPrimary,
                         fontSize: 15,
                         fontWeight: FontWeight.w500,
                       ),
@@ -183,14 +177,14 @@ class _VinHelperScreenState extends State<VinHelperScreen> {
                       child: Icon(
                         Icons.keyboard_arrow_down,
                         color:
-                            isExpanded ? _textPrimary : _textSecondary,
+                            isExpanded ? context.colors.textPrimary : context.colors.textSecondary,
                       ),
                     ),
                     children: [
                       Text(
                         location.description,
-                        style: const TextStyle(
-                          color: _textSecondary,
+                        style: TextStyle(
+                          color: context.colors.textSecondary,
                           fontSize: 14,
                           height: 1.5,
                         ),
@@ -208,25 +202,25 @@ class _VinHelperScreenState extends State<VinHelperScreen> {
           Container(
             padding: const EdgeInsets.all(16),
             decoration: BoxDecoration(
-              color: _surfaceLight,
+              color: context.colors.surfaceLight,
               borderRadius: BorderRadius.circular(12),
-              border: Border.all(color: _borderColor),
+              border: Border.all(color: context.colors.border),
             ),
-            child: const Row(
+            child: Row(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Icon(
                   Icons.info_outline,
-                  color: _textSecondary,
+                  color: context.colors.textSecondary,
                   size: 20,
                 ),
-                SizedBox(width: 12),
+                const SizedBox(width: 12),
                 Expanded(
                   child: Text(
                     'Per auto dal 1981 in poi, il VIN ha sempre 17 caratteri. '
                     'Per auto precedenti, il formato varia per marca.',
                     style: TextStyle(
-                      color: _textSecondary,
+                      color: context.colors.textSecondary,
                       fontSize: 13,
                       height: 1.5,
                     ),
@@ -245,8 +239,8 @@ class _VinHelperScreenState extends State<VinHelperScreen> {
             child: ElevatedButton(
               onPressed: () => Navigator.pop(context),
               style: ElevatedButton.styleFrom(
-                backgroundColor: _textPrimary,
-                foregroundColor: _bgColor,
+                backgroundColor: context.colors.textPrimary,
+                foregroundColor: context.colors.background,
                 shape: RoundedRectangleBorder(
                   borderRadius: BorderRadius.circular(10),
                 ),
