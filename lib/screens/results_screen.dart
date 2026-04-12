@@ -6,6 +6,7 @@ import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:share_plus/share_plus.dart';
 import 'package:google_mlkit_text_recognition/google_mlkit_text_recognition.dart';
+import '../theme/app_colors.dart';
 import '../services/gemini_service.dart';
 import '../services/car_data_service.dart';
 import '../services/database_service.dart';
@@ -35,15 +36,6 @@ class ResultScreen extends StatefulWidget {
 
 class _ResultScreenState extends State<ResultScreen>
     with SingleTickerProviderStateMixin {
-  // Design system
-  static const _bgColor = Color(0xFFFAFAF8);
-  static const _textPrimary = Color(0xFF1A1A1A);
-  static const _textSecondary = Color(0xFF8C8C8C);
-  static const _textTertiary = Color(0xFFB0B0B0);
-  static const _borderColor = Color(0xFFE8E8E6);
-  static const _surfaceLight = Color(0xFFF0F0EE);
-  static const _accentRed = Color(0xFFC4342D);
-
   // State
   int _currentLevel = 1;
   bool _isLoading = true;
@@ -354,7 +346,7 @@ class _ResultScreenState extends State<ResultScreen>
           ScaffoldMessenger.of(context).showSnackBar(
             SnackBar(
               content: Text('Telaio trovato: $foundVin'),
-              backgroundColor: const Color(0xFF4CAF50),
+              backgroundColor: context.colors.success,
             ),
           );
         } else {
@@ -396,7 +388,7 @@ class _ResultScreenState extends State<ResultScreen>
             SnackBar(
               content: const Text(
                   'Formato telaio non riconosciuto. Controlla e riprova.'),
-              backgroundColor: _accentRed,
+              backgroundColor: context.colors.accentRed,
             ),
           );
         }
@@ -448,7 +440,7 @@ class _ResultScreenState extends State<ResultScreen>
           SnackBar(
             content: const Text(
                 'Errore nella decodifica del telaio. Controlla e riprova.'),
-            backgroundColor: _accentRed,
+            backgroundColor: context.colors.accentRed,
           ),
         );
       }
@@ -525,7 +517,7 @@ class _ResultScreenState extends State<ResultScreen>
           SnackBar(
             content:
                 const Text('Errore nella generazione del report. Riprova.'),
-            backgroundColor: _accentRed,
+            backgroundColor: context.colors.accentRed,
           ),
         );
       }
@@ -600,9 +592,9 @@ class _ResultScreenState extends State<ResultScreen>
           _scan = scan.copyWith(id: id);
         });
         ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(
+          SnackBar(
             content: Text('Auto salvata nel Garage!'),
-            backgroundColor: Color(0xFF4CAF50),
+            backgroundColor: context.colors.success,
           ),
         );
       }
@@ -611,7 +603,7 @@ class _ResultScreenState extends State<ResultScreen>
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
             content: const Text('Errore nel salvataggio. Riprova.'),
-            backgroundColor: _accentRed,
+            backgroundColor: context.colors.accentRed,
           ),
         );
       }
@@ -727,7 +719,7 @@ class _ResultScreenState extends State<ResultScreen>
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: _bgColor,
+      backgroundColor: context.colors.background,
       body: SafeArea(
         child: _isLoading
             ? _buildLoadingView()
@@ -751,13 +743,13 @@ class _ResultScreenState extends State<ResultScreen>
         padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 12),
         child: Row(
           children: [
-            const Icon(Icons.arrow_back_ios, size: 16, color: _textSecondary),
+            Icon(Icons.arrow_back_ios, size: 16, color: context.colors.textSecondary),
             const SizedBox(width: 8),
             Text(
               title,
-              style: const TextStyle(
+              style: TextStyle(
                 fontSize: 14,
-                color: _textSecondary,
+                color: context.colors.textSecondary,
               ),
             ),
           ],
@@ -780,20 +772,20 @@ class _ResultScreenState extends State<ResultScreen>
             builder: (context, child) {
               return Opacity(
                 opacity: 0.3 + (_pulseController.value * 0.7),
-                child: const Icon(
+                child: Icon(
                   Icons.directions_car_rounded,
-                  color: _textSecondary,
+                  color: context.colors.textSecondary,
                   size: 64,
                 ),
               );
             },
           ),
           const SizedBox(height: 28),
-          const SizedBox(
+          SizedBox(
             width: 20,
             height: 20,
             child: CircularProgressIndicator(
-              color: _textPrimary,
+              color: context.colors.textPrimary,
               strokeWidth: 1.5,
             ),
           ),
@@ -802,8 +794,8 @@ class _ResultScreenState extends State<ResultScreen>
             widget.listingUrl != null
                 ? 'Analisi annuncio in corso...'
                 : 'Analisi in corso...',
-            style: const TextStyle(
-              color: _textPrimary,
+            style: TextStyle(
+              color: context.colors.textPrimary,
               fontSize: 17,
               fontWeight: FontWeight.w500,
             ),
@@ -813,7 +805,7 @@ class _ResultScreenState extends State<ResultScreen>
             widget.listingUrl != null
                 ? 'Scaricamento foto e identificazione'
                 : 'L\'AI sta identificando l\'auto',
-            style: const TextStyle(color: _textSecondary, fontSize: 13),
+            style: TextStyle(color: context.colors.textSecondary, fontSize: 13),
           ),
         ],
       ),
@@ -836,17 +828,17 @@ class _ResultScreenState extends State<ResultScreen>
               height: 80,
               decoration: BoxDecoration(
                 shape: BoxShape.circle,
-                color: _accentRed.withOpacity(0.08),
+                color: context.colors.accentRed.withValues(alpha:0.08),
               ),
               child: Icon(Icons.error_outline_rounded,
-                  color: _accentRed, size: 44),
+                  color: context.colors.accentRed, size: 44),
             ),
             const SizedBox(height: 24),
             Text(
               _errorMessage!,
               textAlign: TextAlign.center,
-              style: const TextStyle(
-                color: _textSecondary,
+              style: TextStyle(
+                color: context.colors.textSecondary,
                 fontSize: 15,
                 height: 1.5,
               ),
@@ -861,8 +853,8 @@ class _ResultScreenState extends State<ResultScreen>
                 label: const Text('Riprova',
                     style: TextStyle(fontWeight: FontWeight.w500)),
                 style: ElevatedButton.styleFrom(
-                  backgroundColor: _textPrimary,
-                  foregroundColor: _bgColor,
+                  backgroundColor: context.colors.textPrimary,
+                  foregroundColor: context.colors.background,
                   shape: RoundedRectangleBorder(
                     borderRadius: BorderRadius.circular(10),
                   ),
@@ -913,10 +905,10 @@ class _ResultScreenState extends State<ResultScreen>
                       // Brand
                       Text(
                         id.brand.toUpperCase(),
-                        style: const TextStyle(
+                        style: TextStyle(
                           fontSize: 14,
                           fontWeight: FontWeight.w400,
-                          color: _textSecondary,
+                          color: context.colors.textSecondary,
                           letterSpacing: 3,
                         ),
                       ),
@@ -925,10 +917,10 @@ class _ResultScreenState extends State<ResultScreen>
                       // Model
                       Text(
                         id.model,
-                        style: const TextStyle(
+                        style: TextStyle(
                           fontSize: 26,
                           fontWeight: FontWeight.w600,
-                          color: _textPrimary,
+                          color: context.colors.textPrimary,
                           height: 1.2,
                         ),
                       ),
@@ -937,10 +929,10 @@ class _ResultScreenState extends State<ResultScreen>
                       // Years + body
                       Text(
                         '${id.yearEstimate}${id.bodyType.isNotEmpty ? ' \u00b7 ${id.bodyType}' : ''}',
-                        style: const TextStyle(
+                        style: TextStyle(
                           fontSize: 15,
                           fontWeight: FontWeight.w300,
-                          color: _textSecondary,
+                          color: context.colors.textSecondary,
                         ),
                       ),
                       const SizedBox(height: 6),
@@ -950,20 +942,20 @@ class _ResultScreenState extends State<ResultScreen>
                         padding: const EdgeInsets.symmetric(
                             horizontal: 8, vertical: 3),
                         decoration: BoxDecoration(
-                          color: _surfaceLight,
+                          color: context.colors.surfaceLight,
                           borderRadius: BorderRadius.circular(6),
                         ),
                         child: Row(
                           mainAxisSize: MainAxisSize.min,
                           children: [
                             Icon(Icons.auto_awesome,
-                                size: 13, color: _textTertiary),
+                                size: 13, color: context.colors.textTertiary),
                             const SizedBox(width: 4),
                             Text(
                               'Identificato \u00b7 $percent%',
-                              style: const TextStyle(
+                              style: TextStyle(
                                 fontSize: 12,
-                                color: _textTertiary,
+                                color: context.colors.textTertiary,
                               ),
                             ),
                           ],
@@ -974,18 +966,18 @@ class _ResultScreenState extends State<ResultScreen>
                       // (confidence now shown in the badge above)
 
                       // Divider
-                      const Padding(
+                      Padding(
                         padding: EdgeInsets.symmetric(vertical: 24),
-                        child: Divider(color: _borderColor, height: 1),
+                        child: Divider(color: context.colors.border, height: 1),
                       ),
 
                       // SCHEDA RAPIDA section — always shown
-                      const Text(
+                      Text(
                         'SCHEDA RAPIDA',
                         style: TextStyle(
                           fontSize: 12,
                           fontWeight: FontWeight.w500,
-                          color: _textSecondary,
+                          color: context.colors.textSecondary,
                           letterSpacing: 2,
                         ),
                       ),
@@ -994,16 +986,16 @@ class _ResultScreenState extends State<ResultScreen>
 
                       // Details / description
                       if (id.details.isNotEmpty) ...[
-                        const Padding(
+                        Padding(
                           padding: EdgeInsets.symmetric(vertical: 24),
-                          child: Divider(color: _borderColor, height: 1),
+                          child: Divider(color: context.colors.border, height: 1),
                         ),
                         Text(
                           id.details,
-                          style: const TextStyle(
+                          style: TextStyle(
                             fontSize: 14,
                             fontWeight: FontWeight.w300,
-                            color: _textSecondary,
+                            color: context.colors.textSecondary,
                             height: 1.6,
                           ),
                         ),
@@ -1011,45 +1003,45 @@ class _ResultScreenState extends State<ResultScreen>
 
                       // Market value estimate
                       if (id.marketValueRange.isNotEmpty && id.marketValueRange != 'N/D') ...[
-                        const Padding(
+                        Padding(
                           padding: EdgeInsets.symmetric(vertical: 24),
-                          child: Divider(color: _borderColor, height: 1),
+                          child: Divider(color: context.colors.border, height: 1),
                         ),
                         _buildMarketValueCard(id.marketValueRange),
                       ],
 
                       // Listing data section
                       if (_listingData != null || _scan?.askingPrice != null) ...[
-                        const Padding(
+                        Padding(
                           padding: EdgeInsets.symmetric(vertical: 24),
-                          child: Divider(color: _borderColor, height: 1),
+                          child: Divider(color: context.colors.border, height: 1),
                         ),
                         _buildListingDataSection(),
                       ],
 
                       // Timeline
                       if (id.timeline.isNotEmpty) ...[
-                        const Padding(
+                        Padding(
                           padding: EdgeInsets.symmetric(vertical: 24),
-                          child: Divider(color: _borderColor, height: 1),
+                          child: Divider(color: context.colors.border, height: 1),
                         ),
                         _buildTimeline(id.timeline),
                       ],
 
                       // Fun fact
                       if (id.funFact.isNotEmpty && id.funFact != 'N/D') ...[
-                        const Padding(
+                        Padding(
                           padding: EdgeInsets.symmetric(vertical: 24),
-                          child: Divider(color: _borderColor, height: 1),
+                          child: Divider(color: context.colors.border, height: 1),
                         ),
                         _buildFunFact(id.funFact),
                       ],
 
                       // Alternative matches
                       if (_alternatives.isNotEmpty) ...[
-                        const Padding(
+                        Padding(
                           padding: EdgeInsets.symmetric(vertical: 24),
-                          child: Divider(color: _borderColor, height: 1),
+                          child: Divider(color: context.colors.border, height: 1),
                         ),
                         _buildAlternativesSection(),
                       ],
@@ -1059,27 +1051,27 @@ class _ResultScreenState extends State<ResultScreen>
                         margin: const EdgeInsets.only(top: 32),
                         padding: const EdgeInsets.all(24),
                         decoration: BoxDecoration(
-                          color: Colors.white,
+                          color: context.colors.surfaceCard,
                           borderRadius: BorderRadius.circular(12),
-                          border: Border.all(color: _borderColor, width: 1),
+                          border: Border.all(color: context.colors.border, width: 1),
                         ),
                         child: Column(
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
-                            const Text(
+                            Text(
                               'Vuoi saperne di pi\u00f9?',
                               style: TextStyle(
                                 fontSize: 16,
                                 fontWeight: FontWeight.w500,
-                                color: _textPrimary,
+                                color: context.colors.textPrimary,
                               ),
                             ),
                             const SizedBox(height: 8),
-                            const Text(
+                            Text(
                               'Inserisci il numero di telaio per scoprire le specifiche esatte del tuo esemplare.',
                               style: TextStyle(
                                 fontSize: 13,
-                                color: _textSecondary,
+                                color: context.colors.textSecondary,
                                 height: 1.5,
                               ),
                             ),
@@ -1090,8 +1082,8 @@ class _ResultScreenState extends State<ResultScreen>
                                   child: TextField(
                                     controller: _vinController,
                                     maxLength: 25,
-                                    style: const TextStyle(
-                                      color: _textPrimary,
+                                    style: TextStyle(
+                                      color: context.colors.textPrimary,
                                       fontSize: 14,
                                     ),
                                     textCapitalization:
@@ -1100,24 +1092,24 @@ class _ResultScreenState extends State<ResultScreen>
                                     onSubmitted: (_) => _decodeVin(),
                                     decoration: InputDecoration(
                                       hintText: 'Inserisci telaio',
-                                      hintStyle: const TextStyle(
-                                          color: Color(0xFFCCCCCC)),
+                                      hintStyle: TextStyle(
+                                          color: context.colors.hintText),
                                       filled: true,
-                                      fillColor: _bgColor,
+                                      fillColor: context.colors.background,
                                       border: OutlineInputBorder(
                                         borderRadius: BorderRadius.circular(8),
-                                        borderSide: const BorderSide(
-                                            color: _borderColor),
+                                        borderSide: BorderSide(
+                                            color: context.colors.border),
                                       ),
                                       enabledBorder: OutlineInputBorder(
                                         borderRadius: BorderRadius.circular(8),
-                                        borderSide: const BorderSide(
-                                            color: _borderColor),
+                                        borderSide: BorderSide(
+                                            color: context.colors.border),
                                       ),
                                       focusedBorder: OutlineInputBorder(
                                         borderRadius: BorderRadius.circular(8),
-                                        borderSide: const BorderSide(
-                                            color: _textPrimary),
+                                        borderSide: BorderSide(
+                                            color: context.colors.textPrimary),
                                       ),
                                       contentPadding: const EdgeInsets.symmetric(
                                         horizontal: 16,
@@ -1133,12 +1125,12 @@ class _ResultScreenState extends State<ResultScreen>
                                     width: 48,
                                     height: 48,
                                     decoration: BoxDecoration(
-                                      color: _textPrimary,
+                                      color: context.colors.textPrimary,
                                       borderRadius: BorderRadius.circular(8),
                                     ),
-                                    child: const Icon(
+                                    child: Icon(
                                       Icons.camera_alt_outlined,
-                                      color: Colors.white,
+                                      color: context.colors.surfaceCard,
                                       size: 22,
                                     ),
                                   ),
@@ -1159,17 +1151,17 @@ class _ResultScreenState extends State<ResultScreen>
                               child: Container(
                                 padding:
                                     const EdgeInsets.only(bottom: 1),
-                                decoration: const BoxDecoration(
+                                decoration: BoxDecoration(
                                   border: Border(
                                     bottom: BorderSide(
-                                        color: _borderColor, width: 1),
+                                        color: context.colors.border, width: 1),
                                   ),
                                 ),
-                                child: const Text(
+                                child: Text(
                                   'Dove trovo il telaio? \u24d8',
                                   style: TextStyle(
                                     fontSize: 12,
-                                    color: _textSecondary,
+                                    color: context.colors.textSecondary,
                                   ),
                                 ),
                               ),
@@ -1182,8 +1174,8 @@ class _ResultScreenState extends State<ResultScreen>
                                 onPressed:
                                     _vinDecoding ? null : _decodeVin,
                                   style: ElevatedButton.styleFrom(
-                                    backgroundColor: _textPrimary,
-                                    foregroundColor: _bgColor,
+                                    backgroundColor: context.colors.textPrimary,
+                                    foregroundColor: context.colors.background,
                                     shape: RoundedRectangleBorder(
                                       borderRadius:
                                           BorderRadius.circular(10),
@@ -1191,13 +1183,13 @@ class _ResultScreenState extends State<ResultScreen>
                                     elevation: 0,
                                   ),
                                   child: _vinDecoding
-                                      ? const SizedBox(
+                                      ? SizedBox(
                                           width: 20,
                                           height: 20,
                                           child:
                                               CircularProgressIndicator(
                                             strokeWidth: 1.5,
-                                            color: _bgColor,
+                                            color: context.colors.background,
                                           ),
                                         )
                                       : const Text(
@@ -1229,17 +1221,17 @@ class _ResultScreenState extends State<ResultScreen>
                             child: Container(
                               padding:
                                   const EdgeInsets.only(bottom: 1),
-                              decoration: const BoxDecoration(
+                              decoration: BoxDecoration(
                                 border: Border(
                                   bottom: BorderSide(
-                                      color: _borderColor, width: 1),
+                                      color: context.colors.border, width: 1),
                                 ),
                               ),
-                              child: const Text(
+                              child: Text(
                                 'Non \u00e8 questa auto? Correggi \u2192',
                                 style: TextStyle(
                                   fontSize: 12,
-                                  color: _textSecondary,
+                                  color: context.colors.textSecondary,
                                 ),
                               ),
                             ),
@@ -1263,8 +1255,8 @@ class _ResultScreenState extends State<ResultScreen>
                             ),
                           ),
                           style: OutlinedButton.styleFrom(
-                            foregroundColor: _textPrimary,
-                            side: const BorderSide(color: _borderColor),
+                            foregroundColor: context.colors.textPrimary,
+                            side: BorderSide(color: context.colors.border),
                             shape: RoundedRectangleBorder(
                               borderRadius: BorderRadius.circular(10),
                             ),
@@ -1282,11 +1274,11 @@ class _ResultScreenState extends State<ResultScreen>
                               _scan != null ? null : _saveToGarage,
                           style: ElevatedButton.styleFrom(
                             backgroundColor: _scan != null
-                                ? const Color(0xFF4CAF50)
-                                : _textPrimary,
-                            foregroundColor: _bgColor,
+                                ? context.colors.success
+                                : context.colors.textPrimary,
+                            foregroundColor: context.colors.background,
                             disabledBackgroundColor:
-                                const Color(0xFF4CAF50),
+                                context.colors.success,
                             disabledForegroundColor: Colors.white70,
                             shape: RoundedRectangleBorder(
                               borderRadius: BorderRadius.circular(10),
@@ -1403,19 +1395,19 @@ class _ResultScreenState extends State<ResultScreen>
                 children: [
                   Text(
                     s.label,
-                    style: const TextStyle(
+                    style: TextStyle(
                       fontSize: 14,
                       fontWeight: FontWeight.w300,
-                      color: _textSecondary,
+                      color: context.colors.textSecondary,
                     ),
                   ),
                   Flexible(
                     child: Text(
                       s.value,
-                      style: const TextStyle(
+                      style: TextStyle(
                         fontSize: 14,
                         fontWeight: FontWeight.w500,
-                        color: _textPrimary,
+                        color: context.colors.textPrimary,
                       ),
                       textAlign: TextAlign.end,
                     ),
@@ -1466,10 +1458,10 @@ class _ResultScreenState extends State<ResultScreen>
                       // Brand
                       Text(
                         id.brand.toUpperCase(),
-                        style: const TextStyle(
+                        style: TextStyle(
                           fontSize: 14,
                           fontWeight: FontWeight.w400,
-                          color: _textSecondary,
+                          color: context.colors.textSecondary,
                           letterSpacing: 3,
                         ),
                       ),
@@ -1478,10 +1470,10 @@ class _ResultScreenState extends State<ResultScreen>
                       // Model
                       Text(
                         id.model,
-                        style: const TextStyle(
+                        style: TextStyle(
                           fontSize: 26,
                           fontWeight: FontWeight.w600,
-                          color: _textPrimary,
+                          color: context.colors.textPrimary,
                         ),
                       ),
                       const SizedBox(height: 8),
@@ -1493,21 +1485,21 @@ class _ResultScreenState extends State<ResultScreen>
                             padding: const EdgeInsets.symmetric(
                                 horizontal: 8, vertical: 3),
                             decoration: BoxDecoration(
-                              color: const Color(0xFF4CAF50).withOpacity(0.1),
+                              color: context.colors.success.withValues(alpha:0.1),
                               borderRadius: BorderRadius.circular(6),
                             ),
-                            child: const Row(
+                            child: Row(
                               mainAxisSize: MainAxisSize.min,
                               children: [
                                 Icon(Icons.verified_rounded,
-                                    size: 14, color: Color(0xFF4CAF50)),
+                                    size: 14, color: context.colors.success),
                                 SizedBox(width: 4),
                                 Text(
                                   'Verificato',
                                   style: TextStyle(
                                     fontSize: 12,
                                     fontWeight: FontWeight.w500,
-                                    color: Color(0xFF4CAF50),
+                                    color: context.colors.success,
                                   ),
                                 ),
                               ],
@@ -1519,15 +1511,15 @@ class _ResultScreenState extends State<ResultScreen>
                               padding: const EdgeInsets.symmetric(
                                   horizontal: 10, vertical: 4),
                               decoration: BoxDecoration(
-                                color: _surfaceLight,
+                                color: context.colors.surfaceLight,
                                 borderRadius: BorderRadius.circular(6),
                               ),
                               child: Text(
                                 vin.rawVin,
-                                style: const TextStyle(
+                                style: TextStyle(
                                   fontSize: 13,
                                   fontFamily: 'monospace',
-                                  color: _textSecondary,
+                                  color: context.colors.textSecondary,
                                 ),
                                 overflow: TextOverflow.ellipsis,
                               ),
@@ -1568,10 +1560,10 @@ class _ResultScreenState extends State<ResultScreen>
                       if (id.details.isNotEmpty) ...[
                         Text(
                           id.details,
-                          style: const TextStyle(
+                          style: TextStyle(
                             fontSize: 14,
                             fontWeight: FontWeight.w300,
-                            color: _textSecondary,
+                            color: context.colors.textSecondary,
                             height: 1.6,
                           ),
                         ),
@@ -1622,9 +1614,9 @@ class _ResultScreenState extends State<ResultScreen>
                         child: OutlinedButton(
                           onPressed: _shareCar,
                           style: OutlinedButton.styleFrom(
-                            foregroundColor: _textPrimary,
-                            side: const BorderSide(
-                                color: _borderColor, width: 1),
+                            foregroundColor: context.colors.textPrimary,
+                            side: BorderSide(
+                                color: context.colors.border, width: 1),
                             shape: RoundedRectangleBorder(
                               borderRadius: BorderRadius.circular(10),
                             ),
@@ -1648,8 +1640,8 @@ class _ResultScreenState extends State<ResultScreen>
                           child: ElevatedButton(
                             onPressed: _saveToGarage,
                             style: ElevatedButton.styleFrom(
-                              backgroundColor: _textPrimary,
-                              foregroundColor: _bgColor,
+                              backgroundColor: context.colors.textPrimary,
+                              foregroundColor: context.colors.background,
                               shape: RoundedRectangleBorder(
                                 borderRadius: BorderRadius.circular(10),
                               ),
@@ -1702,36 +1694,36 @@ class _ResultScreenState extends State<ResultScreen>
                   child: CustomPaint(
                     painter: _ScoreRingPainter(
                       score: score / 100,
-                      filledColor: _textPrimary,
-                      emptyColor: _borderColor,
+                      filledColor: context.colors.textPrimary,
+                      emptyColor: context.colors.border,
                     ),
                     child: Center(
                       child: Container(
                         width: 116,
                         height: 116,
-                        decoration: const BoxDecoration(
+                        decoration: BoxDecoration(
                           shape: BoxShape.circle,
-                          color: _bgColor,
+                          color: context.colors.background,
                         ),
                         child: Column(
                           mainAxisAlignment: MainAxisAlignment.center,
                           children: [
                             Text(
                               score.toStringAsFixed(0),
-                              style: const TextStyle(
+                              style: TextStyle(
                                 fontSize: 36,
                                 fontWeight: FontWeight.w300,
-                                color: _textPrimary,
+                                color: context.colors.textPrimary,
                                 height: 1,
                               ),
                             ),
                             const SizedBox(height: 2),
-                            const Text(
+                            Text(
                               'su 100',
                               style: TextStyle(
                                 fontSize: 13,
                                 fontWeight: FontWeight.w300,
-                                color: _textSecondary,
+                                color: context.colors.textSecondary,
                               ),
                             ),
                           ],
@@ -1743,10 +1735,10 @@ class _ResultScreenState extends State<ResultScreen>
                 const SizedBox(height: 12),
                 Text(
                   _scoreLabel(score),
-                  style: const TextStyle(
+                  style: TextStyle(
                     fontSize: 14,
                     fontWeight: FontWeight.w500,
-                    color: _textPrimary,
+                    color: context.colors.textPrimary,
                   ),
                 ),
               ],
@@ -1773,28 +1765,28 @@ class _ResultScreenState extends State<ResultScreen>
             width: double.infinity,
             padding: const EdgeInsets.all(20),
             decoration: BoxDecoration(
-              color: Colors.white,
+              color: context.colors.surfaceCard,
               borderRadius: BorderRadius.circular(12),
-              border: Border.all(color: _borderColor, width: 1),
+              border: Border.all(color: context.colors.border, width: 1),
             ),
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                const Text(
+                Text(
                   'IN CONCLUSIONE',
                   style: TextStyle(
                     fontSize: 12,
                     fontWeight: FontWeight.w500,
-                    color: _textSecondary,
+                    color: context.colors.textSecondary,
                     letterSpacing: 2,
                   ),
                 ),
                 const SizedBox(height: 10),
                 Text(
                   report.summary,
-                  style: const TextStyle(
+                  style: TextStyle(
                     fontSize: 14,
-                    color: _textPrimary,
+                    color: context.colors.textPrimary,
                     height: 1.7,
                   ),
                 ),
@@ -1804,13 +1796,13 @@ class _ResultScreenState extends State<ResultScreen>
         ],
 
         // Disclaimer
-        const Padding(
+        Padding(
           padding: EdgeInsets.only(top: 12),
           child: Text(
             'Questo report non sostituisce una perizia tecnica. Per certificazioni ufficiali, rivolgersi al Registro Storico o all\'ASI.',
             style: TextStyle(
               fontSize: 12,
-              color: _textTertiary,
+              color: context.colors.textTertiary,
               height: 1.5,
             ),
           ),
@@ -1833,36 +1825,36 @@ class _ResultScreenState extends State<ResultScreen>
             builder: (context, child) {
               return Opacity(
                 opacity: 0.3 + (_pulseController.value * 0.7),
-                child: const Icon(
+                child: Icon(
                   Icons.verified_rounded,
-                  color: _textSecondary,
+                  color: context.colors.textSecondary,
                   size: 48,
                 ),
               );
             },
           ),
           const SizedBox(height: 16),
-          const SizedBox(
+          SizedBox(
             width: 20,
             height: 20,
             child: CircularProgressIndicator(
-              color: _textPrimary,
+              color: context.colors.textPrimary,
               strokeWidth: 1.5,
             ),
           ),
           const SizedBox(height: 16),
-          const Text(
+          Text(
             'Generazione report in corso...',
             style: TextStyle(
-              color: _textPrimary,
+              color: context.colors.textPrimary,
               fontSize: 15,
               fontWeight: FontWeight.w500,
             ),
           ),
           const SizedBox(height: 4),
-          const Text(
+          Text(
             'L\'AI sta confrontando le specifiche',
-            style: TextStyle(color: _textSecondary, fontSize: 12),
+            style: TextStyle(color: context.colors.textSecondary, fontSize: 12),
           ),
         ],
       ),
@@ -1878,12 +1870,12 @@ class _ResultScreenState extends State<ResultScreen>
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        const Text(
+        Text(
           'DATI ANNUNCIO',
           style: TextStyle(
             fontSize: 12,
             fontWeight: FontWeight.w500,
-            color: _textSecondary,
+            color: context.colors.textSecondary,
             letterSpacing: 2,
           ),
         ),
@@ -1891,9 +1883,9 @@ class _ResultScreenState extends State<ResultScreen>
         Container(
           padding: const EdgeInsets.all(16),
           decoration: BoxDecoration(
-            color: Colors.white,
+            color: context.colors.surfaceCard,
             borderRadius: BorderRadius.circular(12),
-            border: Border.all(color: _borderColor, width: 1),
+            border: Border.all(color: context.colors.border, width: 1),
           ),
           child: Column(
             children: [
@@ -1907,9 +1899,9 @@ class _ResultScreenState extends State<ResultScreen>
                     padding: const EdgeInsets.only(top: 4, bottom: 8),
                     child: Text(
                       'Stima di mercato: ${_identification!.marketValueRange}',
-                      style: const TextStyle(
+                      style: TextStyle(
                         fontSize: 12,
-                        color: _textTertiary,
+                        color: context.colors.textTertiary,
                         fontStyle: FontStyle.italic,
                       ),
                     ),
@@ -1921,11 +1913,11 @@ class _ResultScreenState extends State<ResultScreen>
                 Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
-                    const Text(
+                    Text(
                       'Provenienza',
                       style: TextStyle(
                         fontSize: 13,
-                        color: _textSecondary,
+                        color: context.colors.textSecondary,
                       ),
                     ),
                     Row(
@@ -1933,15 +1925,15 @@ class _ResultScreenState extends State<ResultScreen>
                       children: [
                         Text(
                           sourceName,
-                          style: const TextStyle(
+                          style: TextStyle(
                             fontSize: 13,
                             fontWeight: FontWeight.w500,
-                            color: _textPrimary,
+                            color: context.colors.textPrimary,
                           ),
                         ),
                         if (sourceUrl != null) ...[
                           const SizedBox(width: 4),
-                          const Icon(Icons.open_in_new, size: 14, color: _textTertiary),
+                          Icon(Icons.open_in_new, size: 14, color: context.colors.textTertiary),
                         ],
                       ],
                     ),
@@ -1962,17 +1954,17 @@ class _ResultScreenState extends State<ResultScreen>
         children: [
           Text(
             label,
-            style: const TextStyle(
+            style: TextStyle(
               fontSize: 13,
-              color: _textSecondary,
+              color: context.colors.textSecondary,
             ),
           ),
           Text(
             value,
-            style: const TextStyle(
+            style: TextStyle(
               fontSize: 13,
               fontWeight: FontWeight.w500,
-              color: _textPrimary,
+              color: context.colors.textPrimary,
             ),
           ),
         ],
@@ -1989,10 +1981,10 @@ class _ResultScreenState extends State<ResultScreen>
       padding: const EdgeInsets.only(bottom: 16),
       child: Text(
         title,
-        style: const TextStyle(
+        style: TextStyle(
           fontSize: 12,
           fontWeight: FontWeight.w500,
-          color: _textSecondary,
+          color: context.colors.textSecondary,
           letterSpacing: 2,
         ),
       ),
@@ -2003,41 +1995,41 @@ class _ResultScreenState extends State<ResultScreen>
     return Container(
       padding: const EdgeInsets.all(20),
       decoration: BoxDecoration(
-        color: const Color(0xFFF5F5F0),
+        color: context.colors.surfaceWarm,
         borderRadius: BorderRadius.circular(12),
       ),
       child: Row(
         children: [
-          const Icon(Icons.trending_up, color: Color(0xFF4CAF50), size: 28),
+          Icon(Icons.trending_up, color: context.colors.success, size: 28),
           const SizedBox(width: 16),
           Expanded(
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                const Text(
+                Text(
                   'STIMA DI MERCATO',
                   style: TextStyle(
                     fontSize: 10,
                     fontWeight: FontWeight.w500,
-                    color: _textTertiary,
+                    color: context.colors.textTertiary,
                     letterSpacing: 2,
                   ),
                 ),
                 const SizedBox(height: 4),
                 Text(
                   marketValue,
-                  style: const TextStyle(
+                  style: TextStyle(
                     fontSize: 20,
                     fontWeight: FontWeight.w600,
-                    color: _textPrimary,
+                    color: context.colors.textPrimary,
                   ),
                 ),
                 const SizedBox(height: 4),
-                const Text(
+                Text(
                   'Esemplare in buone condizioni. Stima indicativa.',
                   style: TextStyle(
                     fontSize: 11,
-                    color: _textTertiary,
+                    color: context.colors.textTertiary,
                     fontStyle: FontStyle.italic,
                   ),
                 ),
@@ -2069,7 +2061,7 @@ class _ResultScreenState extends State<ResultScreen>
                   margin: const EdgeInsets.only(top: 5, right: 12),
                   decoration: BoxDecoration(
                     shape: BoxShape.circle,
-                    color: _textTertiary.withAlpha(120),
+                    color: context.colors.textTertiary.withAlpha(120),
                   ),
                 ),
                 if (year.isNotEmpty && year.length <= 5) ...[
@@ -2077,10 +2069,10 @@ class _ResultScreenState extends State<ResultScreen>
                     width: 44,
                     child: Text(
                       year,
-                      style: const TextStyle(
+                      style: TextStyle(
                         fontSize: 13,
                         fontWeight: FontWeight.w600,
-                        color: _textPrimary,
+                        color: context.colors.textPrimary,
                       ),
                     ),
                   ),
@@ -2088,10 +2080,10 @@ class _ResultScreenState extends State<ResultScreen>
                   Expanded(
                     child: Text(
                       desc,
-                      style: const TextStyle(
+                      style: TextStyle(
                         fontSize: 13,
                         fontWeight: FontWeight.w300,
-                        color: _textSecondary,
+                        color: context.colors.textSecondary,
                         height: 1.4,
                       ),
                     ),
@@ -2100,10 +2092,10 @@ class _ResultScreenState extends State<ResultScreen>
                   Expanded(
                     child: Text(
                       event,
-                      style: const TextStyle(
+                      style: TextStyle(
                         fontSize: 13,
                         fontWeight: FontWeight.w300,
-                        color: _textSecondary,
+                        color: context.colors.textSecondary,
                         height: 1.4,
                       ),
                     ),
@@ -2120,7 +2112,7 @@ class _ResultScreenState extends State<ResultScreen>
     return Container(
       padding: const EdgeInsets.all(20),
       decoration: BoxDecoration(
-        color: const Color(0xFFFFF8E1),
+        color: context.colors.goldBg,
         borderRadius: BorderRadius.circular(12),
       ),
       child: Row(
@@ -2132,22 +2124,22 @@ class _ResultScreenState extends State<ResultScreen>
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                const Text(
+                Text(
                   'LO SAPEVI?',
                   style: TextStyle(
                     fontSize: 10,
                     fontWeight: FontWeight.w600,
-                    color: Color(0xFF8D6E00),
+                    color: context.colors.goldDark,
                     letterSpacing: 2,
                   ),
                 ),
                 const SizedBox(height: 6),
                 Text(
                   funFact,
-                  style: const TextStyle(
+                  style: TextStyle(
                     fontSize: 13,
                     fontWeight: FontWeight.w400,
-                    color: Color(0xFF5D4700),
+                    color: context.colors.goldDarker,
                     height: 1.5,
                   ),
                 ),
@@ -2163,12 +2155,12 @@ class _ResultScreenState extends State<ResultScreen>
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        const Text(
+        Text(
           'POTREBBE ANCHE ESSERE',
           style: TextStyle(
             fontSize: 12,
             fontWeight: FontWeight.w500,
-            color: _textSecondary,
+            color: context.colors.textSecondary,
             letterSpacing: 2,
           ),
         ),
@@ -2205,9 +2197,9 @@ class _ResultScreenState extends State<ResultScreen>
         margin: const EdgeInsets.only(bottom: 10),
         padding: const EdgeInsets.all(16),
         decoration: BoxDecoration(
-          color: Colors.white,
+          color: context.colors.surfaceCard,
           borderRadius: BorderRadius.circular(12),
-          border: Border.all(color: _borderColor, width: 1),
+          border: Border.all(color: context.colors.border, width: 1),
         ),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
@@ -2217,25 +2209,25 @@ class _ResultScreenState extends State<ResultScreen>
                 Expanded(
                   child: Text(
                     '${alt.brand} ${alt.model}',
-                    style: const TextStyle(
+                    style: TextStyle(
                       fontSize: 15,
                       fontWeight: FontWeight.w600,
-                      color: _textPrimary,
+                      color: context.colors.textPrimary,
                     ),
                   ),
                 ),
                 Container(
                   padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 3),
                   decoration: BoxDecoration(
-                    color: _surfaceLight,
+                    color: context.colors.surfaceLight,
                     borderRadius: BorderRadius.circular(6),
                   ),
                   child: Text(
                     '$altPercent%',
-                    style: const TextStyle(
+                    style: TextStyle(
                       fontSize: 12,
                       fontWeight: FontWeight.w500,
-                      color: _textSecondary,
+                      color: context.colors.textSecondary,
                     ),
                   ),
                 ),
@@ -2244,21 +2236,21 @@ class _ResultScreenState extends State<ResultScreen>
             const SizedBox(height: 4),
             Text(
               '${alt.yearEstimate}${alt.bodyType.isNotEmpty ? ' \u00b7 ${alt.bodyType}' : ''}',
-              style: const TextStyle(
+              style: TextStyle(
                 fontSize: 13,
                 fontWeight: FontWeight.w300,
-                color: _textSecondary,
+                color: context.colors.textSecondary,
               ),
             ),
             if (alt.keyDifference.isNotEmpty) ...[
               const SizedBox(height: 8),
               Text(
                 alt.keyDifference,
-                style: const TextStyle(
+                style: TextStyle(
                   fontSize: 12,
                   fontWeight: FontWeight.w300,
                   fontStyle: FontStyle.italic,
-                  color: _textSecondary,
+                  color: context.colors.textSecondary,
                   height: 1.4,
                 ),
               ),
@@ -2280,10 +2272,10 @@ class _ResultScreenState extends State<ResultScreen>
             flex: 2,
             child: Text(
               label,
-              style: const TextStyle(
+              style: TextStyle(
                 fontSize: 14,
                 fontWeight: FontWeight.w300,
-                color: _textSecondary,
+                color: context.colors.textSecondary,
               ),
             ),
           ),
@@ -2292,10 +2284,10 @@ class _ResultScreenState extends State<ResultScreen>
             child: Text(
               value,
               textAlign: TextAlign.end,
-              style: const TextStyle(
+              style: TextStyle(
                 fontSize: 14,
                 fontWeight: FontWeight.w500,
-                color: _textPrimary,
+                color: context.colors.textPrimary,
               ),
             ),
           ),
@@ -2313,9 +2305,9 @@ class _ResultScreenState extends State<ResultScreen>
             flex: 3,
             child: Text(
               field,
-              style: const TextStyle(
+              style: TextStyle(
                 fontSize: 13,
-                color: _textSecondary,
+                color: context.colors.textSecondary,
               ),
             ),
           ),
@@ -2323,9 +2315,9 @@ class _ResultScreenState extends State<ResultScreen>
             flex: 5,
             child: Text(
               desc.isNotEmpty ? desc : (match ? 'Conforme' : 'Non conforme'),
-              style: const TextStyle(
+              style: TextStyle(
                 fontSize: 13,
-                color: _textPrimary,
+                color: context.colors.textPrimary,
               ),
             ),
           ),
@@ -2335,7 +2327,7 @@ class _ResultScreenState extends State<ResultScreen>
               match ? '\u2713' : '\u2717',
               style: TextStyle(
                 fontSize: 14,
-                color: match ? _textPrimary : _accentRed,
+                color: match ? context.colors.textPrimary : context.colors.accentRed,
               ),
             ),
           ),
@@ -2360,16 +2352,16 @@ class _ResultScreenState extends State<ResultScreen>
 
     if (isDiverso) {
       badgeLabel = 'Diverso';
-      badgeColor = _accentRed;
-      badgeBg = _accentRed.withValues(alpha: 0.08);
+      badgeColor = context.colors.accentRed;
+      badgeBg = context.colors.accentRed.withValues(alpha: 0.08);
     } else if (isConform) {
       badgeLabel = 'Conforme';
-      badgeColor = const Color(0xFF2E7D32);
-      badgeBg = const Color(0xFF2E7D32).withValues(alpha: 0.08);
+      badgeColor = context.colors.successDark;
+      badgeBg = context.colors.successDark.withValues(alpha: 0.08);
     } else {
       badgeLabel = 'Info';
-      badgeColor = _textSecondary;
-      badgeBg = _surfaceLight;
+      badgeColor = context.colors.textSecondary;
+      badgeBg = context.colors.surfaceLight;
     }
 
     // Extract a title: use the first sentence (up to first period) as title
@@ -2382,9 +2374,9 @@ class _ResultScreenState extends State<ResultScreen>
       padding: const EdgeInsets.only(bottom: 16),
       child: Container(
         padding: const EdgeInsets.symmetric(vertical: 16),
-        decoration: const BoxDecoration(
+        decoration: BoxDecoration(
           border: Border(
-            bottom: BorderSide(color: _surfaceLight, width: 1),
+            bottom: BorderSide(color: context.colors.surfaceLight, width: 1),
           ),
         ),
         child: Column(
@@ -2396,10 +2388,10 @@ class _ResultScreenState extends State<ResultScreen>
                 Expanded(
                   child: Text(
                     title,
-                    style: const TextStyle(
+                    style: TextStyle(
                       fontSize: 14,
                       fontWeight: FontWeight.w500,
-                      color: _textPrimary,
+                      color: context.colors.textPrimary,
                     ),
                   ),
                 ),
@@ -2427,9 +2419,9 @@ class _ResultScreenState extends State<ResultScreen>
               const SizedBox(height: 12),
               Text(
                 note,
-                style: const TextStyle(
+                style: TextStyle(
                   fontSize: 13,
-                  color: Color(0xFF6B6B6B),
+                  color: context.colors.subtleText,
                   height: 1.6,
                 ),
               ),
@@ -2549,9 +2541,9 @@ class _LightDivider extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return const Padding(
+    return Padding(
       padding: EdgeInsets.symmetric(vertical: 24),
-      child: Divider(color: Color(0xFFE8E8E6), height: 1),
+      child: Divider(color: context.colors.border, height: 1),
     );
   }
 }

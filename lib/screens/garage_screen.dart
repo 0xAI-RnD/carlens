@@ -3,6 +3,7 @@ import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:share_plus/share_plus.dart';
+import '../theme/app_colors.dart';
 import '../services/database_service.dart';
 import '../services/telegram_service.dart';
 import '../models/car_scan.dart';
@@ -16,14 +17,6 @@ class GarageScreen extends StatefulWidget {
 }
 
 class _GarageScreenState extends State<GarageScreen> {
-  static const _bgColor = Color(0xFFFAFAF8);
-  static const _textPrimary = Color(0xFF1A1A1A);
-  static const _textSecondary = Color(0xFF8C8C8C);
-  static const _textTertiary = Color(0xFFB0B0B0);
-  static const _borderColor = Color(0xFFE8E8E6);
-  static const _surfaceLight = Color(0xFFF0F0EE);
-  static const _accentRed = Color(0xFFC4342D);
-
   final DatabaseService _db = DatabaseService();
   List<CarScan> _scans = [];
   List<CarScan> _filteredScans = [];
@@ -208,19 +201,19 @@ class _GarageScreenState extends State<GarageScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: _bgColor,
+      backgroundColor: context.colors.background,
       body: SafeArea(
         child: Column(
           children: [
             _buildHeader(),
             Expanded(
               child: _isLoading
-                  ? const Center(
+                  ? Center(
                       child: SizedBox(
                         width: 20,
                         height: 20,
                         child: CircularProgressIndicator(
-                          color: _textPrimary,
+                          color: context.colors.textPrimary,
                           strokeWidth: 1.5,
                         ),
                       ),
@@ -246,10 +239,10 @@ class _GarageScreenState extends State<GarageScreen> {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          const Text(
+          Text(
             'Il tuo Garage',
             style: TextStyle(
-              color: _textPrimary,
+              color: context.colors.textPrimary,
               fontSize: 26,
               fontWeight: FontWeight.w600,
             ),
@@ -258,8 +251,8 @@ class _GarageScreenState extends State<GarageScreen> {
           if (_scans.isNotEmpty) ...[
             Text(
               '${_scans.length} auto scansionat${_scans.length == 1 ? 'a' : 'e'}',
-              style: const TextStyle(
-                color: _textSecondary,
+              style: TextStyle(
+                color: context.colors.textSecondary,
                 fontSize: 13,
               ),
             ),
@@ -290,14 +283,14 @@ class _GarageScreenState extends State<GarageScreen> {
     return Row(
       children: [
         _buildStatChip(Icons.verified_rounded, '$verified',
-            'verificat${verified == 1 ? 'a' : 'e'}', const Color(0xFF4CAF50)),
+            'verificat${verified == 1 ? 'a' : 'e'}', context.colors.success),
         const SizedBox(width: 10),
         _buildStatChip(Icons.local_offer_outlined, '$brands',
-            'march${brands == 1 ? 'io' : 'i'}', _textSecondary),
+            'march${brands == 1 ? 'io' : 'i'}', context.colors.textSecondary),
         if (topBrand.isNotEmpty) ...[
           const SizedBox(width: 10),
           _buildStatChip(Icons.emoji_events_outlined, topBrand,
-              'top marca', const Color(0xFFE6A817)),
+              'top marca', context.colors.gold),
         ],
       ],
     );
@@ -349,30 +342,30 @@ class _GarageScreenState extends State<GarageScreen> {
               height: 100,
               decoration: BoxDecoration(
                 shape: BoxShape.circle,
-                color: _surfaceLight,
-                border: Border.all(color: _borderColor, width: 1),
+                color: context.colors.surfaceLight,
+                border: Border.all(color: context.colors.border, width: 1),
               ),
-              child: const Icon(
+              child: Icon(
                 Icons.directions_car_outlined,
-                color: _textSecondary,
+                color: context.colors.textSecondary,
                 size: 44,
               ),
             ),
             const SizedBox(height: 28),
-            const Text(
+            Text(
               'Il tuo garage \u00e8 vuoto',
               style: TextStyle(
-                color: _textPrimary,
+                color: context.colors.textPrimary,
                 fontSize: 20,
                 fontWeight: FontWeight.w600,
               ),
             ),
             const SizedBox(height: 10),
-            const Text(
+            Text(
               'Scansiona la tua prima auto storica\nper iniziare la tua collezione',
               textAlign: TextAlign.center,
               style: TextStyle(
-                color: _textSecondary,
+                color: context.colors.textSecondary,
                 fontSize: 14,
                 height: 1.5,
               ),
@@ -391,11 +384,11 @@ class _GarageScreenState extends State<GarageScreen> {
           // Search bar
           TextField(
             controller: _searchController,
-            style: const TextStyle(color: _textPrimary, fontSize: 14),
+            style: TextStyle(color: context.colors.textPrimary, fontSize: 14),
             decoration: InputDecoration(
               hintText: 'Cerca per marca, modello, anno...',
-              hintStyle: const TextStyle(color: Color(0xFFCCCCCC), fontSize: 13),
-              prefixIcon: const Icon(Icons.search, size: 20, color: _textSecondary),
+              hintStyle: TextStyle(color: context.colors.hintText, fontSize: 13),
+              prefixIcon: Icon(Icons.search, size: 20, color: context.colors.textSecondary),
               suffixIcon: _searchQuery.isNotEmpty
                   ? GestureDetector(
                       onTap: () {
@@ -405,11 +398,11 @@ class _GarageScreenState extends State<GarageScreen> {
                           _applyFilters();
                         });
                       },
-                      child: const Icon(Icons.close, size: 18, color: _textSecondary),
+                      child: Icon(Icons.close, size: 18, color: context.colors.textSecondary),
                     )
                   : null,
               filled: true,
-              fillColor: _surfaceLight,
+              fillColor: context.colors.surfaceLight,
               border: OutlineInputBorder(
                 borderRadius: BorderRadius.circular(10),
                 borderSide: BorderSide.none,
@@ -456,7 +449,7 @@ class _GarageScreenState extends State<GarageScreen> {
         child: Container(
           padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
           decoration: BoxDecoration(
-            color: isSelected ? _textPrimary : _surfaceLight,
+            color: isSelected ? context.colors.textPrimary : context.colors.surfaceLight,
             borderRadius: BorderRadius.circular(16),
           ),
           child: Text(
@@ -464,7 +457,7 @@ class _GarageScreenState extends State<GarageScreen> {
             style: TextStyle(
               fontSize: 12,
               fontWeight: FontWeight.w500,
-              color: isSelected ? _bgColor : _textSecondary,
+              color: isSelected ? context.colors.background : context.colors.textSecondary,
             ),
           ),
         ),
@@ -475,8 +468,8 @@ class _GarageScreenState extends State<GarageScreen> {
   Widget _buildScanList() {
     return RefreshIndicator(
       onRefresh: _loadScans,
-      color: _textPrimary,
-      backgroundColor: Colors.white,
+      color: context.colors.textPrimary,
+      backgroundColor: context.colors.surfaceCard,
       child: _filteredScans.isEmpty
           ? Center(
               child: Padding(
@@ -485,7 +478,7 @@ class _GarageScreenState extends State<GarageScreen> {
                   _searchQuery.isNotEmpty || _filterBrand != null
                       ? 'Nessun risultato'
                       : '',
-                  style: const TextStyle(color: _textSecondary, fontSize: 14),
+                  style: TextStyle(color: context.colors.textSecondary, fontSize: 14),
                 ),
               ),
             )
@@ -521,7 +514,7 @@ class _GarageScreenState extends State<GarageScreen> {
               ),
               TextButton(
                 onPressed: () => Navigator.pop(ctx, true),
-                child: const Text('Elimina', style: TextStyle(color: Color(0xFFC4342D))),
+                child: Text('Elimina', style: TextStyle(color: context.colors.accentRed)),
               ),
             ],
           ),
@@ -532,12 +525,12 @@ class _GarageScreenState extends State<GarageScreen> {
         alignment: Alignment.centerRight,
         padding: const EdgeInsets.only(right: 24),
         decoration: BoxDecoration(
-          color: _accentRed.withOpacity(0.08),
+          color: context.colors.accentRed.withValues(alpha: 0.08),
           borderRadius: BorderRadius.circular(12),
         ),
         child: Icon(
           Icons.delete_outline_rounded,
-          color: _accentRed,
+          color: context.colors.accentRed,
           size: 28,
         ),
       ),
@@ -552,9 +545,9 @@ class _GarageScreenState extends State<GarageScreen> {
         },
         child: Container(
           padding: const EdgeInsets.symmetric(vertical: 20),
-          decoration: const BoxDecoration(
+          decoration: BoxDecoration(
             border: Border(
-              bottom: BorderSide(color: _surfaceLight, width: 1),
+              bottom: BorderSide(color: context.colors.surfaceLight, width: 1),
             ),
           ),
           child: Row(
@@ -585,8 +578,8 @@ class _GarageScreenState extends State<GarageScreen> {
                     // Brand
                     Text(
                       scan.brand.toUpperCase(),
-                      style: const TextStyle(
-                        color: _textSecondary,
+                      style: TextStyle(
+                        color: context.colors.textSecondary,
                         fontSize: 11,
                         letterSpacing: 2,
                       ),
@@ -595,8 +588,8 @@ class _GarageScreenState extends State<GarageScreen> {
                     // Model
                     Text(
                       scan.model,
-                      style: const TextStyle(
-                        color: _textPrimary,
+                      style: TextStyle(
+                        color: context.colors.textPrimary,
                         fontSize: 16,
                         fontWeight: FontWeight.w600,
                       ),
@@ -609,8 +602,8 @@ class _GarageScreenState extends State<GarageScreen> {
                       hasVin
                           ? '${scan.yearEstimate} \u00b7 ${scan.vin}'
                           : '${scan.yearEstimate} \u00b7 Solo identificazione',
-                      style: const TextStyle(
-                        color: _textSecondary,
+                      style: TextStyle(
+                        color: context.colors.textSecondary,
                         fontSize: 12,
                       ),
                       maxLines: 1,
@@ -628,10 +621,10 @@ class _GarageScreenState extends State<GarageScreen> {
                           const SizedBox(width: 6),
                           Text(
                             'Originalit\u00e0 ${scan.originalityScore!.toStringAsFixed(0)}/100',
-                            style: const TextStyle(
+                            style: TextStyle(
                               fontSize: 12,
                               fontWeight: FontWeight.w500,
-                              color: _textPrimary,
+                              color: context.colors.textPrimary,
                             ),
                           ),
                         ],
@@ -648,8 +641,8 @@ class _GarageScreenState extends State<GarageScreen> {
                               : Icons.auto_awesome,
                           size: 14,
                           color: scan.level >= 2
-                              ? const Color(0xFF4CAF50)
-                              : _textTertiary,
+                              ? context.colors.success
+                              : context.colors.textTertiary,
                         ),
                         const SizedBox(width: 4),
                         Text(
@@ -658,8 +651,8 @@ class _GarageScreenState extends State<GarageScreen> {
                             fontSize: 11,
                             fontWeight: FontWeight.w500,
                             color: scan.level >= 2
-                                ? const Color(0xFF4CAF50)
-                                : _textTertiary,
+                                ? context.colors.success
+                                : context.colors.textTertiary,
                           ),
                         ),
                       ],
@@ -673,14 +666,14 @@ class _GarageScreenState extends State<GarageScreen> {
                           Icon(
                             Icons.link,
                             size: 12,
-                            color: const Color(0xFF5C8A8A),
+                            color: context.colors.teal,
                           ),
                           const SizedBox(width: 4),
                           Text(
                             scan.sourceName!,
-                            style: const TextStyle(
+                            style: TextStyle(
                               fontSize: 11,
-                              color: Color(0xFF5C8A8A),
+                              color: context.colors.teal,
                               fontWeight: FontWeight.w500,
                             ),
                           ),
@@ -716,15 +709,15 @@ class _GarageScreenState extends State<GarageScreen> {
                               style: TextStyle(
                                 fontSize: 12,
                                 fontWeight: FontWeight.w500,
-                                color: _accentRed,
+                                color: context.colors.accentRed,
                               ),
                             ),
                             const SizedBox(width: 4),
-                            const Text(
+                            Text(
                               'Aggiungi telaio per saperne di pi\u00f9',
                               style: TextStyle(
                                 fontSize: 12,
-                                color: _textSecondary,
+                                color: context.colors.textSecondary,
                               ),
                             ),
                           ],
@@ -752,15 +745,15 @@ class _GarageScreenState extends State<GarageScreen> {
                               style: TextStyle(
                                 fontSize: 12,
                                 fontWeight: FontWeight.w500,
-                                color: _accentRed,
+                                color: context.colors.accentRed,
                               ),
                             ),
                             const SizedBox(width: 4),
-                            const Text(
+                            Text(
                               'Verifica originalit\u00e0',
                               style: TextStyle(
                                 fontSize: 12,
-                                color: _textSecondary,
+                                color: context.colors.textSecondary,
                               ),
                             ),
                           ],
@@ -779,10 +772,10 @@ class _GarageScreenState extends State<GarageScreen> {
 
   Widget _thumbnailPlaceholder() {
     return Container(
-      color: _surfaceLight,
-      child: const Icon(
+      color: context.colors.surfaceLight,
+      child: Icon(
         Icons.directions_car_outlined,
-        color: _textTertiary,
+        color: context.colors.textTertiary,
         size: 28,
       ),
     );
@@ -811,17 +804,17 @@ class _MiniScoreRing extends StatelessWidget {
             child: CircularProgressIndicator(
               value: score,
               strokeWidth: 2.5,
-              backgroundColor: const Color(0xFFE8E8E6),
-              valueColor: const AlwaysStoppedAnimation<Color>(
-                  Color(0xFF1A1A1A)),
+              backgroundColor: context.colors.border,
+              valueColor: AlwaysStoppedAnimation<Color>(
+                  context.colors.textPrimary),
             ),
           ),
           Text(
             (score * 100).toStringAsFixed(0),
-            style: const TextStyle(
+            style: TextStyle(
               fontSize: 8,
               fontWeight: FontWeight.w600,
-              color: Color(0xFF1A1A1A),
+              color: context.colors.textPrimary,
             ),
           ),
         ],
@@ -840,13 +833,6 @@ class _DetailSheet extends StatelessWidget {
   final VoidCallback onShare;
   final String levelLabel;
   final String Function(DateTime) formatDate;
-
-  static const _bgColor = Color(0xFFFAFAF8);
-  static const _textPrimary = Color(0xFF1A1A1A);
-  static const _textSecondary = Color(0xFF8C8C8C);
-  static const _borderColor = Color(0xFFE8E8E6);
-  static const _surfaceLight = Color(0xFFF0F0EE);
-  static const _accentRed = Color(0xFFC4342D);
 
   const _DetailSheet({
     required this.scan,
@@ -933,8 +919,8 @@ class _DetailSheet extends StatelessWidget {
       maxChildSize: 0.95,
       builder: (_, scrollController) {
         return Container(
-          decoration: const BoxDecoration(
-            color: _bgColor,
+          decoration: BoxDecoration(
+            color: context.colors.background,
             borderRadius: BorderRadius.vertical(top: Radius.circular(24)),
           ),
           child: ListView(
@@ -948,7 +934,7 @@ class _DetailSheet extends StatelessWidget {
                   height: 4,
                   margin: const EdgeInsets.only(bottom: 24),
                   decoration: BoxDecoration(
-                    color: _borderColor,
+                    color: context.colors.border,
                     borderRadius: BorderRadius.circular(2),
                   ),
                 ),
@@ -962,10 +948,10 @@ class _DetailSheet extends StatelessWidget {
                   child: imageFile.existsSync()
                       ? Image.file(imageFile, fit: BoxFit.cover)
                       : Container(
-                          color: _surfaceLight,
-                          child: const Icon(
+                          color: context.colors.surfaceLight,
+                          child: Icon(
                             Icons.directions_car_outlined,
-                            color: _textSecondary,
+                            color: context.colors.textSecondary,
                             size: 64,
                           ),
                         ),
@@ -976,8 +962,8 @@ class _DetailSheet extends StatelessWidget {
               // Brand + Model
               Text(
                 scan.brand.toUpperCase(),
-                style: const TextStyle(
-                  color: _textSecondary,
+                style: TextStyle(
+                  color: context.colors.textSecondary,
                   fontSize: 12,
                   letterSpacing: 2,
                 ),
@@ -985,8 +971,8 @@ class _DetailSheet extends StatelessWidget {
               const SizedBox(height: 4),
               Text(
                 scan.model,
-                style: const TextStyle(
-                  color: _textPrimary,
+                style: TextStyle(
+                  color: context.colors.textPrimary,
                   fontSize: 24,
                   fontWeight: FontWeight.w600,
                 ),
@@ -994,31 +980,31 @@ class _DetailSheet extends StatelessWidget {
               const SizedBox(height: 4),
               Text(
                 '${scan.yearEstimate}  \u00b7  ${scan.bodyType}  \u00b7  ${scan.color}',
-                style: const TextStyle(
+                style: TextStyle(
                   fontSize: 14,
                   fontWeight: FontWeight.w300,
-                  color: _textSecondary,
+                  color: context.colors.textSecondary,
                 ),
               ),
               const SizedBox(height: 4),
               Text(
                 'Attendibilit\u00e0 $confidencePercent%  \u00b7  ${formatDate(scan.createdAt)}',
-                style: const TextStyle(
+                style: TextStyle(
                   fontSize: 12,
-                  color: Color(0xFFB0B0B0),
+                  color: context.colors.textTertiary,
                 ),
               ),
 
               // Marketplace listing data
               if (scan.sourceName != null && scan.sourceName!.isNotEmpty) ...[
-                const Padding(
+                Padding(
                   padding: EdgeInsets.symmetric(vertical: 24),
-                  child: Divider(color: _borderColor, height: 1),
+                  child: Divider(color: context.colors.border, height: 1),
                 ),
                 Container(
                   padding: const EdgeInsets.all(16),
                   decoration: BoxDecoration(
-                    color: const Color(0xFFF0F5F5),
+                    color: context.colors.surfaceTeal,
                     borderRadius: BorderRadius.circular(12),
                   ),
                   child: Column(
@@ -1026,14 +1012,14 @@ class _DetailSheet extends StatelessWidget {
                     children: [
                       Row(
                         children: [
-                          const Icon(Icons.link, size: 16, color: Color(0xFF5C8A8A)),
+                          Icon(Icons.link, size: 16, color: context.colors.teal),
                           const SizedBox(width: 8),
                           Text(
                             'DA ${scan.sourceName!.toUpperCase()}',
-                            style: const TextStyle(
+                            style: TextStyle(
                               fontSize: 11,
                               fontWeight: FontWeight.w600,
-                              color: Color(0xFF5C8A8A),
+                              color: context.colors.teal,
                               letterSpacing: 1.5,
                             ),
                           ),
@@ -1044,16 +1030,16 @@ class _DetailSheet extends StatelessWidget {
                         Row(
                           mainAxisAlignment: MainAxisAlignment.spaceBetween,
                           children: [
-                            const Text(
+                            Text(
                               'Prezzo richiesto',
-                              style: TextStyle(fontSize: 13, color: _textSecondary),
+                              style: TextStyle(fontSize: 13, color: context.colors.textSecondary),
                             ),
                             Text(
                               scan.askingPrice!,
-                              style: const TextStyle(
+                              style: TextStyle(
                                 fontSize: 14,
                                 fontWeight: FontWeight.w600,
-                                color: _textPrimary,
+                                color: context.colors.textPrimary,
                               ),
                             ),
                           ],
@@ -1064,16 +1050,16 @@ class _DetailSheet extends StatelessWidget {
                         Row(
                           mainAxisAlignment: MainAxisAlignment.spaceBetween,
                           children: [
-                            const Text(
+                            Text(
                               'Km dichiarati',
-                              style: TextStyle(fontSize: 13, color: _textSecondary),
+                              style: TextStyle(fontSize: 13, color: context.colors.textSecondary),
                             ),
                             Text(
                               scan.mileage!,
-                              style: const TextStyle(
+                              style: TextStyle(
                                 fontSize: 14,
                                 fontWeight: FontWeight.w500,
-                                color: _textPrimary,
+                                color: context.colors.textPrimary,
                               ),
                             ),
                           ],
@@ -1086,16 +1072,16 @@ class _DetailSheet extends StatelessWidget {
 
               // Scheda Rapida specs
               if (specEntries.isNotEmpty) ...[
-                const Padding(
+                Padding(
                   padding: EdgeInsets.symmetric(vertical: 24),
-                  child: Divider(color: _borderColor, height: 1),
+                  child: Divider(color: context.colors.border, height: 1),
                 ),
-                const Text(
+                Text(
                   'SCHEDA RAPIDA',
                   style: TextStyle(
                     fontSize: 12,
                     fontWeight: FontWeight.w500,
-                    color: _textSecondary,
+                    color: context.colors.textSecondary,
                     letterSpacing: 2,
                   ),
                 ),
@@ -1107,19 +1093,19 @@ class _DetailSheet extends StatelessWidget {
                     children: [
                       Text(
                         s.label,
-                        style: const TextStyle(
+                        style: TextStyle(
                           fontSize: 14,
                           fontWeight: FontWeight.w300,
-                          color: _textSecondary,
+                          color: context.colors.textSecondary,
                         ),
                       ),
                       Flexible(
                         child: Text(
                           s.value,
-                          style: const TextStyle(
+                          style: TextStyle(
                             fontSize: 14,
                             fontWeight: FontWeight.w500,
-                            color: _textPrimary,
+                            color: context.colors.textPrimary,
                           ),
                           textAlign: TextAlign.end,
                         ),
@@ -1131,16 +1117,16 @@ class _DetailSheet extends StatelessWidget {
 
               // Description
               if (scan.details.isNotEmpty) ...[
-                const Padding(
+                Padding(
                   padding: EdgeInsets.symmetric(vertical: 24),
-                  child: Divider(color: _borderColor, height: 1),
+                  child: Divider(color: context.colors.border, height: 1),
                 ),
                 Text(
                   scan.details,
-                  style: const TextStyle(
+                  style: TextStyle(
                     fontSize: 14,
                     fontWeight: FontWeight.w300,
-                    color: _textSecondary,
+                    color: context.colors.textSecondary,
                     height: 1.6,
                   ),
                 ),
@@ -1148,48 +1134,48 @@ class _DetailSheet extends StatelessWidget {
 
               // Market value estimate
               if (marketValue.isNotEmpty && marketValue != 'N/D') ...[
-                const Padding(
+                Padding(
                   padding: EdgeInsets.symmetric(vertical: 24),
-                  child: Divider(color: _borderColor, height: 1),
+                  child: Divider(color: context.colors.border, height: 1),
                 ),
                 Container(
                   padding: const EdgeInsets.all(20),
                   decoration: BoxDecoration(
-                    color: const Color(0xFFF5F5F0),
+                    color: context.colors.surfaceWarm,
                     borderRadius: BorderRadius.circular(12),
                   ),
                   child: Row(
                     children: [
-                      const Icon(Icons.trending_up, color: Color(0xFF4CAF50), size: 28),
+                      Icon(Icons.trending_up, color: context.colors.success, size: 28),
                       const SizedBox(width: 16),
                       Expanded(
                         child: Column(
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
-                            const Text(
+                            Text(
                               'STIMA DI MERCATO',
                               style: TextStyle(
                                 fontSize: 10,
                                 fontWeight: FontWeight.w500,
-                                color: Color(0xFFB0B0B0),
+                                color: context.colors.textTertiary,
                                 letterSpacing: 2,
                               ),
                             ),
                             const SizedBox(height: 4),
                             Text(
                               marketValue,
-                              style: const TextStyle(
+                              style: TextStyle(
                                 fontSize: 20,
                                 fontWeight: FontWeight.w600,
-                                color: _textPrimary,
+                                color: context.colors.textPrimary,
                               ),
                             ),
                             const SizedBox(height: 4),
-                            const Text(
+                            Text(
                               'Esemplare in buone condizioni. Stima indicativa.',
                               style: TextStyle(
                                 fontSize: 11,
-                                color: Color(0xFFB0B0B0),
+                                color: context.colors.textTertiary,
                                 fontStyle: FontStyle.italic,
                               ),
                             ),
@@ -1203,16 +1189,16 @@ class _DetailSheet extends StatelessWidget {
 
               // Timeline / Storia del Modello
               if (timeline.isNotEmpty) ...[
-                const Padding(
+                Padding(
                   padding: EdgeInsets.symmetric(vertical: 24),
-                  child: Divider(color: _borderColor, height: 1),
+                  child: Divider(color: context.colors.border, height: 1),
                 ),
-                const Text(
+                Text(
                   'STORIA DEL MODELLO',
                   style: TextStyle(
                     fontSize: 12,
                     fontWeight: FontWeight.w500,
-                    color: _textSecondary,
+                    color: context.colors.textSecondary,
                     letterSpacing: 2,
                   ),
                 ),
@@ -1234,7 +1220,7 @@ class _DetailSheet extends StatelessWidget {
                           margin: const EdgeInsets.only(top: 5, right: 12),
                           decoration: BoxDecoration(
                             shape: BoxShape.circle,
-                            color: _textSecondary.withAlpha(120),
+                            color: context.colors.textSecondary.withAlpha(120),
                           ),
                         ),
                         if (year.isNotEmpty && year.length <= 5) ...[
@@ -1242,10 +1228,10 @@ class _DetailSheet extends StatelessWidget {
                             width: 44,
                             child: Text(
                               year,
-                              style: const TextStyle(
+                              style: TextStyle(
                                 fontSize: 13,
                                 fontWeight: FontWeight.w600,
-                                color: _textPrimary,
+                                color: context.colors.textPrimary,
                               ),
                             ),
                           ),
@@ -1253,10 +1239,10 @@ class _DetailSheet extends StatelessWidget {
                           Expanded(
                             child: Text(
                               desc,
-                              style: const TextStyle(
+                              style: TextStyle(
                                 fontSize: 13,
                                 fontWeight: FontWeight.w300,
-                                color: _textSecondary,
+                                color: context.colors.textSecondary,
                                 height: 1.4,
                               ),
                             ),
@@ -1265,10 +1251,10 @@ class _DetailSheet extends StatelessWidget {
                           Expanded(
                             child: Text(
                               event,
-                              style: const TextStyle(
+                              style: TextStyle(
                                 fontSize: 13,
                                 fontWeight: FontWeight.w300,
-                                color: _textSecondary,
+                                color: context.colors.textSecondary,
                                 height: 1.4,
                               ),
                             ),
@@ -1281,14 +1267,14 @@ class _DetailSheet extends StatelessWidget {
 
               // Fun fact / Lo Sapevi?
               if (funFact.isNotEmpty && funFact != 'N/D') ...[
-                const Padding(
+                Padding(
                   padding: EdgeInsets.symmetric(vertical: 24),
-                  child: Divider(color: _borderColor, height: 1),
+                  child: Divider(color: context.colors.border, height: 1),
                 ),
                 Container(
                   padding: const EdgeInsets.all(20),
                   decoration: BoxDecoration(
-                    color: const Color(0xFFFFF8E1),
+                    color: context.colors.goldBg,
                     borderRadius: BorderRadius.circular(12),
                   ),
                   child: Row(
@@ -1300,22 +1286,22 @@ class _DetailSheet extends StatelessWidget {
                         child: Column(
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
-                            const Text(
+                            Text(
                               'LO SAPEVI?',
                               style: TextStyle(
                                 fontSize: 10,
                                 fontWeight: FontWeight.w600,
-                                color: Color(0xFF8D6E00),
+                                color: context.colors.goldDark,
                                 letterSpacing: 2,
                               ),
                             ),
                             const SizedBox(height: 6),
                             Text(
                               funFact,
-                              style: const TextStyle(
+                              style: TextStyle(
                                 fontSize: 13,
                                 fontWeight: FontWeight.w400,
-                                color: Color(0xFF5D4700),
+                                color: context.colors.goldDarker,
                                 height: 1.5,
                               ),
                             ),
@@ -1333,16 +1319,16 @@ class _DetailSheet extends StatelessWidget {
                 Container(
                   padding: const EdgeInsets.all(16),
                   decoration: BoxDecoration(
-                    color: Colors.white,
+                    color: context.colors.surfaceCard,
                     borderRadius: BorderRadius.circular(12),
-                    border: Border.all(color: _borderColor, width: 1),
+                    border: Border.all(color: context.colors.border, width: 1),
                   ),
                   child: Row(
                     children: [
-                      const Text(
+                      Text(
                         'VIN',
                         style: TextStyle(
-                          color: _textSecondary,
+                          color: context.colors.textSecondary,
                           fontSize: 14,
                         ),
                       ),
@@ -1351,13 +1337,13 @@ class _DetailSheet extends StatelessWidget {
                         padding: const EdgeInsets.symmetric(
                             horizontal: 10, vertical: 4),
                         decoration: BoxDecoration(
-                          color: _surfaceLight,
+                          color: context.colors.surfaceLight,
                           borderRadius: BorderRadius.circular(6),
                         ),
                         child: Text(
                           scan.vin!,
-                          style: const TextStyle(
-                            color: _textPrimary,
+                          style: TextStyle(
+                            color: context.colors.textPrimary,
                             fontSize: 13,
                             fontFamily: 'monospace',
                             letterSpacing: 1,
@@ -1375,9 +1361,9 @@ class _DetailSheet extends StatelessWidget {
                 Container(
                   padding: const EdgeInsets.all(16),
                   decoration: BoxDecoration(
-                    color: Colors.white,
+                    color: context.colors.surfaceCard,
                     borderRadius: BorderRadius.circular(12),
-                    border: Border.all(color: _borderColor, width: 1),
+                    border: Border.all(color: context.colors.border, width: 1),
                   ),
                   child: Row(
                     children: [
@@ -1393,16 +1379,16 @@ class _DetailSheet extends StatelessWidget {
                               child: CircularProgressIndicator(
                                 value: scan.originalityScore! / 100,
                                 strokeWidth: 3,
-                                backgroundColor: _borderColor,
+                                backgroundColor: context.colors.border,
                                 valueColor:
-                                    const AlwaysStoppedAnimation<Color>(
-                                        _textPrimary),
+                                    AlwaysStoppedAnimation<Color>(
+                                        context.colors.textPrimary),
                               ),
                             ),
                             Text(
                               '${scan.originalityScore!.toStringAsFixed(0)}',
-                              style: const TextStyle(
-                                color: _textPrimary,
+                              style: TextStyle(
+                                color: context.colors.textPrimary,
                                 fontSize: 11,
                                 fontWeight: FontWeight.w600,
                               ),
@@ -1414,10 +1400,10 @@ class _DetailSheet extends StatelessWidget {
                       Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
-                          const Text(
+                          Text(
                             'Originalit\u00e0',
                             style: TextStyle(
-                              color: _textPrimary,
+                              color: context.colors.textPrimary,
                               fontSize: 15,
                               fontWeight: FontWeight.w500,
                             ),
@@ -1425,8 +1411,8 @@ class _DetailSheet extends StatelessWidget {
                           const SizedBox(height: 2),
                           Text(
                             _originalityLabel(scan.originalityScore!),
-                            style: const TextStyle(
-                              color: _textSecondary,
+                            style: TextStyle(
+                              color: context.colors.textSecondary,
                               fontSize: 12,
                             ),
                           ),
@@ -1445,17 +1431,17 @@ class _DetailSheet extends StatelessWidget {
                   width: double.infinity,
                   padding: const EdgeInsets.all(16),
                   decoration: BoxDecoration(
-                    color: Colors.white,
+                    color: context.colors.surfaceCard,
                     borderRadius: BorderRadius.circular(12),
-                    border: Border.all(color: _borderColor, width: 1),
+                    border: Border.all(color: context.colors.border, width: 1),
                   ),
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      const Text(
+                      Text(
                         'REPORT ORIGINALIT\u00c0',
                         style: TextStyle(
-                          color: _textSecondary,
+                          color: context.colors.textSecondary,
                           fontSize: 12,
                           fontWeight: FontWeight.w500,
                           letterSpacing: 2,
@@ -1464,8 +1450,8 @@ class _DetailSheet extends StatelessWidget {
                       const SizedBox(height: 10),
                       Text(
                         scan.originalityReport!,
-                        style: const TextStyle(
-                          color: _textPrimary,
+                        style: TextStyle(
+                          color: context.colors.textPrimary,
                           fontSize: 13,
                           height: 1.6,
                         ),
@@ -1492,8 +1478,8 @@ class _DetailSheet extends StatelessWidget {
                     ),
                   ),
                   style: ElevatedButton.styleFrom(
-                    backgroundColor: _textPrimary,
-                    foregroundColor: _bgColor,
+                    backgroundColor: context.colors.textPrimary,
+                    foregroundColor: context.colors.background,
                     elevation: 0,
                     shape: RoundedRectangleBorder(
                       borderRadius: BorderRadius.circular(10),
@@ -1512,7 +1498,7 @@ class _DetailSheet extends StatelessWidget {
                   child: Text(
                     'Elimina scansione',
                     style: TextStyle(
-                      color: _accentRed,
+                      color: context.colors.accentRed,
                       fontSize: 15,
                       fontWeight: FontWeight.w400,
                     ),
