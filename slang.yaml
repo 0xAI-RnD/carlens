@@ -1,0 +1,8 @@
+base_locale: it
+input_directory: lib/i18n
+input_file_pattern: .i18n.json
+output_directory: lib/i18n
+output_file_name: strings.g.dart
+locale_handling: true
+flutter_integration: true
+string_interpolation: dart

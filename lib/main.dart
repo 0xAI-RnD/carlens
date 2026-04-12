@@ -1,8 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:intl/date_symbol_data_local.dart';
 import 'package:upgrader/upgrader.dart';
 import 'package:version/version.dart';
+import 'i18n/strings.g.dart';
+import 'theme/app_colors.dart';
+import 'theme/app_theme.dart';
 import 'services/database_service.dart';
 import 'services/car_data_service.dart';
 import 'services/notification_service.dart';
@@ -16,10 +20,12 @@ void main() async {
     statusBarIconBrightness: Brightness.dark,
   ));
 
+  LocaleSettings.setLocaleRaw('it');
+
   await initializeDateFormatting('it_IT', null);
   await DatabaseService().init();
 
-  runApp(const CarLensApp());
+  runApp(TranslationProvider(child: const CarLensApp()));
 }
 
 class CarLensApp extends StatelessWidget {
@@ -30,33 +36,10 @@ class CarLensApp extends StatelessWidget {
     return MaterialApp(
       title: 'CarLens',
       debugShowCheckedModeBanner: false,
-      theme: ThemeData(
-        brightness: Brightness.light,
-        scaffoldBackgroundColor: const Color(0xFFFAFAF8),
-        colorScheme: const ColorScheme.light(
-          primary: Color(0xFF1A1A1A),
-          secondary: Color(0xFF1A1A1A),
-          surface: Color(0xFFFFFFFF),
-        ),
-        appBarTheme: const AppBarTheme(
-          backgroundColor: Color(0xFFFAFAF8),
-          elevation: 0,
-          centerTitle: true,
-          foregroundColor: Color(0xFF1A1A1A),
-        ),
-        cardTheme: CardThemeData(
-          color: const Color(0xFFFFFFFF),
-          shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(12),
-          ),
-          elevation: 0,
-        ),
-        bottomNavigationBarTheme: const BottomNavigationBarThemeData(
-          backgroundColor: Color(0xFFFAFAF8),
-          selectedItemColor: Color(0xFF1A1A1A),
-          unselectedItemColor: Color(0xFF8C8C8C),
-        ),
-      ),
+      locale: TranslationProvider.of(context).flutterLocale,
+      supportedLocales: AppLocaleUtils.supportedLocales,
+      localizationsDelegates: GlobalMaterialLocalizations.delegates,
+      theme: buildTheme(),
       home: const AppLoader(),
     );
   }
@@ -97,8 +80,8 @@ class _AppLoaderState extends State<AppLoader> {
   @override
   Widget build(BuildContext context) {
     if (!_ready) {
-      return const Scaffold(
-        backgroundColor: Color(0xFFFAFAF8),
+      return Scaffold(
+        backgroundColor: context.colors.background,
         body: Center(
           child: Column(
             mainAxisSize: MainAxisSize.min,
@@ -108,16 +91,16 @@ class _AppLoaderState extends State<AppLoader> {
                 style: TextStyle(
                   fontSize: 28,
                   fontWeight: FontWeight.w300,
-                  color: Color(0xFF1A1A1A),
+                  color: context.colors.textPrimary,
                   letterSpacing: 12,
                 ),
               ),
-              SizedBox(height: 24),
+              const SizedBox(height: 24),
               SizedBox(
                 width: 20,
                 height: 20,
                 child: CircularProgressIndicator(
-                  color: Color(0xFF1A1A1A),
+                  color: context.colors.textPrimary,
                   strokeWidth: 1.5,
                 ),
               ),
