@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import '../i18n/strings.g.dart';
 import '../theme/app_colors.dart';
 
 class VinHelperScreen extends StatefulWidget {
@@ -11,48 +12,35 @@ class VinHelperScreen extends StatefulWidget {
 class _VinHelperScreenState extends State<VinHelperScreen> {
   int _expandedIndex = -1;
 
-  static const List<_VinLocation> _locations = [
+  List<_VinLocation> get _locations => [
     _VinLocation(
-      title: 'Targhetta sul cruscotto',
-      description:
-          "Visibile dall'esterno attraverso il parabrezza, lato passeggero. "
-          "\u00c8 il metodo pi\u00f9 semplice per auto dal 1981 in poi.",
+      title: t.vin.dashboard,
+      description: t.vin.dashboardDesc,
       icon: Icons.dashboard_outlined,
     ),
     _VinLocation(
-      title: 'Montante portiera',
-      description:
-          'Aprendo la portiera lato guida, sul montante verticale trovi '
-          "un'etichetta con il VIN e altre informazioni.",
+      title: t.vin.doorPillar,
+      description: t.vin.doorPillarDesc,
       icon: Icons.sensor_door_outlined,
     ),
     _VinLocation(
-      title: 'Vano motore',
-      description:
-          'Targhetta rivettata nel vano motore, spesso sulla parete '
-          'parafiamma o sul passaruota. Comune in auto italiane pre-1981.',
+      title: t.vin.engineBay,
+      description: t.vin.engineBayDesc,
       icon: Icons.miscellaneous_services_outlined,
     ),
     _VinLocation(
-      title: 'Libretto di circolazione',
-      description:
-          'Il numero di telaio \u00e8 riportato alla voce (E) del libretto '
-          "di circolazione. Puoi fotografare il libretto e l'app legger\u00e0 "
-          'il VIN automaticamente.',
+      title: t.vin.registration,
+      description: t.vin.registrationDesc,
       icon: Icons.description_outlined,
     ),
     _VinLocation(
-      title: 'Bagagliaio',
-      description:
-          'Sotto il tappetino del bagagliaio o sul passaruota posteriore. '
-          'Tipico di Fiat 500, 600, 850.',
+      title: t.vin.trunk,
+      description: t.vin.trunkDesc,
       icon: Icons.luggage_outlined,
     ),
     _VinLocation(
-      title: 'Certificato ASI',
-      description:
-          "Se l'auto \u00e8 iscritta all'ASI, il numero di telaio \u00e8 riportato "
-          'sul certificato di rilevanza storica.',
+      title: t.vin.asiCert,
+      description: t.vin.asiCertDesc,
       icon: Icons.verified_outlined,
     ),
   ];
@@ -65,7 +53,7 @@ class _VinHelperScreenState extends State<VinHelperScreen> {
         backgroundColor: context.colors.background,
         foregroundColor: context.colors.textPrimary,
         title: Text(
-          'Dove trovo il telaio?',
+          t.vin.title,
           style: TextStyle(
             fontSize: 18,
             fontWeight: FontWeight.w500,
@@ -96,7 +84,7 @@ class _VinHelperScreenState extends State<VinHelperScreen> {
           ),
           const SizedBox(height: 16),
           Text(
-            'Dove trovo il numero di telaio?',
+            t.vin.pageTitle,
             textAlign: TextAlign.center,
             style: TextStyle(
               color: context.colors.textPrimary,
@@ -106,8 +94,7 @@ class _VinHelperScreenState extends State<VinHelperScreen> {
           ),
           const SizedBox(height: 8),
           Text(
-            'Il VIN (Vehicle Identification Number) pu\u00f2 trovarsi '
-            'in diverse posizioni a seconda del modello e dell\'anno.',
+            t.vin.subtitle,
             textAlign: TextAlign.center,
             style: TextStyle(
               color: context.colors.textSecondary,
@@ -217,8 +204,7 @@ class _VinHelperScreenState extends State<VinHelperScreen> {
                 const SizedBox(width: 12),
                 Expanded(
                   child: Text(
-                    'Per auto dal 1981 in poi, il VIN ha sempre 17 caratteri. '
-                    'Per auto precedenti, il formato varia per marca.',
+                    t.vin.infoNote,
                     style: TextStyle(
                       color: context.colors.textSecondary,
                       fontSize: 13,
@@ -246,9 +232,9 @@ class _VinHelperScreenState extends State<VinHelperScreen> {
                 ),
                 elevation: 0,
               ),
-              child: const Text(
-                'Ho capito',
-                style: TextStyle(
+              child: Text(
+                t.vin.understood,
+                style: const TextStyle(
                   fontSize: 15,
                   fontWeight: FontWeight.w500,
                 ),

@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:carlens/services/notification_service.dart';
+import '../i18n/strings.g.dart';
 import '../theme/app_colors.dart';
 
 class SettingsScreen extends StatefulWidget {
@@ -47,7 +48,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
           onPressed: () => Navigator.pop(context),
         ),
         title: Text(
-          'Impostazioni',
+          t.settings.title,
           style: TextStyle(
             fontSize: 17,
             fontWeight: FontWeight.w600,
@@ -68,7 +69,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
               children: [
                 // Notifications section
                 Text(
-                  'NOTIFICHE',
+                  t.settings.notifications,
                   style: TextStyle(
                     fontSize: 12,
                     fontWeight: FontWeight.w600,
@@ -93,7 +94,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
                               Text(
-                                'Curiosit\u00e0 del giorno',
+                                t.settings.dailyCuriosity,
                                 style: TextStyle(
                                   fontSize: 15,
                                   fontWeight: FontWeight.w500,
@@ -102,7 +103,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
                               ),
                               const SizedBox(height: 4),
                               Text(
-                                'Ricevi ogni giorno una curiosit\u00e0 sulle auto storiche',
+                                t.settings.dailyCuriosityDesc,
                                 style: TextStyle(
                                   fontSize: 13,
                                   color: context.colors.textSecondary,
@@ -127,7 +128,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
 
                 // Info section
                 Text(
-                  'INFORMAZIONI',
+                  t.settings.info,
                   style: TextStyle(
                     fontSize: 12,
                     fontWeight: FontWeight.w600,
@@ -149,7 +150,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
                         Text(
-                          'Versione',
+                          t.settings.version,
                           style: TextStyle(
                             fontSize: 15,
                             fontWeight: FontWeight.w500,
@@ -175,7 +176,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
                   child: Column(
                     children: [
                       Text(
-                        'CARLENS',
+                        t.app.name,
                         style: TextStyle(
                           fontSize: 14,
                           fontWeight: FontWeight.w300,
@@ -185,7 +186,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
                       ),
                       const SizedBox(height: 4),
                       Text(
-                        'Identifica la tua classica',
+                        t.app.tagline,
                         style: TextStyle(
                           fontSize: 12,
                           color: context.colors.textSecondary.withValues(alpha: 0.4),

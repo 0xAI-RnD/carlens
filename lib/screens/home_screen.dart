@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:image_picker/image_picker.dart';
+import '../i18n/strings.g.dart';
 import '../theme/app_colors.dart';
 import 'results_screen.dart';
 import 'garage_screen.dart';
@@ -81,8 +82,8 @@ class _HomeScreenState extends State<HomeScreen> {
     } else {
       if (mounted) {
         ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(
-            content: Text('Nessun link valido negli appunti'),
+          SnackBar(
+            content: Text(t.home.noValidLink),
             backgroundColor: Colors.orange,
           ),
         );
@@ -118,16 +119,16 @@ class _HomeScreenState extends State<HomeScreen> {
             fontWeight: FontWeight.w400,
             fontSize: 10,
           ),
-          items: const [
+          items: [
             BottomNavigationBarItem(
-              icon: Icon(Icons.home_outlined),
-              activeIcon: Icon(Icons.home),
-              label: 'Home',
+              icon: const Icon(Icons.home_outlined),
+              activeIcon: const Icon(Icons.home),
+              label: t.nav.home,
             ),
             BottomNavigationBarItem(
-              icon: Icon(Icons.directions_car_outlined),
-              activeIcon: Icon(Icons.directions_car),
-              label: 'Garage',
+              icon: const Icon(Icons.directions_car_outlined),
+              activeIcon: const Icon(Icons.directions_car),
+              label: t.nav.garage,
             ),
           ],
         ),
@@ -169,7 +170,7 @@ class _HomeScreenState extends State<HomeScreen> {
 
               // Logo
               Text(
-                'CARLENS',
+                t.app.name,
                 style: TextStyle(
                   fontSize: 28,
                   fontWeight: FontWeight.w300,
@@ -181,7 +182,7 @@ class _HomeScreenState extends State<HomeScreen> {
 
               // Tagline
               Text(
-                'Identifica la tua classica',
+                t.app.tagline,
                 style: TextStyle(
                   fontSize: 15,
                   fontWeight: FontWeight.w300,
@@ -228,7 +229,7 @@ class _HomeScreenState extends State<HomeScreen> {
                       ),
                       const SizedBox(height: 16),
                       Text(
-                        'Scatta una foto',
+                        t.home.takePhoto,
                         style: TextStyle(
                           fontSize: 15,
                           fontWeight: FontWeight.w400,
@@ -252,7 +253,7 @@ class _HomeScreenState extends State<HomeScreen> {
                     ),
                   ),
                   child: Text(
-                    'oppure carica dalla galleria (fino a 3 foto)',
+                    t.home.loadFromGallery,
                     style: TextStyle(
                       fontSize: 13,
                       color: context.colors.textSecondary,
@@ -269,7 +270,7 @@ class _HomeScreenState extends State<HomeScreen> {
                 child: OutlinedButton.icon(
                   onPressed: _pasteLink,
                   icon: const Icon(Icons.link, size: 20),
-                  label: const Text('Incolla Link'),
+                  label: Text(t.home.pasteLink),
                   style: OutlinedButton.styleFrom(
                     foregroundColor: context.colors.textPrimary,
                     side: BorderSide(color: context.colors.border, width: 1.5),
