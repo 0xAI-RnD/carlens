@@ -272,6 +272,12 @@ class TranslationsGarageIt {
 
 	/// it: 'Km dichiarati'
 	String get mileage => 'Km dichiarati';
+
+	/// it: 'Originalità ${score}/100'
+	String originalityScore({required Object score}) => 'Originalità ${score}/100';
+
+	late final TranslationsGarageSpecsIt specs = TranslationsGarageSpecsIt._(_root);
+	late final TranslationsGarageShareTextIt shareText = TranslationsGarageShareTextIt._(_root);
 }
 
 // Path: results
@@ -288,14 +294,32 @@ class TranslationsResultsIt {
 	/// it: 'Analisi in corso...'
 	String get analyzing => 'Analisi in corso...';
 
+	/// it: 'Analisi annuncio in corso...'
+	String get analyzingListing => 'Analisi annuncio in corso...';
+
+	/// it: 'L'AI sta identificando l'auto'
+	String get analyzingSubtitle => 'L\'AI sta identificando l\'auto';
+
+	/// it: 'Scaricamento foto e identificazione'
+	String get analyzingListingSubtitle => 'Scaricamento foto e identificazione';
+
 	/// it: 'SCHEDA RAPIDA'
 	String get quickSpecs => 'SCHEDA RAPIDA';
 
 	/// it: 'Identificato'
 	String get identified => 'Identificato';
 
+	/// it: 'Identificato · ${percent}%'
+	String identifiedWithPercent({required Object percent}) => 'Identificato · ${percent}%';
+
 	/// it: 'Vuoi saperne di più?'
 	String get wantToKnowMore => 'Vuoi saperne di più?';
+
+	/// it: 'Inserisci il numero di telaio per scoprire le specifiche esatte del tuo esemplare.'
+	String get vinInviteDesc => 'Inserisci il numero di telaio per scoprire le specifiche esatte del tuo esemplare.';
+
+	/// it: 'Dove trovo il telaio? ⓘ'
+	String get whereIsVin => 'Dove trovo il telaio? ⓘ';
 
 	/// it: 'Inserisci telaio'
 	String get enterVin => 'Inserisci telaio';
@@ -318,11 +342,20 @@ class TranslationsResultsIt {
 	/// it: 'Salvata nel garage'
 	String get saved => 'Salvata nel garage';
 
+	/// it: 'Auto salvata nel Garage!'
+	String get savedExcl => 'Auto salvata nel Garage!';
+
 	/// it: 'Già nel garage'
 	String get alreadySaved => 'Già nel garage';
 
 	/// it: 'Salva nel garage'
 	String get save => 'Salva nel garage';
+
+	/// it: 'Salvata nel Garage'
+	String get savedInGarage => 'Salvata nel Garage';
+
+	/// it: 'Salva nel Garage'
+	String get saveToGarage => 'Salva nel Garage';
 
 	/// it: 'Telaio trovato: ${vin}'
 	String vinFound({required Object vin}) => 'Telaio trovato: ${vin}';
@@ -330,18 +363,74 @@ class TranslationsResultsIt {
 	/// it: 'Nessun VIN trovato nelle immagini'
 	String get vinNotFound => 'Nessun VIN trovato nelle immagini';
 
+	/// it: 'Nessun numero di telaio riconosciuto. Prova ad avvicinare la fotocamera.'
+	String get vinNotRecognized => 'Nessun numero di telaio riconosciuto. Prova ad avvicinare la fotocamera.';
+
+	/// it: 'Errore nella lettura. Inserisci il telaio manualmente.'
+	String get vinReadError => 'Errore nella lettura. Inserisci il telaio manualmente.';
+
+	/// it: 'Formato telaio non riconosciuto. Controlla e riprova.'
+	String get vinFormatError => 'Formato telaio non riconosciuto. Controlla e riprova.';
+
+	/// it: 'Attenzione: il check digit non corrisponde. I VIN europei spesso non lo utilizzano.'
+	String get vinCheckDigitWarning => 'Attenzione: il check digit non corrisponde. I VIN europei spesso non lo utilizzano.';
+
+	/// it: 'Errore nella decodifica del telaio. Controlla e riprova.'
+	String get vinDecodeError => 'Errore nella decodifica del telaio. Controlla e riprova.';
+
 	/// it: 'Scansiona telaio'
 	String get scanVin => 'Scansiona telaio';
 
 	/// it: 'VIN decodificato'
 	String get vinDecoded => 'VIN decodificato';
 
+	/// it: 'Lettura targhetta in corso...'
+	String get vinReading => 'Lettura targhetta in corso...';
+
 	/// it: 'Attendibilità ricerca: ${percent}%'
 	String searchReliability({required Object percent}) => 'Attendibilità ricerca: ${percent}%';
+
+	/// it: 'Non è questa auto? Correggi →'
+	String get notThisCar => 'Non è questa auto? Correggi →';
+
+	/// it: 'Grazie per il feedback! Riprova con un'altra foto.'
+	String get correctionFeedback => 'Grazie per il feedback! Riprova con un\'altra foto.';
+
+	/// it: 'Errore nel salvataggio. Riprova.'
+	String get saveError => 'Errore nel salvataggio. Riprova.';
+
+	/// it: 'Errore nella generazione del report. Riprova.'
+	String get reportError => 'Errore nella generazione del report. Riprova.';
+
+	/// it: 'Generazione report in corso...'
+	String get reportGenerating => 'Generazione report in corso...';
+
+	/// it: 'L'AI sta confrontando le specifiche'
+	String get reportGeneratingSubtitle => 'L\'AI sta confrontando le specifiche';
+
+	/// it: 'Scheda tecnica'
+	String get techSheet => 'Scheda tecnica';
 
 	late final TranslationsResultsSpecsIt specs = TranslationsResultsSpecsIt._(_root);
 	late final TranslationsResultsShareTextIt shareText = TranslationsResultsShareTextIt._(_root);
 	late final TranslationsResultsLevel2It level2 = TranslationsResultsLevel2It._(_root);
+	late final TranslationsResultsMarketIt market = TranslationsResultsMarketIt._(_root);
+
+	/// it: 'STORIA DEL MODELLO'
+	String get modelHistory => 'STORIA DEL MODELLO';
+
+	/// it: 'LO SAPEVI?'
+	String get funFact => 'LO SAPEVI?';
+
+	/// it: 'POTREBBE ANCHE ESSERE'
+	String get alternatives => 'POTREBBE ANCHE ESSERE';
+
+	/// it: 'Verificato'
+	String get verified => 'Verificato';
+
+	late final TranslationsResultsOriginalityIt originality = TranslationsResultsOriginalityIt._(_root);
+	late final TranslationsResultsListingIt listing = TranslationsResultsListingIt._(_root);
+	late final TranslationsResultsVinSpecsIt vinSpecs = TranslationsResultsVinSpecsIt._(_root);
 }
 
 // Path: settings
@@ -467,6 +556,84 @@ class TranslationsVinIt {
 	String get decode => 'Decodifica VIN';
 }
 
+// Path: garage.specs
+class TranslationsGarageSpecsIt {
+	TranslationsGarageSpecsIt._(this._root);
+
+	final Translations _root; // ignore: unused_field
+
+	// Translations
+
+	/// it: 'Motore'
+	String get engine => 'Motore';
+
+	/// it: 'Potenza'
+	String get power => 'Potenza';
+
+	/// it: 'Cambio'
+	String get gearbox => 'Cambio';
+
+	/// it: 'Peso'
+	String get weight => 'Peso';
+
+	/// it: 'Velocità max'
+	String get topSpeed => 'Velocità max';
+
+	/// it: 'Produzione'
+	String get production => 'Produzione';
+
+	/// it: '${n} esemplari'
+	String productionValue({required Object n}) => '${n} esemplari';
+
+	/// it: 'Design'
+	String get design => 'Design';
+}
+
+// Path: garage.shareText
+class TranslationsGarageShareTextIt {
+	TranslationsGarageShareTextIt._(this._root);
+
+	final Translations _root; // ignore: unused_field
+
+	// Translations
+
+	/// it: 'Attendibilità ricerca: ${percent}%'
+	String searchReliability({required Object percent}) => 'Attendibilità ricerca: ${percent}%';
+
+	/// it: 'Motore: ${value}'
+	String engine({required Object value}) => 'Motore: ${value}';
+
+	/// it: 'Potenza: ${value}'
+	String power({required Object value}) => 'Potenza: ${value}';
+
+	/// it: 'Cambio: ${value}'
+	String gearbox({required Object value}) => 'Cambio: ${value}';
+
+	/// it: 'Peso: ${value}'
+	String weight({required Object value}) => 'Peso: ${value}';
+
+	/// it: 'Velocità max: ${value}'
+	String topSpeed({required Object value}) => 'Velocità max: ${value}';
+
+	/// it: 'Produzione: ${value} esemplari'
+	String production({required Object value}) => 'Produzione: ${value} esemplari';
+
+	/// it: 'Design: ${value}'
+	String design({required Object value}) => 'Design: ${value}';
+
+	/// it: 'Stima di mercato: ${value}'
+	String marketEstimate({required Object value}) => 'Stima di mercato: ${value}';
+
+	/// it: 'Telaio: ${value}'
+	String vin({required Object value}) => 'Telaio: ${value}';
+
+	/// it: 'Originalità: ${value}%'
+	String originality({required Object value}) => 'Originalità: ${value}%';
+
+	/// it: 'Analizzato con CarLens'
+	String get footer => 'Analizzato con CarLens';
+}
+
 // Path: results.specs
 class TranslationsResultsSpecsIt {
 	TranslationsResultsSpecsIt._(this._root);
@@ -496,6 +663,9 @@ class TranslationsResultsSpecsIt {
 	/// it: 'Dimensioni'
 	String get dimensions => 'Dimensioni';
 
+	/// it: 'Passo'
+	String get wheelbase => 'Passo';
+
 	/// it: 'Anni di produzione'
 	String get years => 'Anni di produzione';
 
@@ -504,6 +674,9 @@ class TranslationsResultsSpecsIt {
 
 	/// it: 'Produzione'
 	String get production => 'Produzione';
+
+	/// it: '${n} esemplari'
+	String productionValue({required Object n}) => '${n} esemplari';
 
 	/// it: 'Designer'
 	String get designer => 'Designer';
@@ -529,23 +702,62 @@ class TranslationsResultsShareTextIt {
 	/// it: 'Auto identificata con CarLens'
 	String get header => 'Auto identificata con CarLens';
 
+	/// it: 'Attendibilità ricerca: ${percent}%'
+	String searchReliability({required Object percent}) => 'Attendibilità ricerca: ${percent}%';
+
 	/// it: 'Motore: ${value}'
 	String engine({required Object value}) => 'Motore: ${value}';
 
 	/// it: 'Potenza: ${value}'
 	String power({required Object value}) => 'Potenza: ${value}';
 
-	/// it: 'Trasmissione: ${value}'
-	String transmission({required Object value}) => 'Trasmissione: ${value}';
+	/// it: 'Cambio: ${value}'
+	String gearbox({required Object value}) => 'Cambio: ${value}';
 
 	/// it: 'Peso: ${value}'
 	String weight({required Object value}) => 'Peso: ${value}';
 
+	/// it: 'Velocità max: ${value}'
+	String topSpeed({required Object value}) => 'Velocità max: ${value}';
+
+	/// it: 'Trasmissione: ${value}'
+	String transmission({required Object value}) => 'Trasmissione: ${value}';
+
 	/// it: 'Produzione: ${value}'
 	String production({required Object value}) => 'Produzione: ${value}';
 
+	/// it: 'Produzione: ${value} esemplari'
+	String productionWithUnits({required Object value}) => 'Produzione: ${value} esemplari';
+
+	/// it: 'Design: ${value}'
+	String design({required Object value}) => 'Design: ${value}';
+
 	/// it: 'Valore di mercato: ${value}'
 	String marketValue({required Object value}) => 'Valore di mercato: ${value}';
+
+	/// it: 'Stima di mercato: ${value}'
+	String marketEstimate({required Object value}) => 'Stima di mercato: ${value}';
+
+	/// it: 'Telaio: ${value}'
+	String vin({required Object value}) => 'Telaio: ${value}';
+
+	/// it: 'Costruttore: ${value}'
+	String manufacturer({required Object value}) => 'Costruttore: ${value}';
+
+	/// it: 'Anno (da VIN): ${value}'
+	String yearFromVin({required Object value}) => 'Anno (da VIN): ${value}';
+
+	/// it: 'Originalità: ${value}%'
+	String originality({required Object value}) => 'Originalità: ${value}%';
+
+	/// it: 'Motore: ${value}'
+	String engineConform({required Object value}) => 'Motore: ${value}';
+
+	/// it: 'Cambio: ${value}'
+	String gearboxConform({required Object value}) => 'Cambio: ${value}';
+
+	/// it: 'Carrozzeria: ${value}'
+	String bodyConform({required Object value}) => 'Carrozzeria: ${value}';
 
 	/// it: 'Analizzato con CarLens'
 	String get footer => 'Analizzato con CarLens';
@@ -579,6 +791,159 @@ class TranslationsResultsLevel2It {
 
 	/// it: 'CURIOSITÀ'
 	String get curiosities => 'CURIOSITÀ';
+
+	/// it: 'Costruttore'
+	String get manufacturer => 'Costruttore';
+
+	/// it: 'Paese'
+	String get country => 'Paese';
+
+	/// it: 'Anno'
+	String get year => 'Anno';
+
+	/// it: 'Numero di serie'
+	String get serialNumber => 'Numero di serie';
+
+	/// it: 'DATI DA TELAIO'
+	String get vinData => 'DATI DA TELAIO';
+}
+
+// Path: results.market
+class TranslationsResultsMarketIt {
+	TranslationsResultsMarketIt._(this._root);
+
+	final Translations _root; // ignore: unused_field
+
+	// Translations
+
+	/// it: 'STIMA DI MERCATO'
+	String get title => 'STIMA DI MERCATO';
+
+	/// it: 'Esemplare in buone condizioni. Stima indicativa.'
+	String get disclaimer => 'Esemplare in buone condizioni. Stima indicativa.';
+
+	/// it: 'Stima di mercato: ${value}'
+	String estimate({required Object value}) => 'Stima di mercato: ${value}';
+}
+
+// Path: results.originality
+class TranslationsResultsOriginalityIt {
+	TranslationsResultsOriginalityIt._(this._root);
+
+	final Translations _root; // ignore: unused_field
+
+	// Translations
+
+	/// it: 'ORIGINALITÀ'
+	String get title => 'ORIGINALITÀ';
+
+	/// it: 'su 100'
+	String get outOf100 => 'su 100';
+
+	/// it: 'Eccellente corrispondenza'
+	String get excellent => 'Eccellente corrispondenza';
+
+	/// it: 'Buona corrispondenza'
+	String get good => 'Buona corrispondenza';
+
+	/// it: 'Discreta corrispondenza'
+	String get fair => 'Discreta corrispondenza';
+
+	/// it: 'Bassa corrispondenza'
+	String get low => 'Bassa corrispondenza';
+
+	/// it: 'Motore'
+	String get engine => 'Motore';
+
+	/// it: 'Cambio'
+	String get gearbox => 'Cambio';
+
+	/// it: 'Carrozzeria'
+	String get body => 'Carrozzeria';
+
+	/// it: 'Conforme'
+	String get conform => 'Conforme';
+
+	/// it: 'Non conforme'
+	String get nonConform => 'Non conforme';
+
+	/// it: 'conforme'
+	String get conformLower => 'conforme';
+
+	/// it: 'non conforme'
+	String get nonConformLower => 'non conforme';
+
+	/// it: 'DIFFERENZE RILEVATE'
+	String get differencesFound => 'DIFFERENZE RILEVATE';
+
+	/// it: 'Diverso'
+	String get badgeDiverso => 'Diverso';
+
+	/// it: 'Conforme'
+	String get badgeConforme => 'Conforme';
+
+	/// it: 'Info'
+	String get badgeInfo => 'Info';
+
+	/// it: 'IN CONCLUSIONE'
+	String get conclusion => 'IN CONCLUSIONE';
+
+	/// it: 'Questo report non sostituisce una perizia tecnica. Per certificazioni ufficiali, rivolgersi al Registro Storico o all'ASI.'
+	String get disclaimer => 'Questo report non sostituisce una perizia tecnica. Per certificazioni ufficiali, rivolgersi al Registro Storico o all\'ASI.';
+}
+
+// Path: results.listing
+class TranslationsResultsListingIt {
+	TranslationsResultsListingIt._(this._root);
+
+	final Translations _root; // ignore: unused_field
+
+	// Translations
+
+	/// it: 'DATI ANNUNCIO'
+	String get title => 'DATI ANNUNCIO';
+
+	/// it: 'Prezzo richiesto'
+	String get askingPrice => 'Prezzo richiesto';
+
+	/// it: 'Km dichiarati'
+	String get mileage => 'Km dichiarati';
+
+	/// it: 'Provenienza'
+	String get source => 'Provenienza';
+
+	/// it: 'Stima di mercato: ${value}'
+	String marketEstimate({required Object value}) => 'Stima di mercato: ${value}';
+}
+
+// Path: results.vinSpecs
+class TranslationsResultsVinSpecsIt {
+	TranslationsResultsVinSpecsIt._(this._root);
+
+	final Translations _root; // ignore: unused_field
+
+	// Translations
+
+	/// it: 'Motore'
+	String get engineType => 'Motore';
+
+	/// it: 'Cilindrata'
+	String get displacement => 'Cilindrata';
+
+	/// it: 'Alimentazione'
+	String get fuelSystem => 'Alimentazione';
+
+	/// it: 'Cambio'
+	String get transmission => 'Cambio';
+
+	/// it: 'Carrozzeria'
+	String get bodyStyle => 'Carrozzeria';
+
+	/// it: 'Trazione'
+	String get driveType => 'Trazione';
+
+	/// it: 'Codice VDS'
+	String get vdsCode => 'Codice VDS';
 }
 
 /// The flat map containing all translations for locale <it>.
@@ -652,11 +1017,38 @@ extension on Translations {
 			'garage.from' => ({required Object source}) => 'DA ${source}',
 			'garage.askingPrice' => 'Prezzo richiesto',
 			'garage.mileage' => 'Km dichiarati',
+			'garage.originalityScore' => ({required Object score}) => 'Originalità ${score}/100',
+			'garage.specs.engine' => 'Motore',
+			'garage.specs.power' => 'Potenza',
+			'garage.specs.gearbox' => 'Cambio',
+			'garage.specs.weight' => 'Peso',
+			'garage.specs.topSpeed' => 'Velocità max',
+			'garage.specs.production' => 'Produzione',
+			'garage.specs.productionValue' => ({required Object n}) => '${n} esemplari',
+			'garage.specs.design' => 'Design',
+			'garage.shareText.searchReliability' => ({required Object percent}) => 'Attendibilità ricerca: ${percent}%',
+			'garage.shareText.engine' => ({required Object value}) => 'Motore: ${value}',
+			'garage.shareText.power' => ({required Object value}) => 'Potenza: ${value}',
+			'garage.shareText.gearbox' => ({required Object value}) => 'Cambio: ${value}',
+			'garage.shareText.weight' => ({required Object value}) => 'Peso: ${value}',
+			'garage.shareText.topSpeed' => ({required Object value}) => 'Velocità max: ${value}',
+			'garage.shareText.production' => ({required Object value}) => 'Produzione: ${value} esemplari',
+			'garage.shareText.design' => ({required Object value}) => 'Design: ${value}',
+			'garage.shareText.marketEstimate' => ({required Object value}) => 'Stima di mercato: ${value}',
+			'garage.shareText.vin' => ({required Object value}) => 'Telaio: ${value}',
+			'garage.shareText.originality' => ({required Object value}) => 'Originalità: ${value}%',
+			'garage.shareText.footer' => 'Analizzato con CarLens',
 			'results.title' => 'Risultato',
 			'results.analyzing' => 'Analisi in corso...',
+			'results.analyzingListing' => 'Analisi annuncio in corso...',
+			'results.analyzingSubtitle' => 'L\'AI sta identificando l\'auto',
+			'results.analyzingListingSubtitle' => 'Scaricamento foto e identificazione',
 			'results.quickSpecs' => 'SCHEDA RAPIDA',
 			'results.identified' => 'Identificato',
+			'results.identifiedWithPercent' => ({required Object percent}) => 'Identificato · ${percent}%',
 			'results.wantToKnowMore' => 'Vuoi saperne di più?',
+			'results.vinInviteDesc' => 'Inserisci il numero di telaio per scoprire le specifiche esatte del tuo esemplare.',
+			'results.whereIsVin' => 'Dove trovo il telaio? ⓘ',
 			'results.enterVin' => 'Inserisci telaio',
 			'results.decode' => 'Decodifica',
 			'results.share' => 'Condividi scheda',
@@ -664,13 +1056,29 @@ extension on Translations {
 			'results.error' => 'Si è verificato un errore. Riprova.',
 			'results.errorRetry' => 'Errore durante l\'analisi',
 			'results.saved' => 'Salvata nel garage',
+			'results.savedExcl' => 'Auto salvata nel Garage!',
 			'results.alreadySaved' => 'Già nel garage',
 			'results.save' => 'Salva nel garage',
+			'results.savedInGarage' => 'Salvata nel Garage',
+			'results.saveToGarage' => 'Salva nel Garage',
 			'results.vinFound' => ({required Object vin}) => 'Telaio trovato: ${vin}',
 			'results.vinNotFound' => 'Nessun VIN trovato nelle immagini',
+			'results.vinNotRecognized' => 'Nessun numero di telaio riconosciuto. Prova ad avvicinare la fotocamera.',
+			'results.vinReadError' => 'Errore nella lettura. Inserisci il telaio manualmente.',
+			'results.vinFormatError' => 'Formato telaio non riconosciuto. Controlla e riprova.',
+			'results.vinCheckDigitWarning' => 'Attenzione: il check digit non corrisponde. I VIN europei spesso non lo utilizzano.',
+			'results.vinDecodeError' => 'Errore nella decodifica del telaio. Controlla e riprova.',
 			'results.scanVin' => 'Scansiona telaio',
 			'results.vinDecoded' => 'VIN decodificato',
+			'results.vinReading' => 'Lettura targhetta in corso...',
 			'results.searchReliability' => ({required Object percent}) => 'Attendibilità ricerca: ${percent}%',
+			'results.notThisCar' => 'Non è questa auto? Correggi →',
+			'results.correctionFeedback' => 'Grazie per il feedback! Riprova con un\'altra foto.',
+			'results.saveError' => 'Errore nel salvataggio. Riprova.',
+			'results.reportError' => 'Errore nella generazione del report. Riprova.',
+			'results.reportGenerating' => 'Generazione report in corso...',
+			'results.reportGeneratingSubtitle' => 'L\'AI sta confrontando le specifiche',
+			'results.techSheet' => 'Scheda tecnica',
 			'results.specs.engine' => 'Motore',
 			'results.specs.power' => 'Potenza',
 			'results.specs.transmission' => 'Trasmissione',
@@ -678,20 +1086,35 @@ extension on Translations {
 			'results.specs.weight' => 'Peso',
 			'results.specs.topSpeed' => 'Velocità max',
 			'results.specs.dimensions' => 'Dimensioni',
+			'results.specs.wheelbase' => 'Passo',
 			'results.specs.years' => 'Anni di produzione',
 			'results.specs.produced' => 'Esemplari prodotti',
 			'results.specs.production' => 'Produzione',
+			'results.specs.productionValue' => ({required Object n}) => '${n} esemplari',
 			'results.specs.designer' => 'Designer',
 			'results.specs.design' => 'Design',
 			'results.specs.marketValue' => 'Valore di mercato',
 			'results.specs.curiosity' => 'Lo sapevi che...',
 			'results.shareText.header' => 'Auto identificata con CarLens',
+			'results.shareText.searchReliability' => ({required Object percent}) => 'Attendibilità ricerca: ${percent}%',
 			'results.shareText.engine' => ({required Object value}) => 'Motore: ${value}',
 			'results.shareText.power' => ({required Object value}) => 'Potenza: ${value}',
-			'results.shareText.transmission' => ({required Object value}) => 'Trasmissione: ${value}',
+			'results.shareText.gearbox' => ({required Object value}) => 'Cambio: ${value}',
 			'results.shareText.weight' => ({required Object value}) => 'Peso: ${value}',
+			'results.shareText.topSpeed' => ({required Object value}) => 'Velocità max: ${value}',
+			'results.shareText.transmission' => ({required Object value}) => 'Trasmissione: ${value}',
 			'results.shareText.production' => ({required Object value}) => 'Produzione: ${value}',
+			'results.shareText.productionWithUnits' => ({required Object value}) => 'Produzione: ${value} esemplari',
+			'results.shareText.design' => ({required Object value}) => 'Design: ${value}',
 			'results.shareText.marketValue' => ({required Object value}) => 'Valore di mercato: ${value}',
+			'results.shareText.marketEstimate' => ({required Object value}) => 'Stima di mercato: ${value}',
+			'results.shareText.vin' => ({required Object value}) => 'Telaio: ${value}',
+			'results.shareText.manufacturer' => ({required Object value}) => 'Costruttore: ${value}',
+			'results.shareText.yearFromVin' => ({required Object value}) => 'Anno (da VIN): ${value}',
+			'results.shareText.originality' => ({required Object value}) => 'Originalità: ${value}%',
+			'results.shareText.engineConform' => ({required Object value}) => 'Motore: ${value}',
+			'results.shareText.gearboxConform' => ({required Object value}) => 'Cambio: ${value}',
+			'results.shareText.bodyConform' => ({required Object value}) => 'Carrozzeria: ${value}',
 			'results.shareText.footer' => 'Analizzato con CarLens',
 			'results.level2.deepAnalysis' => 'Analisi approfondita',
 			'results.level2.loading' => 'Approfondimento in corso...',
@@ -700,6 +1123,49 @@ extension on Translations {
 			'results.level2.techDetails' => 'DETTAGLI TECNICI',
 			'results.level2.marketValue' => 'VALORE DI MERCATO',
 			'results.level2.curiosities' => 'CURIOSITÀ',
+			'results.level2.manufacturer' => 'Costruttore',
+			'results.level2.country' => 'Paese',
+			'results.level2.year' => 'Anno',
+			'results.level2.serialNumber' => 'Numero di serie',
+			'results.level2.vinData' => 'DATI DA TELAIO',
+			'results.market.title' => 'STIMA DI MERCATO',
+			'results.market.disclaimer' => 'Esemplare in buone condizioni. Stima indicativa.',
+			'results.market.estimate' => ({required Object value}) => 'Stima di mercato: ${value}',
+			'results.modelHistory' => 'STORIA DEL MODELLO',
+			'results.funFact' => 'LO SAPEVI?',
+			'results.alternatives' => 'POTREBBE ANCHE ESSERE',
+			'results.verified' => 'Verificato',
+			'results.originality.title' => 'ORIGINALITÀ',
+			'results.originality.outOf100' => 'su 100',
+			'results.originality.excellent' => 'Eccellente corrispondenza',
+			'results.originality.good' => 'Buona corrispondenza',
+			'results.originality.fair' => 'Discreta corrispondenza',
+			'results.originality.low' => 'Bassa corrispondenza',
+			'results.originality.engine' => 'Motore',
+			'results.originality.gearbox' => 'Cambio',
+			'results.originality.body' => 'Carrozzeria',
+			'results.originality.conform' => 'Conforme',
+			'results.originality.nonConform' => 'Non conforme',
+			'results.originality.conformLower' => 'conforme',
+			'results.originality.nonConformLower' => 'non conforme',
+			'results.originality.differencesFound' => 'DIFFERENZE RILEVATE',
+			'results.originality.badgeDiverso' => 'Diverso',
+			'results.originality.badgeConforme' => 'Conforme',
+			'results.originality.badgeInfo' => 'Info',
+			'results.originality.conclusion' => 'IN CONCLUSIONE',
+			'results.originality.disclaimer' => 'Questo report non sostituisce una perizia tecnica. Per certificazioni ufficiali, rivolgersi al Registro Storico o all\'ASI.',
+			'results.listing.title' => 'DATI ANNUNCIO',
+			'results.listing.askingPrice' => 'Prezzo richiesto',
+			'results.listing.mileage' => 'Km dichiarati',
+			'results.listing.source' => 'Provenienza',
+			'results.listing.marketEstimate' => ({required Object value}) => 'Stima di mercato: ${value}',
+			'results.vinSpecs.engineType' => 'Motore',
+			'results.vinSpecs.displacement' => 'Cilindrata',
+			'results.vinSpecs.fuelSystem' => 'Alimentazione',
+			'results.vinSpecs.transmission' => 'Cambio',
+			'results.vinSpecs.bodyStyle' => 'Carrozzeria',
+			'results.vinSpecs.driveType' => 'Trazione',
+			'results.vinSpecs.vdsCode' => 'Codice VDS',
 			'settings.title' => 'Impostazioni',
 			'settings.notifications' => 'NOTIFICHE',
 			'settings.dailyCuriosity' => 'Curiosità del giorno',

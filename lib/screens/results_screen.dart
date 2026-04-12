@@ -7,6 +7,7 @@ import 'package:image_picker/image_picker.dart';
 import 'package:share_plus/share_plus.dart';
 import 'package:google_mlkit_text_recognition/google_mlkit_text_recognition.dart';
 import '../theme/app_colors.dart';
+import '../i18n/strings.g.dart';
 import '../services/gemini_service.dart';
 import '../services/car_data_service.dart';
 import '../services/database_service.dart';
@@ -229,7 +230,7 @@ class _ResultScreenState extends State<ResultScreen>
             _isLoading = false;
             _errorMessage = e.toString().contains('Exception: ')
                 ? e.toString().replaceFirst('Exception: ', '')
-                : 'Si \u00e8 verificato un errore. Riprova.';
+                : t.results.error;
           });
         }
       }
@@ -291,7 +292,7 @@ class _ResultScreenState extends State<ResultScreen>
           _isLoading = false;
           _errorMessage = e.toString().contains('Exception: ')
               ? e.toString().replaceFirst('Exception: ', '')
-              : 'Si \u00e8 verificato un errore. Riprova.';
+              : t.results.error;
         });
       }
     }
@@ -309,9 +310,9 @@ class _ResultScreenState extends State<ResultScreen>
 
     // Show processing indicator
     ScaffoldMessenger.of(context).showSnackBar(
-      const SnackBar(
-        content: Text('Lettura targhetta in corso...'),
-        duration: Duration(seconds: 2),
+      SnackBar(
+        content: Text(t.results.vinReading),
+        duration: const Duration(seconds: 2),
       ),
     );
 
@@ -345,14 +346,14 @@ class _ResultScreenState extends State<ResultScreen>
           setState(() => _showVinInput = true);
           ScaffoldMessenger.of(context).showSnackBar(
             SnackBar(
-              content: Text('Telaio trovato: $foundVin'),
+              content: Text(t.results.vinFound(vin: foundVin)),
               backgroundColor: context.colors.success,
             ),
           );
         } else {
           ScaffoldMessenger.of(context).showSnackBar(
-            const SnackBar(
-              content: Text('Nessun numero di telaio riconosciuto. Prova ad avvicinare la fotocamera.'),
+            SnackBar(
+              content: Text(t.results.vinNotRecognized),
               backgroundColor: Colors.orange,
             ),
           );
@@ -361,8 +362,8 @@ class _ResultScreenState extends State<ResultScreen>
     } catch (e) {
       if (mounted) {
         ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(
-            content: Text('Errore nella lettura. Inserisci il telaio manualmente.'),
+          SnackBar(
+            content: Text(t.results.vinReadError),
             backgroundColor: Colors.redAccent,
           ),
         );
@@ -386,8 +387,7 @@ class _ResultScreenState extends State<ResultScreen>
           setState(() => _vinDecoding = false);
           ScaffoldMessenger.of(context).showSnackBar(
             SnackBar(
-              content: const Text(
-                  'Formato telaio non riconosciuto. Controlla e riprova.'),
+              content: Text(t.results.vinFormatError),
               backgroundColor: context.colors.accentRed,
             ),
           );
@@ -398,9 +398,8 @@ class _ResultScreenState extends State<ResultScreen>
       if (mounted) {
         if (!vinResult.isValid && vinResult.manufacturer.isNotEmpty) {
           ScaffoldMessenger.of(context).showSnackBar(
-            const SnackBar(
-              content: Text(
-                  'Attenzione: il check digit non corrisponde. I VIN europei spesso non lo utilizzano.'),
+            SnackBar(
+              content: Text(t.results.vinCheckDigitWarning),
               backgroundColor: Colors.orange,
             ),
           );
@@ -438,8 +437,7 @@ class _ResultScreenState extends State<ResultScreen>
         setState(() => _vinDecoding = false);
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
-            content: const Text(
-                'Errore nella decodifica del telaio. Controlla e riprova.'),
+            content: Text(t.results.vinDecodeError),
             backgroundColor: context.colors.accentRed,
           ),
         );
@@ -515,8 +513,7 @@ class _ResultScreenState extends State<ResultScreen>
         setState(() => _generatingReport = false);
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
-            content:
-                const Text('Errore nella generazione del report. Riprova.'),
+            content: Text(t.results.reportError),
             backgroundColor: context.colors.accentRed,
           ),
         );
@@ -593,7 +590,7 @@ class _ResultScreenState extends State<ResultScreen>
         });
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
-            content: Text('Auto salvata nel Garage!'),
+            content: Text(t.results.savedExcl),
             backgroundColor: context.colors.success,
           ),
         );
@@ -602,7 +599,7 @@ class _ResultScreenState extends State<ResultScreen>
       if (mounted) {
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
-            content: const Text('Errore nel salvataggio. Riprova.'),
+            content: Text(t.results.saveError),
             backgroundColor: context.colors.accentRed,
           ),
         );
@@ -622,48 +619,48 @@ class _ResultScreenState extends State<ResultScreen>
     text.writeln(id.brand.toUpperCase());
     text.writeln('${id.model}');
     text.writeln('${id.yearEstimate} \u00b7 ${id.bodyType}');
-    text.writeln('Attendibilit\u00e0 ricerca: ${(id.confidence * 100).round()}%');
+    text.writeln(t.results.shareText.searchReliability(percent: (id.confidence * 100).round().toString()));
     text.writeln();
 
     // Specs (always available after L1)
     if (id.engineDisplacement.isNotEmpty && id.engineDisplacement != 'N/D') {
-      text.writeln('Motore: ${id.engineDisplacement}${id.engineCode.isNotEmpty ? ' ${id.engineCode}' : ''}');
+      text.writeln(t.results.shareText.engine(value: '${id.engineDisplacement}${id.engineCode.isNotEmpty ? ' ${id.engineCode}' : ''}'));
     }
     if (id.enginePower.isNotEmpty && id.enginePower != 'N/D') {
-      text.writeln('Potenza: ${id.enginePower}');
+      text.writeln(t.results.shareText.power(value: id.enginePower));
     }
     if (id.transmissionType.isNotEmpty && id.transmissionType != 'N/D') {
-      text.writeln('Cambio: ${id.transmissionType}${id.transmissionBrand.isNotEmpty ? ' (${id.transmissionBrand})' : ''}');
+      text.writeln(t.results.shareText.gearbox(value: '${id.transmissionType}${id.transmissionBrand.isNotEmpty ? ' (${id.transmissionBrand})' : ''}'));
     }
     if (id.weight.isNotEmpty && id.weight != 'N/D') {
-      text.write('Peso: ${id.weight}');
+      text.write(t.results.shareText.weight(value: id.weight));
       if (id.topSpeed.isNotEmpty && id.topSpeed != 'N/D') {
-        text.write(' \u00b7 Velocit\u00e0 max: ${id.topSpeed}');
+        text.write(' \u00b7 ${t.results.shareText.topSpeed(value: id.topSpeed)}');
       }
       text.writeln();
     }
     if (id.totalProduced.isNotEmpty && id.totalProduced != 'N/D') {
-      text.writeln('Produzione: ${id.totalProduced} esemplari');
+      text.writeln(t.results.shareText.productionWithUnits(value: id.totalProduced));
     }
     if (id.designer.isNotEmpty && id.designer != 'N/D') {
-      text.writeln('Design: ${id.designer}');
+      text.writeln(t.results.shareText.design(value: id.designer));
     }
 
     // Market value (if available)
     if (id.marketValueRange.isNotEmpty && id.marketValueRange != 'N/D') {
       text.writeln();
-      text.writeln('Stima di mercato: ${id.marketValueRange}');
+      text.writeln(t.results.shareText.marketEstimate(value: id.marketValueRange));
     }
 
     // L2: VIN data
     if (_vinResult != null) {
       text.writeln();
-      text.writeln('Telaio: ${_vinResult!.rawVin}');
+      text.writeln(t.results.shareText.vin(value: _vinResult!.rawVin));
       if (_vinResult!.manufacturer.isNotEmpty && _vinResult!.manufacturer != 'Unknown') {
-        text.writeln('Costruttore: ${_vinResult!.manufacturer}');
+        text.writeln(t.results.shareText.manufacturer(value: _vinResult!.manufacturer));
       }
       if (_vinResult!.year != null) {
-        text.writeln('Anno (da VIN): ${_vinResult!.year}');
+        text.writeln(t.results.shareText.yearFromVin(value: _vinResult!.year.toString()));
       }
     }
 
@@ -671,14 +668,14 @@ class _ResultScreenState extends State<ResultScreen>
     if (_originalityReport != null) {
       final report = _originalityReport!;
       text.writeln();
-      text.writeln('Originalit\u00e0: ${report.originalityScore.toStringAsFixed(0)}%');
-      text.writeln('Motore: ${report.engineMatch ? "Conforme" : "Non conforme"}');
-      text.writeln('Cambio: ${report.transmissionMatch ? "Conforme" : "Non conforme"}');
-      text.writeln('Carrozzeria: ${report.bodyMatch ? "Conforme" : "Non conforme"}');
+      text.writeln(t.results.shareText.originality(value: report.originalityScore.toStringAsFixed(0)));
+      text.writeln(t.results.shareText.engineConform(value: report.engineMatch ? t.results.originality.conform : t.results.originality.nonConform));
+      text.writeln(t.results.shareText.gearboxConform(value: report.transmissionMatch ? t.results.originality.conform : t.results.originality.nonConform));
+      text.writeln(t.results.shareText.bodyConform(value: report.bodyMatch ? t.results.originality.conform : t.results.originality.nonConform));
     }
 
     text.writeln();
-    text.writeln('Analizzato con CarLens');
+    text.writeln(t.results.shareText.footer);
 
     // Share with photo
     final effectivePath = _listingImagePath ?? widget.imagePath;
@@ -792,8 +789,8 @@ class _ResultScreenState extends State<ResultScreen>
           const SizedBox(height: 24),
           Text(
             widget.listingUrl != null
-                ? 'Analisi annuncio in corso...'
-                : 'Analisi in corso...',
+                ? t.results.analyzingListing
+                : t.results.analyzing,
             style: TextStyle(
               color: context.colors.textPrimary,
               fontSize: 17,
@@ -803,8 +800,8 @@ class _ResultScreenState extends State<ResultScreen>
           const SizedBox(height: 8),
           Text(
             widget.listingUrl != null
-                ? 'Scaricamento foto e identificazione'
-                : 'L\'AI sta identificando l\'auto',
+                ? t.results.analyzingListingSubtitle
+                : t.results.analyzingSubtitle,
             style: TextStyle(color: context.colors.textSecondary, fontSize: 13),
           ),
         ],
@@ -850,8 +847,8 @@ class _ResultScreenState extends State<ResultScreen>
               child: ElevatedButton.icon(
                 onPressed: _retry,
                 icon: const Icon(Icons.refresh_rounded, size: 20),
-                label: const Text('Riprova',
-                    style: TextStyle(fontWeight: FontWeight.w500)),
+                label: Text(t.results.retry,
+                    style: const TextStyle(fontWeight: FontWeight.w500)),
                 style: ElevatedButton.styleFrom(
                   backgroundColor: context.colors.textPrimary,
                   foregroundColor: context.colors.background,
@@ -878,7 +875,7 @@ class _ResultScreenState extends State<ResultScreen>
 
     return Column(
       children: [
-        _buildHeaderBack('Risultato'),
+        _buildHeaderBack(t.results.title),
         Expanded(
           child: SingleChildScrollView(
             physics: const BouncingScrollPhysics(),
@@ -952,7 +949,7 @@ class _ResultScreenState extends State<ResultScreen>
                                 size: 13, color: context.colors.textTertiary),
                             const SizedBox(width: 4),
                             Text(
-                              'Identificato \u00b7 $percent%',
+                              t.results.identifiedWithPercent(percent: percent.toString()),
                               style: TextStyle(
                                 fontSize: 12,
                                 color: context.colors.textTertiary,
@@ -971,9 +968,9 @@ class _ResultScreenState extends State<ResultScreen>
                         child: Divider(color: context.colors.border, height: 1),
                       ),
 
-                      // SCHEDA RAPIDA section — always shown
+                      // SCHEDA RAPIDA section -- always shown
                       Text(
-                        'SCHEDA RAPIDA',
+                        t.results.quickSpecs,
                         style: TextStyle(
                           fontSize: 12,
                           fontWeight: FontWeight.w500,
@@ -1059,7 +1056,7 @@ class _ResultScreenState extends State<ResultScreen>
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
                             Text(
-                              'Vuoi saperne di pi\u00f9?',
+                              t.results.wantToKnowMore,
                               style: TextStyle(
                                 fontSize: 16,
                                 fontWeight: FontWeight.w500,
@@ -1068,7 +1065,7 @@ class _ResultScreenState extends State<ResultScreen>
                             ),
                             const SizedBox(height: 8),
                             Text(
-                              'Inserisci il numero di telaio per scoprire le specifiche esatte del tuo esemplare.',
+                              t.results.vinInviteDesc,
                               style: TextStyle(
                                 fontSize: 13,
                                 color: context.colors.textSecondary,
@@ -1091,7 +1088,7 @@ class _ResultScreenState extends State<ResultScreen>
                                     textInputAction: TextInputAction.done,
                                     onSubmitted: (_) => _decodeVin(),
                                     decoration: InputDecoration(
-                                      hintText: 'Inserisci telaio',
+                                      hintText: t.results.enterVin,
                                       hintStyle: TextStyle(
                                           color: context.colors.hintText),
                                       filled: true,
@@ -1158,7 +1155,7 @@ class _ResultScreenState extends State<ResultScreen>
                                   ),
                                 ),
                                 child: Text(
-                                  'Dove trovo il telaio? \u24d8',
+                                  t.results.whereIsVin,
                                   style: TextStyle(
                                     fontSize: 12,
                                     color: context.colors.textSecondary,
@@ -1192,9 +1189,9 @@ class _ResultScreenState extends State<ResultScreen>
                                             color: context.colors.background,
                                           ),
                                         )
-                                      : const Text(
-                                          'Decodifica',
-                                          style: TextStyle(
+                                      : Text(
+                                          t.results.decode,
+                                          style: const TextStyle(
                                             fontWeight: FontWeight.w500,
                                             fontSize: 15,
                                           ),
@@ -1212,9 +1209,8 @@ class _ResultScreenState extends State<ResultScreen>
                           child: GestureDetector(
                             onTap: () {
                               ScaffoldMessenger.of(context).showSnackBar(
-                                const SnackBar(
-                                  content: Text(
-                                      'Grazie per il feedback! Riprova con un\'altra foto.'),
+                                SnackBar(
+                                  content: Text(t.results.correctionFeedback),
                                 ),
                               );
                             },
@@ -1228,7 +1224,7 @@ class _ResultScreenState extends State<ResultScreen>
                                 ),
                               ),
                               child: Text(
-                                'Non \u00e8 questa auto? Correggi \u2192',
+                                t.results.notThisCar,
                                 style: TextStyle(
                                   fontSize: 12,
                                   color: context.colors.textSecondary,
@@ -1247,9 +1243,9 @@ class _ResultScreenState extends State<ResultScreen>
                         child: OutlinedButton.icon(
                           onPressed: _shareCar,
                           icon: const Icon(Icons.share_outlined, size: 18),
-                          label: const Text(
-                            'Condividi scheda',
-                            style: TextStyle(
+                          label: Text(
+                            t.results.share,
+                            style: const TextStyle(
                               fontWeight: FontWeight.w500,
                               fontSize: 15,
                             ),
@@ -1287,8 +1283,8 @@ class _ResultScreenState extends State<ResultScreen>
                           ),
                           child: Text(
                             _scan != null
-                                ? 'Salvata nel Garage'
-                                : 'Salva nel Garage',
+                                ? t.results.savedInGarage
+                                : t.results.saveToGarage,
                             style: const TextStyle(
                               fontWeight: FontWeight.w500,
                               fontSize: 15,
@@ -1318,18 +1314,18 @@ class _ResultScreenState extends State<ResultScreen>
     final engineCode = data?['engine_code']?.toString() ?? id.engineCode;
     final geminiDisp = id.engineDisplacement;
     if (engineDisp.isNotEmpty && engineCode.isNotEmpty) {
-      specs.add(_SpecEntry('Motore', '${engineDisp}cc $engineCode'));
+      specs.add(_SpecEntry(t.results.specs.engine, '${engineDisp}cc $engineCode'));
     } else if (geminiDisp.isNotEmpty) {
-      specs.add(_SpecEntry('Motore', engineCode.isNotEmpty ? '$geminiDisp $engineCode' : geminiDisp));
+      specs.add(_SpecEntry(t.results.specs.engine, engineCode.isNotEmpty ? '$geminiDisp $engineCode' : geminiDisp));
     }
 
     // Potenza
     final hp = data?['engine_hp']?.toString() ?? '';
     final geminiPower = id.enginePower;
     if (hp.isNotEmpty) {
-      specs.add(_SpecEntry('Potenza', '$hp CV'));
+      specs.add(_SpecEntry(t.results.specs.power, '$hp CV'));
     } else if (geminiPower.isNotEmpty && geminiPower != 'N/D') {
-      specs.add(_SpecEntry('Potenza', geminiPower));
+      specs.add(_SpecEntry(t.results.specs.power, geminiPower));
     }
 
     // Cambio
@@ -1338,27 +1334,27 @@ class _ResultScreenState extends State<ResultScreen>
     final geminiTx = id.transmissionType;
     if (txSpeeds.isNotEmpty) {
       final txLabel = txBrand.isNotEmpty ? '$txSpeeds marce ($txBrand)' : '$txSpeeds marce';
-      specs.add(_SpecEntry('Cambio', txLabel));
+      specs.add(_SpecEntry(t.results.specs.gearbox, txLabel));
     } else if (geminiTx.isNotEmpty && geminiTx != 'N/D') {
-      specs.add(_SpecEntry('Cambio', txBrand.isNotEmpty && !geminiTx.contains(txBrand) ? '$geminiTx ($txBrand)' : geminiTx));
+      specs.add(_SpecEntry(t.results.specs.gearbox, txBrand.isNotEmpty && !geminiTx.contains(txBrand) ? '$geminiTx ($txBrand)' : geminiTx));
     }
 
     // Peso
     final weight = data?['weight_kg']?.toString() ?? '';
     final geminiWeight = id.weight;
     if (weight.isNotEmpty) {
-      specs.add(_SpecEntry('Peso', '$weight kg'));
+      specs.add(_SpecEntry(t.results.specs.weight, '$weight kg'));
     } else if (geminiWeight.isNotEmpty && geminiWeight != 'N/D') {
-      specs.add(_SpecEntry('Peso', geminiWeight));
+      specs.add(_SpecEntry(t.results.specs.weight, geminiWeight));
     }
 
-    // Velocità max
+    // Velocita max
     final topSpeed = data?['top_speed_kmh']?.toString() ?? '';
     final geminiTopSpeed = id.topSpeed;
     if (topSpeed.isNotEmpty) {
-      specs.add(_SpecEntry('Velocit\u00e0 max', '$topSpeed km/h'));
+      specs.add(_SpecEntry(t.results.specs.topSpeed, '$topSpeed km/h'));
     } else if (geminiTopSpeed.isNotEmpty && geminiTopSpeed != 'N/D') {
-      specs.add(_SpecEntry('Velocit\u00e0 max', geminiTopSpeed));
+      specs.add(_SpecEntry(t.results.specs.topSpeed, geminiTopSpeed));
     }
 
     // Dimensioni
@@ -1366,25 +1362,25 @@ class _ResultScreenState extends State<ResultScreen>
       final dims = <String>[id.length];
       if (id.width.isNotEmpty && id.width != 'N/D') dims.add(id.width);
       if (id.height.isNotEmpty && id.height != 'N/D') dims.add(id.height);
-      specs.add(_SpecEntry('Dimensioni', dims.join(' \u00d7 ')));
+      specs.add(_SpecEntry(t.results.specs.dimensions, dims.join(' \u00d7 ')));
     }
     if (id.wheelbase.isNotEmpty && id.wheelbase != 'N/D') {
-      specs.add(_SpecEntry('Passo', id.wheelbase));
+      specs.add(_SpecEntry(t.results.specs.wheelbase, id.wheelbase));
     }
 
     // Produzione
     final produced = data?['total_produced']?.toString() ?? '';
     final geminiProduced = id.totalProduced;
     if (produced.isNotEmpty) {
-      specs.add(_SpecEntry('Produzione', '$produced esemplari'));
+      specs.add(_SpecEntry(t.results.specs.production, t.results.specs.productionValue(n: produced)));
     } else if (geminiProduced.isNotEmpty && geminiProduced != 'N/D') {
-      specs.add(_SpecEntry('Produzione', '$geminiProduced esemplari'));
+      specs.add(_SpecEntry(t.results.specs.production, t.results.specs.productionValue(n: geminiProduced)));
     }
 
     // Designer
     final geminiDesigner = id.designer;
     if (geminiDesigner.isNotEmpty && geminiDesigner != 'N/D') {
-      specs.add(_SpecEntry('Design', geminiDesigner));
+      specs.add(_SpecEntry(t.results.specs.design, geminiDesigner));
     }
 
     return specs
@@ -1432,7 +1428,7 @@ class _ResultScreenState extends State<ResultScreen>
 
     return Column(
       children: [
-        _buildHeaderBack('Scheda tecnica'),
+        _buildHeaderBack(t.results.techSheet),
         Expanded(
           child: SingleChildScrollView(
             physics: const BouncingScrollPhysics(),
@@ -1495,7 +1491,7 @@ class _ResultScreenState extends State<ResultScreen>
                                     size: 14, color: context.colors.success),
                                 SizedBox(width: 4),
                                 Text(
-                                  'Verificato',
+                                  t.results.verified,
                                   style: TextStyle(
                                     fontSize: 12,
                                     fontWeight: FontWeight.w500,
@@ -1530,25 +1526,25 @@ class _ResultScreenState extends State<ResultScreen>
                       const SizedBox(height: 24),
 
                       // PRODUZIONE section
-                      _buildSectionTitle('PRODUZIONE'),
-                      _buildSpecRow('Costruttore', vin.manufacturer),
-                      _buildSpecRow('Paese', vin.country),
+                      _buildSectionTitle(t.results.level2.production),
+                      _buildSpecRow(t.results.level2.manufacturer, vin.manufacturer),
+                      _buildSpecRow(t.results.level2.country, vin.country),
                       if (vin.year != null)
-                        _buildSpecRow('Anno', '${vin.year}'),
+                        _buildSpecRow(t.results.level2.year, '${vin.year}'),
                       if (vin.serialNumber != null)
                         _buildSpecRow(
-                            'Numero di serie', vin.serialNumber!),
+                            t.results.level2.serialNumber, vin.serialNumber!),
 
                       const _LightDivider(),
 
                       // SCHEDA RAPIDA (same data as L1, always visible)
-                      _buildSectionTitle('SCHEDA RAPIDA'),
+                      _buildSectionTitle(t.results.quickSpecs),
                       ..._buildQuickSpecs(),
                       const _LightDivider(),
 
                       // DATI DA TELAIO section
                       if (vinSpecs.isNotEmpty) ...[
-                        _buildSectionTitle('DATI DA TELAIO'),
+                        _buildSectionTitle(t.results.level2.vinData),
                         ...vinSpecs.entries
                             .where((e) => e.value != null)
                             .map((e) => _buildSpecRow(
@@ -1621,9 +1617,9 @@ class _ResultScreenState extends State<ResultScreen>
                               borderRadius: BorderRadius.circular(10),
                             ),
                           ),
-                          child: const Text(
-                            'Condividi scheda',
-                            style: TextStyle(
+                          child: Text(
+                            t.results.share,
+                            style: const TextStyle(
                               fontWeight: FontWeight.w400,
                               fontSize: 15,
                             ),
@@ -1647,9 +1643,9 @@ class _ResultScreenState extends State<ResultScreen>
                               ),
                               elevation: 0,
                             ),
-                            child: const Text(
-                              'Salva nel Garage',
-                              style: TextStyle(
+                            child: Text(
+                              t.results.saveToGarage,
+                              style: const TextStyle(
                                 fontWeight: FontWeight.w500,
                                 fontSize: 15,
                               ),
@@ -1680,7 +1676,7 @@ class _ResultScreenState extends State<ResultScreen>
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        _buildSectionTitle('ORIGINALIT\u00c0'),
+        _buildSectionTitle(t.results.originality.title),
 
         // Score ring
         Padding(
@@ -1719,7 +1715,7 @@ class _ResultScreenState extends State<ResultScreen>
                             ),
                             const SizedBox(height: 2),
                             Text(
-                              'su 100',
+                              t.results.originality.outOf100,
                               style: TextStyle(
                                 fontSize: 13,
                                 fontWeight: FontWeight.w300,
@@ -1747,14 +1743,14 @@ class _ResultScreenState extends State<ResultScreen>
         ),
 
         // Conformance checks
-        _buildConformRow('Motore', report.engineMatch, _getEngineDesc(report.engineMatch)),
-        _buildConformRow('Cambio', report.transmissionMatch, _getTransDesc(report.transmissionMatch)),
-        _buildConformRow('Carrozzeria', report.bodyMatch, _getBodyDesc(report.bodyMatch)),
+        _buildConformRow(t.results.originality.engine, report.engineMatch, _getEngineDesc(report.engineMatch)),
+        _buildConformRow(t.results.originality.gearbox, report.transmissionMatch, _getTransDesc(report.transmissionMatch)),
+        _buildConformRow(t.results.originality.body, report.bodyMatch, _getBodyDesc(report.bodyMatch)),
 
         // Differences
         if (report.notes.isNotEmpty) ...[
           const SizedBox(height: 20),
-          _buildSectionTitle('DIFFERENZE RILEVATE'),
+          _buildSectionTitle(t.results.originality.differencesFound),
           ...report.notes.map((note) => _buildDiffBlock(note)),
         ],
 
@@ -1773,7 +1769,7 @@ class _ResultScreenState extends State<ResultScreen>
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Text(
-                  'IN CONCLUSIONE',
+                  t.results.originality.conclusion,
                   style: TextStyle(
                     fontSize: 12,
                     fontWeight: FontWeight.w500,
@@ -1799,7 +1795,7 @@ class _ResultScreenState extends State<ResultScreen>
         Padding(
           padding: EdgeInsets.only(top: 12),
           child: Text(
-            'Questo report non sostituisce una perizia tecnica. Per certificazioni ufficiali, rivolgersi al Registro Storico o all\'ASI.',
+            t.results.originality.disclaimer,
             style: TextStyle(
               fontSize: 12,
               color: context.colors.textTertiary,
@@ -1844,7 +1840,7 @@ class _ResultScreenState extends State<ResultScreen>
           ),
           const SizedBox(height: 16),
           Text(
-            'Generazione report in corso...',
+            t.results.reportGenerating,
             style: TextStyle(
               color: context.colors.textPrimary,
               fontSize: 15,
@@ -1853,7 +1849,7 @@ class _ResultScreenState extends State<ResultScreen>
           ),
           const SizedBox(height: 4),
           Text(
-            'L\'AI sta confrontando le specifiche',
+            t.results.reportGeneratingSubtitle,
             style: TextStyle(color: context.colors.textSecondary, fontSize: 12),
           ),
         ],
@@ -1871,7 +1867,7 @@ class _ResultScreenState extends State<ResultScreen>
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         Text(
-          'DATI ANNUNCIO',
+          t.results.listing.title,
           style: TextStyle(
             fontSize: 12,
             fontWeight: FontWeight.w500,
@@ -1890,7 +1886,7 @@ class _ResultScreenState extends State<ResultScreen>
           child: Column(
             children: [
               if (askingPrice != null && askingPrice.isNotEmpty) ...[
-                _buildListingRow('Prezzo richiesto', askingPrice),
+                _buildListingRow(t.results.listing.askingPrice, askingPrice),
                 // Show comparison with market estimate if available
                 if (_identification != null &&
                     _identification!.marketValueRange.isNotEmpty &&
@@ -1898,7 +1894,7 @@ class _ResultScreenState extends State<ResultScreen>
                   Padding(
                     padding: const EdgeInsets.only(top: 4, bottom: 8),
                     child: Text(
-                      'Stima di mercato: ${_identification!.marketValueRange}',
+                      t.results.listing.marketEstimate(value: _identification!.marketValueRange),
                       style: TextStyle(
                         fontSize: 12,
                         color: context.colors.textTertiary,
@@ -1908,13 +1904,13 @@ class _ResultScreenState extends State<ResultScreen>
                   ),
               ],
               if (mileage != null && mileage.isNotEmpty)
-                _buildListingRow('Km dichiarati', mileage),
+                _buildListingRow(t.results.listing.mileage, mileage),
               if (sourceName != null && sourceName.isNotEmpty)
                 Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
                     Text(
-                      'Provenienza',
+                      t.results.listing.source,
                       style: TextStyle(
                         fontSize: 13,
                         color: context.colors.textSecondary,
@@ -2007,7 +2003,7 @@ class _ResultScreenState extends State<ResultScreen>
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Text(
-                  'STIMA DI MERCATO',
+                  t.results.market.title,
                   style: TextStyle(
                     fontSize: 10,
                     fontWeight: FontWeight.w500,
@@ -2026,7 +2022,7 @@ class _ResultScreenState extends State<ResultScreen>
                 ),
                 const SizedBox(height: 4),
                 Text(
-                  'Esemplare in buone condizioni. Stima indicativa.',
+                  t.results.market.disclaimer,
                   style: TextStyle(
                     fontSize: 11,
                     color: context.colors.textTertiary,
@@ -2045,7 +2041,7 @@ class _ResultScreenState extends State<ResultScreen>
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        _buildSectionTitle('STORIA DEL MODELLO'),
+        _buildSectionTitle(t.results.modelHistory),
         ...timeline.map((event) {
           final parts = event.split(':');
           final year = parts.isNotEmpty ? parts[0].trim() : '';
@@ -2125,7 +2121,7 @@ class _ResultScreenState extends State<ResultScreen>
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Text(
-                  'LO SAPEVI?',
+                  t.results.funFact,
                   style: TextStyle(
                     fontSize: 10,
                     fontWeight: FontWeight.w600,
@@ -2156,7 +2152,7 @@ class _ResultScreenState extends State<ResultScreen>
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         Text(
-          'POTREBBE ANCHE ESSERE',
+          t.results.alternatives,
           style: TextStyle(
             fontSize: 12,
             fontWeight: FontWeight.w500,
@@ -2314,7 +2310,7 @@ class _ResultScreenState extends State<ResultScreen>
           Expanded(
             flex: 5,
             child: Text(
-              desc.isNotEmpty ? desc : (match ? 'Conforme' : 'Non conforme'),
+              desc.isNotEmpty ? desc : (match ? t.results.originality.conform : t.results.originality.nonConform),
               style: TextStyle(
                 fontSize: 13,
                 color: context.colors.textPrimary,
@@ -2351,15 +2347,15 @@ class _ResultScreenState extends State<ResultScreen>
     final Color badgeBg;
 
     if (isDiverso) {
-      badgeLabel = 'Diverso';
+      badgeLabel = t.results.originality.badgeDiverso;
       badgeColor = context.colors.accentRed;
       badgeBg = context.colors.accentRed.withValues(alpha: 0.08);
     } else if (isConform) {
-      badgeLabel = 'Conforme';
+      badgeLabel = t.results.originality.badgeConforme;
       badgeColor = context.colors.successDark;
       badgeBg = context.colors.successDark.withValues(alpha: 0.08);
     } else {
-      badgeLabel = 'Info';
+      badgeLabel = t.results.originality.badgeInfo;
       badgeColor = context.colors.textSecondary;
       badgeBg = context.colors.surfaceLight;
     }
@@ -2433,48 +2429,48 @@ class _ResultScreenState extends State<ResultScreen>
   }
 
   String _specLabel(String key) {
-    const labels = {
-      'engineType': 'Motore',
-      'displacement': 'Cilindrata',
-      'fuelSystem': 'Alimentazione',
-      'transmission': 'Cambio',
-      'bodyStyle': 'Carrozzeria',
-      'driveType': 'Trazione',
-      'vdsCode': 'Codice VDS',
+    final labels = {
+      'engineType': t.results.vinSpecs.engineType,
+      'displacement': t.results.vinSpecs.displacement,
+      'fuelSystem': t.results.vinSpecs.fuelSystem,
+      'transmission': t.results.vinSpecs.transmission,
+      'bodyStyle': t.results.vinSpecs.bodyStyle,
+      'driveType': t.results.vinSpecs.driveType,
+      'vdsCode': t.results.vinSpecs.vdsCode,
     };
     return labels[key] ?? key;
   }
 
   String _scoreLabel(double score) {
-    if (score >= 80) return 'Eccellente corrispondenza';
-    if (score >= 60) return 'Buona corrispondenza';
-    if (score >= 40) return 'Discreta corrispondenza';
-    return 'Bassa corrispondenza';
+    if (score >= 80) return t.results.originality.excellent;
+    if (score >= 60) return t.results.originality.good;
+    if (score >= 40) return t.results.originality.fair;
+    return t.results.originality.low;
   }
 
 
   String _getEngineDesc(bool isMatch) {
-    final label = isMatch ? 'conforme' : 'non conforme';
+    final label = isMatch ? t.results.originality.conformLower : t.results.originality.nonConformLower;
     if (_carData != null && _carData!['engine_code'] != null) {
       return '${_carData!['engine_code']} \u2014 $label';
     }
-    return isMatch ? 'Conforme' : 'Non conforme';
+    return isMatch ? t.results.originality.conform : t.results.originality.nonConform;
   }
 
   String _getTransDesc(bool isMatch) {
-    final label = isMatch ? 'conforme' : 'non conforme';
+    final label = isMatch ? t.results.originality.conformLower : t.results.originality.nonConformLower;
     if (_carData != null && _carData!['transmission_speeds'] != null) {
       return '${_carData!['transmission_speeds']} marce \u2014 $label';
     }
-    return isMatch ? 'Conforme' : 'Non conforme';
+    return isMatch ? t.results.originality.conform : t.results.originality.nonConform;
   }
 
   String _getBodyDesc(bool isMatch) {
-    final label = isMatch ? 'conforme' : 'non conforme';
+    final label = isMatch ? t.results.originality.conformLower : t.results.originality.nonConformLower;
     if (_identification != null && _identification!.bodyType.isNotEmpty) {
       return '${_identification!.bodyType} \u2014 $label';
     }
-    return isMatch ? 'Conforme' : 'Non conforme';
+    return isMatch ? t.results.originality.conform : t.results.originality.nonConform;
   }
 }
 

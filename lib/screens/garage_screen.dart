@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:share_plus/share_plus.dart';
 import '../theme/app_colors.dart';
+import '../i18n/strings.g.dart';
 import '../services/database_service.dart';
 import '../services/telegram_service.dart';
 import '../models/car_scan.dart';
@@ -75,11 +76,11 @@ class _GarageScreenState extends State<GarageScreen> {
   String _levelLabel(int level) {
     switch (level) {
       case 1:
-        return 'Identificato';
+        return t.garage.identified;
       case 2:
-        return 'Verificato';
+        return t.garage.verified;
       default:
-        return 'Identificato';
+        return t.garage.identified;
     }
   }
 
@@ -138,54 +139,54 @@ class _GarageScreenState extends State<GarageScreen> {
     text.writeln(scan.brand.toUpperCase());
     text.writeln(scan.model);
     text.writeln('${scan.yearEstimate} \u00b7 ${scan.bodyType}');
-    text.writeln('Attendibilit\u00e0 ricerca: ${(scan.confidence * 100).toStringAsFixed(0)}%');
+    text.writeln(t.garage.shareText.searchReliability(percent: (scan.confidence * 100).toStringAsFixed(0)));
     text.writeln();
 
     // Specs from extraData
     final disp = extra['displacement'] as String? ?? '';
     final engCode = extra['engine_code'] as String? ?? '';
     if (disp.isNotEmpty && disp != 'N/D') {
-      text.writeln('Motore: $disp${engCode.isNotEmpty ? ' $engCode' : ''}');
+      text.writeln(t.garage.shareText.engine(value: '$disp${engCode.isNotEmpty ? ' $engCode' : ''}'));
     }
     final power = extra['power'] as String? ?? '';
-    if (power.isNotEmpty && power != 'N/D') text.writeln('Potenza: $power');
+    if (power.isNotEmpty && power != 'N/D') text.writeln(t.garage.shareText.power(value: power));
     final tx = extra['transmission'] as String? ?? '';
     final txBrand = extra['transmission_brand'] as String? ?? '';
     if (tx.isNotEmpty && tx != 'N/D') {
-      text.writeln('Cambio: $tx${txBrand.isNotEmpty ? ' ($txBrand)' : ''}');
+      text.writeln(t.garage.shareText.gearbox(value: '$tx${txBrand.isNotEmpty ? ' ($txBrand)' : ''}'));
     }
     final weight = extra['weight'] as String? ?? '';
     final topSpeed = extra['top_speed'] as String? ?? '';
     if (weight.isNotEmpty && weight != 'N/D') {
-      text.write('Peso: $weight');
-      if (topSpeed.isNotEmpty && topSpeed != 'N/D') text.write(' \u00b7 Velocit\u00e0 max: $topSpeed');
+      text.write(t.garage.shareText.weight(value: weight));
+      if (topSpeed.isNotEmpty && topSpeed != 'N/D') text.write(' \u00b7 ${t.garage.shareText.topSpeed(value: topSpeed)}');
       text.writeln();
     }
     final produced = extra['total_produced'] as String? ?? '';
-    if (produced.isNotEmpty && produced != 'N/D') text.writeln('Produzione: $produced esemplari');
+    if (produced.isNotEmpty && produced != 'N/D') text.writeln(t.garage.shareText.production(value: produced));
     final designer = extra['designer'] as String? ?? '';
-    if (designer.isNotEmpty && designer != 'N/D') text.writeln('Design: $designer');
+    if (designer.isNotEmpty && designer != 'N/D') text.writeln(t.garage.shareText.design(value: designer));
 
     // Market value
     final market = extra['market_value_range'] as String? ?? '';
     if (market.isNotEmpty && market != 'N/D') {
       text.writeln();
-      text.writeln('Stima di mercato: $market');
+      text.writeln(t.garage.shareText.marketEstimate(value: market));
     }
 
     // VIN
     if (scan.vin != null && scan.vin!.isNotEmpty) {
       text.writeln();
-      text.writeln('Telaio: ${scan.vin}');
+      text.writeln(t.garage.shareText.vin(value: scan.vin!));
     }
 
     // Originality
     if (scan.originalityScore != null) {
-      text.writeln('Originalit\u00e0: ${scan.originalityScore!.toStringAsFixed(0)}%');
+      text.writeln(t.garage.shareText.originality(value: scan.originalityScore!.toStringAsFixed(0)));
     }
 
     text.writeln();
-    text.writeln('Analizzato con CarLens');
+    text.writeln(t.garage.shareText.footer);
 
     final file = File(scan.imagePath);
     if (await file.exists()) {
@@ -240,7 +241,7 @@ class _GarageScreenState extends State<GarageScreen> {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Text(
-            'Il tuo Garage',
+            t.garage.title,
             style: TextStyle(
               color: context.colors.textPrimary,
               fontSize: 26,
@@ -250,7 +251,9 @@ class _GarageScreenState extends State<GarageScreen> {
           const SizedBox(height: 4),
           if (_scans.isNotEmpty) ...[
             Text(
-              '${_scans.length} auto scansionat${_scans.length == 1 ? 'a' : 'e'}',
+              _scans.length == 1
+                  ? t.garage.scannedCountOne
+                  : t.garage.scannedCount(n: _scans.length.toString()),
               style: TextStyle(
                 color: context.colors.textSecondary,
                 fontSize: 13,
@@ -283,14 +286,14 @@ class _GarageScreenState extends State<GarageScreen> {
     return Row(
       children: [
         _buildStatChip(Icons.verified_rounded, '$verified',
-            'verificat${verified == 1 ? 'a' : 'e'}', context.colors.success),
+            verified == 1 ? t.garage.verifiedCountOne : t.garage.verifiedCount(n: verified.toString()), context.colors.success),
         const SizedBox(width: 10),
         _buildStatChip(Icons.local_offer_outlined, '$brands',
-            'march${brands == 1 ? 'io' : 'i'}', context.colors.textSecondary),
+            brands == 1 ? t.garage.brandCountOne : t.garage.brandCount(n: brands.toString()), context.colors.textSecondary),
         if (topBrand.isNotEmpty) ...[
           const SizedBox(width: 10),
           _buildStatChip(Icons.emoji_events_outlined, topBrand,
-              'top marca', context.colors.gold),
+              t.garage.topBrand, context.colors.gold),
         ],
       ],
     );
@@ -353,7 +356,7 @@ class _GarageScreenState extends State<GarageScreen> {
             ),
             const SizedBox(height: 28),
             Text(
-              'Il tuo garage \u00e8 vuoto',
+              t.garage.empty,
               style: TextStyle(
                 color: context.colors.textPrimary,
                 fontSize: 20,
@@ -362,7 +365,7 @@ class _GarageScreenState extends State<GarageScreen> {
             ),
             const SizedBox(height: 10),
             Text(
-              'Scansiona la tua prima auto storica\nper iniziare la tua collezione',
+              t.garage.emptySubtitle,
               textAlign: TextAlign.center,
               style: TextStyle(
                 color: context.colors.textSecondary,
@@ -386,7 +389,7 @@ class _GarageScreenState extends State<GarageScreen> {
             controller: _searchController,
             style: TextStyle(color: context.colors.textPrimary, fontSize: 14),
             decoration: InputDecoration(
-              hintText: 'Cerca per marca, modello, anno...',
+              hintText: t.garage.searchHint,
               hintStyle: TextStyle(color: context.colors.hintText, fontSize: 13),
               prefixIcon: Icon(Icons.search, size: 20, color: context.colors.textSecondary),
               suffixIcon: _searchQuery.isNotEmpty
@@ -424,7 +427,7 @@ class _GarageScreenState extends State<GarageScreen> {
               child: ListView(
                 scrollDirection: Axis.horizontal,
                 children: [
-                  _buildFilterChip('Tutte', null),
+                  _buildFilterChip(t.garage.all, null),
                   ..._availableBrands.map((b) => _buildFilterChip(b, b)),
                 ],
               ),
@@ -476,7 +479,7 @@ class _GarageScreenState extends State<GarageScreen> {
                 padding: const EdgeInsets.all(40),
                 child: Text(
                   _searchQuery.isNotEmpty || _filterBrand != null
-                      ? 'Nessun risultato'
+                      ? t.garage.noResults
                       : '',
                   style: TextStyle(color: context.colors.textSecondary, fontSize: 14),
                 ),
@@ -505,16 +508,16 @@ class _GarageScreenState extends State<GarageScreen> {
         return await showDialog<bool>(
           context: context,
           builder: (ctx) => AlertDialog(
-            title: const Text('Elimina scansione'),
-            content: Text('Vuoi eliminare ${scan.brand} ${scan.model}?'),
+            title: Text(t.garage.deleteTitle),
+            content: Text(t.garage.deleteMessage(brand: scan.brand, model: scan.model)),
             actions: [
               TextButton(
                 onPressed: () => Navigator.pop(ctx, false),
-                child: const Text('Annulla'),
+                child: Text(t.garage.cancel),
               ),
               TextButton(
                 onPressed: () => Navigator.pop(ctx, true),
-                child: Text('Elimina', style: TextStyle(color: context.colors.accentRed)),
+                child: Text(t.garage.delete, style: TextStyle(color: context.colors.accentRed)),
               ),
             ],
           ),
@@ -601,7 +604,7 @@ class _GarageScreenState extends State<GarageScreen> {
                     Text(
                       hasVin
                           ? '${scan.yearEstimate} \u00b7 ${scan.vin}'
-                          : '${scan.yearEstimate} \u00b7 Solo identificazione',
+                          : '${scan.yearEstimate} \u00b7 ${t.garage.identificationOnly}',
                       style: TextStyle(
                         color: context.colors.textSecondary,
                         fontSize: 12,
@@ -620,7 +623,7 @@ class _GarageScreenState extends State<GarageScreen> {
                               score: scan.originalityScore! / 100),
                           const SizedBox(width: 6),
                           Text(
-                            'Originalit\u00e0 ${scan.originalityScore!.toStringAsFixed(0)}/100',
+                            t.garage.originalityScore(score: scan.originalityScore!.toStringAsFixed(0)),
                             style: TextStyle(
                               fontSize: 12,
                               fontWeight: FontWeight.w500,
@@ -696,8 +699,8 @@ class _GarageScreenState extends State<GarageScreen> {
                             ).then((_) => _loadScans());
                           } else {
                             ScaffoldMessenger.of(context).showSnackBar(
-                              const SnackBar(
-                                content: Text('Foto originale non disponibile. Scansiona di nuovo.'),
+                              SnackBar(
+                                content: Text(t.garage.photoUnavailable),
                               ),
                             );
                           }
@@ -714,7 +717,7 @@ class _GarageScreenState extends State<GarageScreen> {
                             ),
                             const SizedBox(width: 4),
                             Text(
-                              'Aggiungi telaio per saperne di pi\u00f9',
+                              t.garage.addVin,
                               style: TextStyle(
                                 fontSize: 12,
                                 color: context.colors.textSecondary,
@@ -750,7 +753,7 @@ class _GarageScreenState extends State<GarageScreen> {
                             ),
                             const SizedBox(width: 4),
                             Text(
-                              'Verifica originalit\u00e0',
+                              t.garage.verifyOriginality,
                               style: TextStyle(
                                 fontSize: 12,
                                 color: context.colors.textSecondary,
@@ -861,12 +864,12 @@ class _DetailSheet extends StatelessWidget {
       final val = displacement.isNotEmpty && engineCode.isNotEmpty
           ? '$displacement $engineCode'
           : displacement.isNotEmpty ? displacement : engineCode;
-      specs.add(_GarageSpecEntry('Motore', val));
+      specs.add(_GarageSpecEntry(t.garage.specs.engine, val));
     }
 
     final power = extra['power'] as String? ?? '';
     if (power.isNotEmpty && power != 'N/D') {
-      specs.add(_GarageSpecEntry('Potenza', power));
+      specs.add(_GarageSpecEntry(t.garage.specs.power, power));
     }
 
     final transmission = extra['transmission'] as String? ?? '';
@@ -875,27 +878,27 @@ class _DetailSheet extends StatelessWidget {
       final val = txBrand.isNotEmpty && !transmission.contains(txBrand)
           ? '$transmission ($txBrand)'
           : transmission;
-      specs.add(_GarageSpecEntry('Cambio', val));
+      specs.add(_GarageSpecEntry(t.garage.specs.gearbox, val));
     }
 
     final weight = extra['weight'] as String? ?? '';
     if (weight.isNotEmpty && weight != 'N/D') {
-      specs.add(_GarageSpecEntry('Peso', weight));
+      specs.add(_GarageSpecEntry(t.garage.specs.weight, weight));
     }
 
     final topSpeed = extra['top_speed'] as String? ?? '';
     if (topSpeed.isNotEmpty && topSpeed != 'N/D') {
-      specs.add(_GarageSpecEntry('Velocit\u00e0 max', topSpeed));
+      specs.add(_GarageSpecEntry(t.garage.specs.topSpeed, topSpeed));
     }
 
     final produced = extra['total_produced'] as String? ?? '';
     if (produced.isNotEmpty && produced != 'N/D') {
-      specs.add(_GarageSpecEntry('Produzione', '$produced esemplari'));
+      specs.add(_GarageSpecEntry(t.garage.specs.production, t.garage.specs.productionValue(n: produced)));
     }
 
     final designer = extra['designer'] as String? ?? '';
     if (designer.isNotEmpty && designer != 'N/D') {
-      specs.add(_GarageSpecEntry('Design', designer));
+      specs.add(_GarageSpecEntry(t.garage.specs.design, designer));
     }
 
     return specs;
@@ -988,7 +991,7 @@ class _DetailSheet extends StatelessWidget {
               ),
               const SizedBox(height: 4),
               Text(
-                'Attendibilit\u00e0 $confidencePercent%  \u00b7  ${formatDate(scan.createdAt)}',
+                '${t.garage.confidence} $confidencePercent%  \u00b7  ${formatDate(scan.createdAt)}',
                 style: TextStyle(
                   fontSize: 12,
                   color: context.colors.textTertiary,
@@ -1015,7 +1018,7 @@ class _DetailSheet extends StatelessWidget {
                           Icon(Icons.link, size: 16, color: context.colors.teal),
                           const SizedBox(width: 8),
                           Text(
-                            'DA ${scan.sourceName!.toUpperCase()}',
+                            t.garage.from(source: scan.sourceName!.toUpperCase()),
                             style: TextStyle(
                               fontSize: 11,
                               fontWeight: FontWeight.w600,
@@ -1031,7 +1034,7 @@ class _DetailSheet extends StatelessWidget {
                           mainAxisAlignment: MainAxisAlignment.spaceBetween,
                           children: [
                             Text(
-                              'Prezzo richiesto',
+                              t.garage.askingPrice,
                               style: TextStyle(fontSize: 13, color: context.colors.textSecondary),
                             ),
                             Text(
@@ -1051,7 +1054,7 @@ class _DetailSheet extends StatelessWidget {
                           mainAxisAlignment: MainAxisAlignment.spaceBetween,
                           children: [
                             Text(
-                              'Km dichiarati',
+                              t.garage.mileage,
                               style: TextStyle(fontSize: 13, color: context.colors.textSecondary),
                             ),
                             Text(
@@ -1077,7 +1080,7 @@ class _DetailSheet extends StatelessWidget {
                   child: Divider(color: context.colors.border, height: 1),
                 ),
                 Text(
-                  'SCHEDA RAPIDA',
+                  t.garage.quickSpecs,
                   style: TextStyle(
                     fontSize: 12,
                     fontWeight: FontWeight.w500,
@@ -1153,7 +1156,7 @@ class _DetailSheet extends StatelessWidget {
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
                             Text(
-                              'STIMA DI MERCATO',
+                              t.garage.marketEstimate,
                               style: TextStyle(
                                 fontSize: 10,
                                 fontWeight: FontWeight.w500,
@@ -1172,7 +1175,7 @@ class _DetailSheet extends StatelessWidget {
                             ),
                             const SizedBox(height: 4),
                             Text(
-                              'Esemplare in buone condizioni. Stima indicativa.',
+                              t.garage.marketDisclaimer,
                               style: TextStyle(
                                 fontSize: 11,
                                 color: context.colors.textTertiary,
@@ -1194,7 +1197,7 @@ class _DetailSheet extends StatelessWidget {
                   child: Divider(color: context.colors.border, height: 1),
                 ),
                 Text(
-                  'STORIA DEL MODELLO',
+                  t.garage.modelHistory,
                   style: TextStyle(
                     fontSize: 12,
                     fontWeight: FontWeight.w500,
@@ -1287,7 +1290,7 @@ class _DetailSheet extends StatelessWidget {
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
                             Text(
-                              'LO SAPEVI?',
+                              t.garage.funFact,
                               style: TextStyle(
                                 fontSize: 10,
                                 fontWeight: FontWeight.w600,
@@ -1401,7 +1404,7 @@ class _DetailSheet extends StatelessWidget {
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
                           Text(
-                            'Originalit\u00e0',
+                            t.garage.originalityLabel,
                             style: TextStyle(
                               color: context.colors.textPrimary,
                               fontSize: 15,
@@ -1439,7 +1442,7 @@ class _DetailSheet extends StatelessWidget {
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       Text(
-                        'REPORT ORIGINALIT\u00c0',
+                        t.garage.originalityReport,
                         style: TextStyle(
                           color: context.colors.textSecondary,
                           fontSize: 12,
@@ -1470,9 +1473,9 @@ class _DetailSheet extends StatelessWidget {
                 child: ElevatedButton.icon(
                   onPressed: onShare,
                   icon: const Icon(Icons.share_outlined, size: 20),
-                  label: const Text(
-                    'Condividi',
-                    style: TextStyle(
+                  label: Text(
+                    t.garage.share,
+                    style: const TextStyle(
                       fontSize: 15,
                       fontWeight: FontWeight.w500,
                     ),
@@ -1496,7 +1499,7 @@ class _DetailSheet extends StatelessWidget {
                 child: TextButton(
                   onPressed: onDelete,
                   child: Text(
-                    'Elimina scansione',
+                    t.garage.deleteAction,
                     style: TextStyle(
                       color: context.colors.accentRed,
                       fontSize: 15,
@@ -1513,10 +1516,10 @@ class _DetailSheet extends StatelessWidget {
   }
 
   String _originalityLabel(double score) {
-    if (score >= 80) return 'Eccellente';
-    if (score >= 60) return 'Buona';
-    if (score >= 40) return 'Discreta';
-    return 'Bassa';
+    if (score >= 80) return t.garage.originalityExcellent;
+    if (score >= 60) return t.garage.originalityGood;
+    if (score >= 40) return t.garage.originalityFair;
+    return t.garage.originalityLow;
   }
 }
 
