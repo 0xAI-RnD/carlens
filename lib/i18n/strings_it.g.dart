@@ -46,6 +46,7 @@ class Translations with BaseTranslations<AppLocale, Translations> {
 	late final TranslationsGarageIt garage = TranslationsGarageIt._(_root);
 	late final TranslationsResultsIt results = TranslationsResultsIt._(_root);
 	late final TranslationsSettingsIt settings = TranslationsSettingsIt._(_root);
+	late final TranslationsAchievementsIt achievements = TranslationsAchievementsIt._(_root);
 	late final TranslationsVinIt vin = TranslationsVinIt._(_root);
 }
 
@@ -80,6 +81,9 @@ class TranslationsNavIt {
 
 	/// it: 'Garage'
 	String get garage => 'Garage';
+
+	/// it: 'Traguardi'
+	String get achievements => 'Traguardi';
 }
 
 // Path: home
@@ -113,6 +117,21 @@ class TranslationsHomeIt {
 
 	/// it: 'Siti supportati: Subito.it, AutoScout24'
 	String get supportedSites => 'Siti supportati: Subito.it, AutoScout24';
+
+	/// it: 'Analisi annuncio Subito.it...'
+	String get analyzingSubito => 'Analisi annuncio Subito.it...';
+
+	/// it: 'Analisi annuncio AutoScout24...'
+	String get analyzingAutoScout => 'Analisi annuncio AutoScout24...';
+
+	/// it: 'Analisi link in corso...'
+	String get analyzingLink => 'Analisi link in corso...';
+
+	/// it: 'Per risultati migliori'
+	String get photoTips => 'Per risultati migliori';
+
+	/// it: 'Inquadra l'auto intera, con buona luce e da più angolazioni'
+	String get photoTipsDesc => 'Inquadra l\'auto intera, con buona luce e da più angolazioni';
 }
 
 // Path: garage
@@ -390,8 +409,8 @@ class TranslationsResultsIt {
 	/// it: 'Attendibilità ricerca: ${percent}%'
 	String searchReliability({required Object percent}) => 'Attendibilità ricerca: ${percent}%';
 
-	/// it: 'Non è questa auto? Correggi →'
-	String get notThisCar => 'Non è questa auto? Correggi →';
+	/// it: 'Non è quest'auto?'
+	String get notThisCar => 'Non è quest\'auto?';
 
 	/// it: 'Grazie per il feedback! Riprova con un'altra foto.'
 	String get correctionFeedback => 'Grazie per il feedback! Riprova con un\'altra foto.';
@@ -476,6 +495,21 @@ class TranslationsSettingsIt {
 
 	/// it: 'Annulla'
 	String get cancel => 'Annulla';
+}
+
+// Path: achievements
+class TranslationsAchievementsIt {
+	TranslationsAchievementsIt._(this._root);
+
+	final Translations _root; // ignore: unused_field
+
+	// Translations
+
+	/// it: 'Presto disponibile'
+	String get comingSoon => 'Presto disponibile';
+
+	/// it: 'I tuoi traguardi appariranno qui'
+	String get comingSoonDesc => 'I tuoi traguardi appariranno qui';
 }
 
 // Path: vin
@@ -959,6 +993,7 @@ extension on Translations {
 			'app.loading' => 'Caricamento...',
 			'nav.home' => 'Home',
 			'nav.garage' => 'Garage',
+			'nav.achievements' => 'Traguardi',
 			'home.takePhoto' => 'Scatta una foto',
 			'home.loadFromGallery' => 'oppure carica dalla galleria (fino a 3 foto)',
 			'home.pasteLink' => 'Incolla Link',
@@ -967,6 +1002,11 @@ extension on Translations {
 			'home.analyzing' => 'Analisi in corso...',
 			'home.invalidUrl' => 'URL non valido o non supportato',
 			'home.supportedSites' => 'Siti supportati: Subito.it, AutoScout24',
+			'home.analyzingSubito' => 'Analisi annuncio Subito.it...',
+			'home.analyzingAutoScout' => 'Analisi annuncio AutoScout24...',
+			'home.analyzingLink' => 'Analisi link in corso...',
+			'home.photoTips' => 'Per risultati migliori',
+			'home.photoTipsDesc' => 'Inquadra l\'auto intera, con buona luce e da più angolazioni',
 			'garage.title' => 'Il tuo Garage',
 			'garage.empty' => 'Il tuo garage è vuoto',
 			'garage.emptySubtitle' => 'Scansiona la tua prima auto storica\nper iniziare la tua collezione',
@@ -1072,7 +1112,7 @@ extension on Translations {
 			'results.vinDecoded' => 'VIN decodificato',
 			'results.vinReading' => 'Lettura targhetta in corso...',
 			'results.searchReliability' => ({required Object percent}) => 'Attendibilità ricerca: ${percent}%',
-			'results.notThisCar' => 'Non è questa auto? Correggi →',
+			'results.notThisCar' => 'Non è quest\'auto?',
 			'results.correctionFeedback' => 'Grazie per il feedback! Riprova con un\'altra foto.',
 			'results.saveError' => 'Errore nel salvataggio. Riprova.',
 			'results.reportError' => 'Errore nella generazione del report. Riprova.',
@@ -1178,6 +1218,8 @@ extension on Translations {
 			'settings.deleteAllConfirm' => 'Elimina tutto',
 			'settings.deleteAllDone' => 'Tutti i dati sono stati eliminati',
 			'settings.cancel' => 'Annulla',
+			'achievements.comingSoon' => 'Presto disponibile',
+			'achievements.comingSoonDesc' => 'I tuoi traguardi appariranno qui',
 			'vin.title' => 'Dove trovo il telaio?',
 			'vin.subtitle' => 'Il VIN (Vehicle Identification Number) può trovarsi in diverse posizioni a seconda del modello e dell\'anno.',
 			'vin.pageTitle' => 'Dove trovo il numero di telaio?',

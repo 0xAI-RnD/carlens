@@ -6,7 +6,8 @@
   },
   "nav": {
     "home": "Home",
-    "garage": "Garage"
+    "garage": "Garage",
+    "achievements": "Traguardi"
   },
   "home": {
     "takePhoto": "Scatta una foto",
@@ -16,7 +17,12 @@
     "linkCopied": "Link copiato dagli appunti",
     "analyzing": "Analisi in corso...",
     "invalidUrl": "URL non valido o non supportato",
-    "supportedSites": "Siti supportati: Subito.it, AutoScout24"
+    "supportedSites": "Siti supportati: Subito.it, AutoScout24",
+    "analyzingSubito": "Analisi annuncio Subito.it...",
+    "analyzingAutoScout": "Analisi annuncio AutoScout24...",
+    "analyzingLink": "Analisi link in corso...",
+    "photoTips": "Per risultati migliori",
+    "photoTipsDesc": "Inquadra l'auto intera, con buona luce e da pi\u00f9 angolazioni"
   },
   "garage": {
     "title": "Il tuo Garage",
@@ -130,7 +136,7 @@
     "vinDecoded": "VIN decodificato",
     "vinReading": "Lettura targhetta in corso...",
     "searchReliability": "Attendibilit\u00e0 ricerca: ${percent}%",
-    "notThisCar": "Non \u00e8 questa auto? Correggi \u2192",
+    "notThisCar": "Non \u00e8 quest'auto?",
     "correctionFeedback": "Grazie per il feedback! Riprova con un'altra foto.",
     "saveError": "Errore nel salvataggio. Riprova.",
     "reportError": "Errore nella generazione del report. Riprova.",
@@ -252,6 +258,10 @@
     "deleteAllConfirm": "Elimina tutto",
     "deleteAllDone": "Tutti i dati sono stati eliminati",
     "cancel": "Annulla"
+  },
+  "achievements": {
+    "comingSoon": "Presto disponibile",
+    "comingSoonDesc": "I tuoi traguardi appariranno qui"
   },
   "vin": {
     "title": "Dove trovo il telaio?",
