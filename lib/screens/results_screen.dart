@@ -14,6 +14,8 @@ import '../services/database_service.dart';
 import '../models/car_scan.dart';
 import '../services/telegram_service.dart';
 import '../services/url_scraper_service.dart';
+import '../services/achievement_service.dart';
+import '../models/achievement.dart';
 import '../utils/vin_decoder.dart';
 import 'vin_helper_screen.dart';
 
@@ -63,6 +65,11 @@ class _ResultScreenState extends State<ResultScreen>
   final CarDataService _carDataService = CarDataService();
   final DatabaseService _databaseService = DatabaseService();
 
+  // Badge banner state
+  List<Achievement> _newlyUnlockedBadges = [];
+  int _currentBannerIndex = 0;
+  bool _showBanner = false;
+
   late AnimationController _pulseController;
 
   @override
@@ -81,6 +88,35 @@ class _ResultScreenState extends State<ResultScreen>
     _pulseController.dispose();
     _scrollController.dispose();
     super.dispose();
+  }
+
+  // ---------------------------------------------------------------------------
+  // Badge checking
+  // ---------------------------------------------------------------------------
+
+  Future<void> _checkBadges(CarIdentification identification) async {
+    final newBadges = await AchievementService().checkAndUnlock(identification);
+    if (newBadges.isNotEmpty && mounted) {
+      setState(() {
+        _newlyUnlockedBadges = newBadges;
+        _currentBannerIndex = 0;
+        _showBanner = true;
+      });
+      _showNextBanner();
+    }
+  }
+
+  void _showNextBanner() {
+    Future.delayed(const Duration(seconds: 3), () {
+      if (!mounted) return;
+      setState(() {
+        _currentBannerIndex++;
+        if (_currentBannerIndex >= _newlyUnlockedBadges.length) {
+          _showBanner = false;
+        }
+      });
+      if (_showBanner) _showNextBanner();
+    });
   }
 
   // ---------------------------------------------------------------------------
@@ -213,6 +249,9 @@ class _ResultScreenState extends State<ResultScreen>
             _isLoading = false;
           });
 
+          // Check and unlock badges (fire-and-forget)
+          _checkBadges(identification);
+
           // Telegram notification (fire-and-forget)
           TelegramService().notifyMarketplaceScan(
             brand: identification.brand,
@@ -277,6 +316,9 @@ class _ResultScreenState extends State<ResultScreen>
           _carData = carData;
           _isLoading = false;
         });
+
+        // Check and unlock badges (fire-and-forget)
+        _checkBadges(identification);
 
         // Telegram notification (fire-and-forget)
         TelegramService().notifyNewScan(
@@ -720,17 +762,127 @@ class _ResultScreenState extends State<ResultScreen>
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: context.colors.background,
-      body: SafeArea(
-        child: _isLoading
-            ? _buildLoadingView()
-            : _errorMessage != null
-                ? _buildErrorView()
-                : _currentLevel >= 2 && _vinResult != null
-                    ? _buildL2View()
-                    : _buildL1View(),
+      body: Stack(
+        children: [
+          SafeArea(
+            child: _isLoading
+                ? _buildLoadingView()
+                : _errorMessage != null
+                    ? _buildErrorView()
+                    : _currentLevel >= 2 && _vinResult != null
+                        ? _buildL2View()
+                        : _buildL1View(),
+          ),
+          Positioned(
+            top: 0,
+            left: 0,
+            right: 0,
+            child: _buildBadgeBanner(),
+          ),
+        ],
       ),
     );
   }
+
+  // ---------------------------------------------------------------------------
+  // Badge banner
+  // ---------------------------------------------------------------------------
+
+  Widget _buildBadgeBanner() {
+    if (!_showBanner || _currentBannerIndex >= _newlyUnlockedBadges.length) {
+      return const SizedBox.shrink();
+    }
+    final badge = _newlyUnlockedBadges[_currentBannerIndex];
+    final isGold = badge.tier == 'gold';
+    return AnimatedOpacity(
+      opacity: _showBanner ? 1.0 : 0.0,
+      duration: const Duration(milliseconds: 400),
+      child: Container(
+        margin: EdgeInsets.only(
+          top: MediaQuery.of(context).padding.top + 8,
+          left: 16,
+          right: 16,
+        ),
+        padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+        decoration: BoxDecoration(
+          color: isGold ? context.colors.goldBg : context.colors.surfaceCard,
+          borderRadius: BorderRadius.circular(12),
+          border: Border.all(
+            color: isGold ? context.colors.gold : context.colors.border,
+          ),
+          boxShadow: [
+            BoxShadow(
+              color: Colors.black.withValues(alpha: 0.1),
+              blurRadius: 8,
+              offset: const Offset(0, 2),
+            ),
+          ],
+        ),
+        child: Row(
+          children: [
+            Icon(
+              _badgeCategoryIcon(badge.category),
+              color: isGold ? context.colors.gold : context.colors.teal,
+              size: 24,
+            ),
+            const SizedBox(width: 12),
+            Expanded(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  Text(
+                    t.achievements.badgeUnlocked,
+                    style: TextStyle(
+                      fontSize: 12,
+                      color: context.colors.textSecondary,
+                    ),
+                  ),
+                  Text(
+                    '${_badgeCategoryName(badge.category)} ${_badgeTierName(badge.tier)}',
+                    style: TextStyle(
+                      fontSize: 15,
+                      fontWeight: FontWeight.w600,
+                      color: isGold
+                          ? context.colors.gold
+                          : context.colors.textPrimary,
+                    ),
+                  ),
+                ],
+              ),
+            ),
+            Icon(
+              Icons.emoji_events,
+              color: isGold ? context.colors.gold : context.colors.textTertiary,
+              size: 20,
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+
+  String _badgeCategoryName(String category) => switch (category) {
+        'scans' => t.achievements.scansBadgeName,
+        'brands' => t.achievements.brandsBadgeName,
+        'eras' => t.achievements.erasBadgeName,
+        _ => '',
+      };
+
+  String _badgeTierName(String tier) => switch (tier) {
+        'base' => t.achievements.base,
+        'bronze' => t.achievements.bronze,
+        'silver' => t.achievements.silver,
+        'gold' => t.achievements.gold,
+        _ => '',
+      };
+
+  IconData _badgeCategoryIcon(String category) => switch (category) {
+        'scans' => Icons.camera_alt,
+        'brands' => Icons.directions_car,
+        'eras' => Icons.history,
+        _ => Icons.emoji_events,
+      };
 
   // ---------------------------------------------------------------------------
   // Header back
