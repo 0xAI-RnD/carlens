@@ -106,6 +106,14 @@ class _ResultScreenState extends State<ResultScreen>
         _showBanner = true;
       });
       _showNextBanner();
+      // Log each badge unlock to Firebase Analytics
+      for (final badge in newBadges) {
+        AnalyticsService().logAchievementUnlocked(
+          achievementId: badge.achievementId,
+          tier: badge.tier,
+          category: badge.category,
+        );
+      }
     }
   }
 
