@@ -872,7 +872,6 @@ class _ResultScreenState extends State<ResultScreen>
 
   Widget _buildL1View() {
     final id = _identification!;
-    final percent = (id.confidence * 100).round();
 
     return Column(
       children: [
@@ -2179,25 +2178,6 @@ class _ResultScreenState extends State<ResultScreen>
     );
   }
 
-  Widget _buildAlternativesSection() {
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        Text(
-          t.results.alternatives,
-          style: TextStyle(
-            fontSize: 12,
-            fontWeight: FontWeight.w500,
-            color: context.colors.textSecondary,
-            letterSpacing: 2,
-          ),
-        ),
-        const SizedBox(height: 12),
-        ..._alternatives.map((alt) => _buildAlternativeCard(alt)),
-      ],
-    );
-  }
-
   Widget _buildAlternativeCard(CarIdentification alt) {
     final altPercent = (alt.confidence * 100).round();
     return GestureDetector(
@@ -2216,6 +2196,8 @@ class _ResultScreenState extends State<ResultScreen>
           _vinController.clear();
           _currentLevel = 1;
           _showVinInput = false;
+          // Collapse alternatives after swap — user must tap "Non e quest'auto?" again
+          _alternativesExpanded = false;
           // Refresh car data for new primary
           _carData = _carDataService.findByBrandModel(alt.brand, alt.model);
         });
@@ -2247,15 +2229,15 @@ class _ResultScreenState extends State<ResultScreen>
                 Container(
                   padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 3),
                   decoration: BoxDecoration(
-                    color: context.colors.surfaceLight,
+                    color: context.colors.goldBg,
                     borderRadius: BorderRadius.circular(6),
                   ),
                   child: Text(
                     '$altPercent%',
                     style: TextStyle(
                       fontSize: 12,
-                      fontWeight: FontWeight.w500,
-                      color: context.colors.textSecondary,
+                      fontWeight: FontWeight.w600,
+                      color: context.colors.gold,
                     ),
                   ),
                 ),
@@ -2265,8 +2247,8 @@ class _ResultScreenState extends State<ResultScreen>
             Text(
               '${alt.yearEstimate}${alt.bodyType.isNotEmpty ? ' \u00b7 ${alt.bodyType}' : ''}',
               style: TextStyle(
-                fontSize: 13,
-                fontWeight: FontWeight.w300,
+                fontSize: 15,
+                fontWeight: FontWeight.w400,
                 color: context.colors.textSecondary,
               ),
             ),
