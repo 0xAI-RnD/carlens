@@ -1,8 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:intl/date_symbol_data_local.dart';
+import 'package:firebase_core/firebase_core.dart';
 import 'package:upgrader/upgrader.dart';
 import 'package:version/version.dart';
+import 'firebase_options.dart';
 import 'services/database_service.dart';
 import 'services/car_data_service.dart';
 import 'services/notification_service.dart';
@@ -18,6 +20,7 @@ void main() async {
 
   await initializeDateFormatting('it_IT', null);
   await DatabaseService().init();
+  await Firebase.initializeApp(options: DefaultFirebaseOptions.currentPlatform);
 
   runApp(const CarLensApp());
 }
