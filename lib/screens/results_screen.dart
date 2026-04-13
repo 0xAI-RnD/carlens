@@ -10,6 +10,7 @@ import '../services/gemini_service.dart';
 import '../services/car_data_service.dart';
 import '../services/database_service.dart';
 import '../models/car_scan.dart';
+import '../services/analytics_service.dart';
 import '../services/telegram_service.dart';
 import '../services/url_scraper_service.dart';
 import '../utils/vin_decoder.dart';
@@ -20,6 +21,7 @@ class ResultScreen extends StatefulWidget {
   final List<String>? extraImagePaths;
   final CarScan? existingScan;
   final String? listingUrl;
+  final String scanSource;
 
   const ResultScreen({
     super.key,
@@ -27,6 +29,7 @@ class ResultScreen extends StatefulWidget {
     this.extraImagePaths,
     this.existingScan,
     this.listingUrl,
+    this.scanSource = 'camera',
   });
 
   @override
@@ -230,6 +233,17 @@ class _ResultScreenState extends State<ResultScreen>
             mileage: _listingData!.mileage,
             imagePath: _listingImagePath ?? widget.imagePath,
           );
+
+          // Analytics (fire-and-forget)
+          final yearMatch = RegExp(r'(1[89]\d{2}|20\d{2})').firstMatch(identification.yearEstimate);
+          final yearInt = yearMatch != null ? int.parse(yearMatch.group(1)!) : 0;
+          AnalyticsService().logScanCompleted(
+            brand: identification.brand,
+            model: identification.model,
+            year: yearInt,
+            confidence: identification.confidence,
+            source: widget.scanSource,
+          );
         }
       } catch (e) {
         if (mounted) {
@@ -291,6 +305,17 @@ class _ResultScreenState extends State<ResultScreen>
           confidence: identification.confidence,
           level: 1,
           imagePath: widget.imagePath,
+        );
+
+        // Analytics (fire-and-forget)
+        final yearMatch = RegExp(r'(1[89]\d{2}|20\d{2})').firstMatch(identification.yearEstimate);
+        final yearInt = yearMatch != null ? int.parse(yearMatch.group(1)!) : 0;
+        AnalyticsService().logScanCompleted(
+          brand: identification.brand,
+          model: identification.model,
+          year: yearInt,
+          confidence: identification.confidence,
+          source: widget.scanSource,
         );
       }
     } catch (e) {
@@ -624,6 +649,13 @@ class _ResultScreenState extends State<ResultScreen>
     if (_identification == null) return;
 
     final id = _identification!;
+
+    // Analytics (fire-and-forget)
+    AnalyticsService().logCarShared(
+      brand: id.brand,
+      model: id.model,
+    );
+
     final text = StringBuffer();
 
     // Header
@@ -2182,6 +2214,12 @@ class _ResultScreenState extends State<ResultScreen>
     final altPercent = (alt.confidence * 100).round();
     return GestureDetector(
       onTap: () {
+        // Analytics (fire-and-forget)
+        AnalyticsService().logAlternativeSwapped(
+          originalBrand: _identification!.brand,
+          swappedToBrand: alt.brand,
+        );
+
         setState(() {
           // Swap: current primary becomes alternative, tapped alt becomes primary
           final currentPrimary = _identification!;

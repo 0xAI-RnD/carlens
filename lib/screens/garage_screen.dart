@@ -546,7 +546,7 @@ class _GarageScreenState extends State<GarageScreen> {
           Navigator.push(
             context,
             MaterialPageRoute(
-              builder: (_) => ResultScreen(imagePath: scan.imagePath, existingScan: scan),
+              builder: (_) => ResultScreen(imagePath: scan.imagePath, existingScan: scan, scanSource: 'garage'),
             ),
           ).then((_) => _loadScans());
         },
@@ -698,7 +698,7 @@ class _GarageScreenState extends State<GarageScreen> {
                             Navigator.push(
                               context,
                               MaterialPageRoute(
-                                builder: (_) => ResultScreen(imagePath: scan.imagePath, existingScan: scan),
+                                builder: (_) => ResultScreen(imagePath: scan.imagePath, existingScan: scan, scanSource: 'garage'),
                               ),
                             ).then((_) => _loadScans());
                           } else {
@@ -740,7 +740,7 @@ class _GarageScreenState extends State<GarageScreen> {
                             Navigator.push(
                               context,
                               MaterialPageRoute(
-                                builder: (_) => ResultScreen(imagePath: scan.imagePath, existingScan: scan),
+                                builder: (_) => ResultScreen(imagePath: scan.imagePath, existingScan: scan, scanSource: 'garage'),
                               ),
                             ).then((_) => _loadScans());
                           }
