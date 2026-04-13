@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "293397550929",
+    "project_id": "carlens-85357",
+    "storage_bucket": "carlens-85357.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:293397550929:android:3e8f73caf76505a1576570",
+        "android_client_info": {
+          "package_name": "com.carlens.carlens"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyA64RLyEwjys3_4mQVT_a2rKKrQkYThCYY"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
