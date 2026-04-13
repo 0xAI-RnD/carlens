@@ -1233,38 +1233,6 @@ class _ResultScreenState extends State<ResultScreen>
                         ),
                       ),
 
-                      // Correction link
-                      Center(
-                        child: Padding(
-                          padding: const EdgeInsets.only(top: 16),
-                          child: GestureDetector(
-                            onTap: () {
-                              ScaffoldMessenger.of(context).showSnackBar(
-                                SnackBar(
-                                  content: Text(t.results.correctionFeedback),
-                                ),
-                              );
-                            },
-                            child: Container(
-                              padding:
-                                  const EdgeInsets.only(bottom: 1),
-                              decoration: BoxDecoration(
-                                border: Border(
-                                  bottom: BorderSide(
-                                      color: context.colors.border, width: 1),
-                                ),
-                              ),
-                              child: Text(
-                                t.results.notThisCar,
-                                style: TextStyle(
-                                  fontSize: 12,
-                                  color: context.colors.textSecondary,
-                                ),
-                              ),
-                            ),
-                          ),
-                        ),
-                      ),
                       const SizedBox(height: 16),
 
                       // Condividi button
