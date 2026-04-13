@@ -132,6 +132,21 @@ class TranslationsHomeIt {
 
 	/// it: 'Inquadra l'auto intera, con buona luce e da più angolazioni'
 	String get photoTipsDesc => 'Inquadra l\'auto intera, con buona luce e da più angolazioni';
+
+	/// it: 'Il tuo identificatore di auto d'epoca'
+	String get subtitle => 'Il tuo identificatore di auto d\'epoca';
+
+	/// it: 'Scatta e identifica'
+	String get snapAndIdentify => 'Scatta e identifica';
+
+	/// it: 'Scegli dalla galleria'
+	String get chooseFromGallery => 'Scegli dalla galleria';
+
+	/// it: 'Galleria'
+	String get gallery => 'Galleria';
+
+	/// it: 'Subito.it, AutoScout24'
+	String get marketplaceSites => 'Subito.it, AutoScout24';
 }
 
 // Path: garage
@@ -1007,6 +1022,11 @@ extension on Translations {
 			'home.analyzingLink' => 'Analisi link in corso...',
 			'home.photoTips' => 'Per risultati migliori',
 			'home.photoTipsDesc' => 'Inquadra l\'auto intera, con buona luce e da più angolazioni',
+			'home.subtitle' => 'Il tuo identificatore di auto d\'epoca',
+			'home.snapAndIdentify' => 'Scatta e identifica',
+			'home.chooseFromGallery' => 'Scegli dalla galleria',
+			'home.gallery' => 'Galleria',
+			'home.marketplaceSites' => 'Subito.it, AutoScout24',
 			'garage.title' => 'Il tuo Garage',
 			'garage.empty' => 'Il tuo garage è vuoto',
 			'garage.emptySubtitle' => 'Scansiona la tua prima auto storica\nper iniziare la tua collezione',

@@ -3,9 +3,14 @@ import 'package:flutter/services.dart';
 import 'package:image_picker/image_picker.dart';
 import '../i18n/strings.g.dart';
 import '../theme/app_colors.dart';
+import '../widgets/photo_tips_card.dart';
+import 'achievements_placeholder_screen.dart';
 import 'results_screen.dart';
 import 'garage_screen.dart';
 import 'settings_screen.dart';
+
+/// Layout variant for user selection. Change [_activeVariant] to preview each.
+enum _HomeLayoutVariant { minimalEvoluto, heroVisivo, cardBased }
 
 class HomeScreen extends StatefulWidget {
   const HomeScreen({super.key});
@@ -18,9 +23,11 @@ class _HomeScreenState extends State<HomeScreen> {
   int _currentIndex = 0;
   final ImagePicker _picker = ImagePicker();
 
+  // TEMPORARY: Change this to preview each variant. User will pick one, then others are deleted.
+  static const _activeVariant = _HomeLayoutVariant.minimalEvoluto;
+
   Future<void> _pickImage(ImageSource source) async {
     if (source == ImageSource.gallery) {
-      // Multi-photo from gallery
       final List<XFile> images = await _picker.pickMultiImage(
         maxWidth: 1920,
         maxHeight: 1920,
@@ -63,21 +70,45 @@ class _HomeScreenState extends State<HomeScreen> {
     final text = clipboardData?.text?.trim() ?? '';
 
     // Extract URL from text - handles cases where apps add extra text
-    // e.g. "Guarda questo annuncio: https://www.subito.it/auto/..."
     final urlMatch = RegExp(r'https?://[^\s<>"]+').firstMatch(text);
     final url = urlMatch?.group(0);
 
     if (url != null && url.isNotEmpty) {
       if (mounted) {
-        Navigator.push(
-          context,
-          MaterialPageRoute(
-            builder: (_) => ResultScreen(
-              imagePath: '',
-              listingUrl: url,
+        final host = Uri.tryParse(url)?.host.toLowerCase() ?? '';
+        String message;
+        if (host.contains('subito.it')) {
+          message = t.home.analyzingSubito;
+        } else if (host.contains('autoscout24')) {
+          message = t.home.analyzingAutoScout;
+        } else {
+          message = t.home.analyzingLink;
+        }
+
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: Row(
+              children: [
+                Icon(Icons.storefront, color: context.colors.teal, size: 20),
+                const SizedBox(width: 8),
+                Text(message),
+              ],
             ),
+            duration: const Duration(milliseconds: 1500),
+            backgroundColor: context.colors.surfaceCard,
           ),
         );
+
+        Future.delayed(const Duration(milliseconds: 1500), () {
+          if (mounted) {
+            Navigator.push(
+              context,
+              MaterialPageRoute(
+                builder: (_) => ResultScreen(imagePath: '', listingUrl: url),
+              ),
+            );
+          }
+        });
       }
     } else {
       if (mounted) {
@@ -95,7 +126,11 @@ class _HomeScreenState extends State<HomeScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: context.colors.background,
-      body: _currentIndex == 0 ? _buildScanPage() : const GarageScreen(),
+      body: [
+        _buildScanPage(),
+        const GarageScreen(),
+        const AchievementsPlaceholderScreen(),
+      ][_currentIndex],
       bottomNavigationBar: Container(
         decoration: BoxDecoration(
           color: context.colors.background,
@@ -113,11 +148,11 @@ class _HomeScreenState extends State<HomeScreen> {
           elevation: 0,
           selectedLabelStyle: const TextStyle(
             fontWeight: FontWeight.w600,
-            fontSize: 10,
+            fontSize: 12,
           ),
           unselectedLabelStyle: const TextStyle(
             fontWeight: FontWeight.w400,
-            fontSize: 10,
+            fontSize: 12,
           ),
           items: [
             BottomNavigationBarItem(
@@ -130,6 +165,11 @@ class _HomeScreenState extends State<HomeScreen> {
               activeIcon: const Icon(Icons.directions_car),
               label: t.nav.garage,
             ),
+            BottomNavigationBarItem(
+              icon: const Icon(Icons.emoji_events_outlined),
+              activeIcon: const Icon(Icons.emoji_events),
+              label: t.nav.achievements,
+            ),
           ],
         ),
       ),
@@ -137,6 +177,18 @@ class _HomeScreenState extends State<HomeScreen> {
   }
 
   Widget _buildScanPage() {
+    return switch (_activeVariant) {
+      _HomeLayoutVariant.minimalEvoluto => _buildVariantA(),
+      _HomeLayoutVariant.heroVisivo => _buildVariantB(),
+      _HomeLayoutVariant.cardBased => _buildVariantC(),
+    };
+  }
+
+  // ---------------------------------------------------------------------------
+  // Variant A — Minimal Evoluto
+  // Clean vertical stack, breathing space, camera circle centered.
+  // ---------------------------------------------------------------------------
+  Widget _buildVariantA() {
     return SafeArea(
       child: Stack(
         children: [
@@ -150,148 +202,559 @@ class _HomeScreenState extends State<HomeScreen> {
                 color: context.colors.textSecondary,
                 size: 22,
               ),
-              onPressed: () {
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(
-                    builder: (_) => const SettingsScreen(),
-                  ),
-                );
-              },
+              onPressed: () => _navigateToSettings(),
             ),
           ),
           Center(
-        child: Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 40),
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              const Spacer(flex: 2),
+            child: Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 40),
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  const Spacer(flex: 2),
 
-              // Logo
-              Text(
-                t.app.name,
-                style: TextStyle(
-                  fontSize: 28,
-                  fontWeight: FontWeight.w300,
-                  letterSpacing: 12,
-                  color: context.colors.textPrimary,
+                  // Logo
+                  Text(
+                    t.app.name,
+                    style: TextStyle(
+                      fontSize: 28,
+                      fontWeight: FontWeight.w400,
+                      letterSpacing: 12,
+                      color: context.colors.textPrimary,
+                    ),
+                  ),
+                  const SizedBox(height: 8),
+
+                  // Tagline
+                  Text(
+                    t.app.tagline,
+                    style: TextStyle(
+                      fontSize: 15,
+                      fontWeight: FontWeight.w400,
+                      color: context.colors.textSecondary,
+                    ),
+                  ),
+                  const SizedBox(height: 48),
+
+                  // Camera button — large circle
+                  Semantics(
+                    label: t.home.takePhoto,
+                    child: GestureDetector(
+                      onTap: () => _pickImage(ImageSource.camera),
+                      child: Container(
+                        width: 200,
+                        height: 200,
+                        decoration: BoxDecoration(
+                          shape: BoxShape.circle,
+                          color: context.colors.surfaceCard,
+                          border: Border.all(
+                            color: context.colors.border,
+                            width: 1.5,
+                          ),
+                        ),
+                        child: Column(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            Container(
+                              width: 48,
+                              height: 48,
+                              decoration: BoxDecoration(
+                                borderRadius: BorderRadius.circular(12),
+                                border: Border.all(
+                                  color: context.colors.textPrimary,
+                                  width: 2,
+                                ),
+                              ),
+                              child: Center(
+                                child: Icon(
+                                  Icons.camera_alt_outlined,
+                                  size: 24,
+                                  color: context.colors.textPrimary,
+                                ),
+                              ),
+                            ),
+                            const SizedBox(height: 16),
+                            Text(
+                              t.home.takePhoto,
+                              style: TextStyle(
+                                fontSize: 15,
+                                fontWeight: FontWeight.w400,
+                                color: context.colors.textPrimary,
+                              ),
+                            ),
+                          ],
+                        ),
+                      ),
+                    ),
+                  ),
+                  const SizedBox(height: 24),
+
+                  // Gallery link
+                  Semantics(
+                    label: t.home.loadFromGallery,
+                    child: GestureDetector(
+                      onTap: () => _pickImage(ImageSource.gallery),
+                      child: Container(
+                        padding: const EdgeInsets.only(bottom: 2),
+                        decoration: BoxDecoration(
+                          border: Border(
+                            bottom: BorderSide(
+                              color: context.colors.border,
+                              width: 1,
+                            ),
+                          ),
+                        ),
+                        child: Text(
+                          t.home.loadFromGallery,
+                          style: TextStyle(
+                            fontSize: 15,
+                            fontWeight: FontWeight.w400,
+                            color: context.colors.textSecondary,
+                          ),
+                        ),
+                      ),
+                    ),
+                  ),
+                  const SizedBox(height: 32),
+
+                  // Paste link button
+                  Semantics(
+                    label: t.home.pasteLink,
+                    child: SizedBox(
+                      width: double.infinity,
+                      child: OutlinedButton.icon(
+                        onPressed: _pasteLink,
+                        icon: const Icon(Icons.link, size: 20),
+                        label: Text(t.home.pasteLink),
+                        style: OutlinedButton.styleFrom(
+                          foregroundColor: context.colors.textPrimary,
+                          side: BorderSide(
+                            color: context.colors.border,
+                            width: 1.5,
+                          ),
+                          padding: const EdgeInsets.symmetric(vertical: 14),
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(12),
+                          ),
+                          textStyle: const TextStyle(
+                            fontSize: 15,
+                            fontWeight: FontWeight.w400,
+                          ),
+                        ),
+                      ),
+                    ),
+                  ),
+                  const SizedBox(height: 24),
+
+                  // Photo tips card
+                  const PhotoTipsCard(),
+
+                  const Spacer(flex: 3),
+                ],
+              ),
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
+  // ---------------------------------------------------------------------------
+  // Variant B — Hero Visivo
+  // surfaceWarm hero area at top, overlapping action card, more visual personality.
+  // ---------------------------------------------------------------------------
+  Widget _buildVariantB() {
+    return SafeArea(
+      child: SingleChildScrollView(
+        child: Column(
+          children: [
+            // Hero area with surfaceWarm background
+            Container(
+              width: double.infinity,
+              decoration: BoxDecoration(
+                color: context.colors.surfaceWarm,
+                borderRadius: const BorderRadius.only(
+                  bottomLeft: Radius.circular(24),
+                  bottomRight: Radius.circular(24),
                 ),
               ),
-              const SizedBox(height: 8),
+              child: Column(
+                children: [
+                  // Settings row (right-aligned)
+                  Align(
+                    alignment: Alignment.centerRight,
+                    child: Padding(
+                      padding: const EdgeInsets.only(top: 8, right: 8),
+                      child: IconButton(
+                        icon: Icon(
+                          Icons.settings_outlined,
+                          color: context.colors.textSecondary,
+                          size: 22,
+                        ),
+                        onPressed: () => _navigateToSettings(),
+                      ),
+                    ),
+                  ),
 
-              // Tagline
-              Text(
-                t.app.tagline,
-                style: TextStyle(
-                  fontSize: 15,
-                  fontWeight: FontWeight.w300,
-                  color: context.colors.textSecondary,
-                ),
+                  // Logo + tagline in hero
+                  const SizedBox(height: 24),
+                  Text(
+                    t.app.name,
+                    style: TextStyle(
+                      fontSize: 28,
+                      fontWeight: FontWeight.w400,
+                      letterSpacing: 12,
+                      color: context.colors.textPrimary,
+                    ),
+                  ),
+                  const SizedBox(height: 8),
+                  Text(
+                    t.app.tagline,
+                    style: TextStyle(
+                      fontSize: 15,
+                      fontWeight: FontWeight.w400,
+                      color: context.colors.textSecondary,
+                    ),
+                  ),
+                  const SizedBox(height: 48),
+                ],
               ),
-              const SizedBox(height: 60),
+            ),
 
-              // Camera button - large circle
-              GestureDetector(
-                onTap: () => _pickImage(ImageSource.camera),
+            // Overlapping action card
+            Transform.translate(
+              offset: const Offset(0, -32),
+              child: Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 24),
                 child: Container(
-                  width: 220,
-                  height: 220,
+                  padding: const EdgeInsets.all(24),
                   decoration: BoxDecoration(
-                    shape: BoxShape.circle,
                     color: context.colors.surfaceCard,
+                    borderRadius: BorderRadius.circular(12),
                     border: Border.all(
                       color: context.colors.border,
-                      width: 1.5,
+                      width: 1,
                     ),
                   ),
                   child: Column(
-                    mainAxisAlignment: MainAxisAlignment.center,
                     children: [
-                      // Camera icon
-                      Container(
-                        width: 48,
-                        height: 48,
-                        decoration: BoxDecoration(
-                          borderRadius: BorderRadius.circular(12),
-                          border: Border.all(
-                            color: context.colors.textPrimary,
-                            width: 2,
-                          ),
-                        ),
-                        child: Center(
-                          child: Icon(
-                            Icons.camera_alt_outlined,
-                            size: 24,
-                            color: context.colors.textPrimary,
+                      // Camera button — large circle
+                      Semantics(
+                        label: t.home.takePhoto,
+                        child: GestureDetector(
+                          onTap: () => _pickImage(ImageSource.camera),
+                          child: Container(
+                            width: 200,
+                            height: 200,
+                            decoration: BoxDecoration(
+                              shape: BoxShape.circle,
+                              color: context.colors.surfaceCard,
+                              border: Border.all(
+                                color: context.colors.border,
+                                width: 1.5,
+                              ),
+                            ),
+                            child: Column(
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              children: [
+                                Container(
+                                  width: 48,
+                                  height: 48,
+                                  decoration: BoxDecoration(
+                                    borderRadius: BorderRadius.circular(12),
+                                    border: Border.all(
+                                      color: context.colors.textPrimary,
+                                      width: 2,
+                                    ),
+                                  ),
+                                  child: Center(
+                                    child: Icon(
+                                      Icons.camera_alt_outlined,
+                                      size: 24,
+                                      color: context.colors.textPrimary,
+                                    ),
+                                  ),
+                                ),
+                                const SizedBox(height: 16),
+                                Text(
+                                  t.home.takePhoto,
+                                  style: TextStyle(
+                                    fontSize: 15,
+                                    fontWeight: FontWeight.w400,
+                                    color: context.colors.textPrimary,
+                                  ),
+                                ),
+                              ],
+                            ),
                           ),
                         ),
                       ),
                       const SizedBox(height: 16),
-                      Text(
-                        t.home.takePhoto,
-                        style: TextStyle(
-                          fontSize: 15,
-                          fontWeight: FontWeight.w400,
-                          color: context.colors.textPrimary,
-                        ),
+
+                      // Secondary actions row
+                      Row(
+                        children: [
+                          // Gallery button
+                          Expanded(
+                            child: Semantics(
+                              label: t.home.loadFromGallery,
+                              child: OutlinedButton.icon(
+                                onPressed: () =>
+                                    _pickImage(ImageSource.gallery),
+                                icon: Icon(
+                                  Icons.photo_library_outlined,
+                                  size: 20,
+                                  color: context.colors.textPrimary,
+                                ),
+                                label: Text(
+                                  t.home.gallery,
+                                  style: TextStyle(
+                                    fontSize: 15,
+                                    fontWeight: FontWeight.w400,
+                                    color: context.colors.textPrimary,
+                                  ),
+                                ),
+                                style: OutlinedButton.styleFrom(
+                                  side: BorderSide(
+                                    color: context.colors.border,
+                                    width: 1.5,
+                                  ),
+                                  padding:
+                                      const EdgeInsets.symmetric(vertical: 14),
+                                  shape: RoundedRectangleBorder(
+                                    borderRadius: BorderRadius.circular(12),
+                                  ),
+                                ),
+                              ),
+                            ),
+                          ),
+                          const SizedBox(width: 12),
+
+                          // Paste link button
+                          Expanded(
+                            child: Semantics(
+                              label: t.home.pasteLink,
+                              child: OutlinedButton.icon(
+                                onPressed: _pasteLink,
+                                icon: Icon(
+                                  Icons.link,
+                                  size: 20,
+                                  color: context.colors.textPrimary,
+                                ),
+                                label: Text(
+                                  t.home.pasteLink,
+                                  style: TextStyle(
+                                    fontSize: 15,
+                                    fontWeight: FontWeight.w400,
+                                    color: context.colors.textPrimary,
+                                  ),
+                                ),
+                                style: OutlinedButton.styleFrom(
+                                  side: BorderSide(
+                                    color: context.colors.border,
+                                    width: 1.5,
+                                  ),
+                                  padding:
+                                      const EdgeInsets.symmetric(vertical: 14),
+                                  shape: RoundedRectangleBorder(
+                                    borderRadius: BorderRadius.circular(12),
+                                  ),
+                                ),
+                              ),
+                            ),
+                          ),
+                        ],
                       ),
+                      const SizedBox(height: 16),
+
+                      // Photo tips card
+                      const PhotoTipsCard(),
                     ],
                   ),
                 ),
               ),
-              const SizedBox(height: 24),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
 
-              // Gallery link
-              GestureDetector(
-                onTap: () => _pickImage(ImageSource.gallery),
-                child: Container(
-                  padding: const EdgeInsets.only(bottom: 2),
-                  decoration: BoxDecoration(
-                    border: Border(
-                      bottom: BorderSide(color: context.colors.border, width: 1),
-                    ),
-                  ),
-                  child: Text(
-                    t.home.loadFromGallery,
-                    style: TextStyle(
-                      fontSize: 13,
-                      color: context.colors.textSecondary,
-                    ),
+  // ---------------------------------------------------------------------------
+  // Variant C — Card-Based
+  // Three vertical action cards, camera card with accent border.
+  // ---------------------------------------------------------------------------
+  Widget _buildVariantC() {
+    return SafeArea(
+      child: Stack(
+        children: [
+          // Settings button top-right
+          Positioned(
+            top: 8,
+            right: 8,
+            child: IconButton(
+              icon: Icon(
+                Icons.settings_outlined,
+                color: context.colors.textSecondary,
+                size: 22,
+              ),
+              onPressed: () => _navigateToSettings(),
+            ),
+          ),
+          Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 24),
+            child: Column(
+              children: [
+                const SizedBox(height: 64),
+
+                // Logo
+                Text(
+                  t.app.name,
+                  style: TextStyle(
+                    fontSize: 28,
+                    fontWeight: FontWeight.w400,
+                    letterSpacing: 12,
+                    color: context.colors.textPrimary,
                   ),
                 ),
-              ),
+                const SizedBox(height: 8),
 
-              const SizedBox(height: 32),
-
-              // Paste link button
-              SizedBox(
-                width: double.infinity,
-                child: OutlinedButton.icon(
-                  onPressed: _pasteLink,
-                  icon: const Icon(Icons.link, size: 20),
-                  label: Text(t.home.pasteLink),
-                  style: OutlinedButton.styleFrom(
-                    foregroundColor: context.colors.textPrimary,
-                    side: BorderSide(color: context.colors.border, width: 1.5),
-                    padding: const EdgeInsets.symmetric(vertical: 14),
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(12),
-                    ),
-                    textStyle: const TextStyle(
-                      fontSize: 15,
-                      fontWeight: FontWeight.w400,
-                    ),
+                // Tagline
+                Text(
+                  t.app.tagline,
+                  style: TextStyle(
+                    fontSize: 15,
+                    fontWeight: FontWeight.w400,
+                    color: context.colors.textSecondary,
                   ),
                 ),
-              ),
+                const SizedBox(height: 48),
 
-              const Spacer(flex: 3),
+                // Subtitle
+                Text(
+                  t.home.subtitle,
+                  style: TextStyle(
+                    fontSize: 12,
+                    fontWeight: FontWeight.w600,
+                    letterSpacing: 2,
+                    color: context.colors.textTertiary,
+                  ),
+                ),
+                const SizedBox(height: 24),
+
+                // Camera action card (primary — accent border)
+                _buildActionCard(
+                  icon: Icons.camera_alt_outlined,
+                  label: t.home.takePhoto,
+                  description: t.home.snapAndIdentify,
+                  onTap: () => _pickImage(ImageSource.camera),
+                  isPrimary: true,
+                ),
+                const SizedBox(height: 12),
+
+                // Gallery action card
+                _buildActionCard(
+                  icon: Icons.photo_library_outlined,
+                  label: t.home.loadFromGallery,
+                  description: t.home.chooseFromGallery,
+                  onTap: () => _pickImage(ImageSource.gallery),
+                ),
+                const SizedBox(height: 12),
+
+                // Paste link action card
+                _buildActionCard(
+                  icon: Icons.link,
+                  label: t.home.pasteLink,
+                  description: t.home.marketplaceSites,
+                  onTap: _pasteLink,
+                ),
+                const SizedBox(height: 24),
+
+                // Photo tips card
+                const PhotoTipsCard(),
+              ],
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
+  /// Action card for Variant C.
+  Widget _buildActionCard({
+    required IconData icon,
+    required String label,
+    required String description,
+    required VoidCallback onTap,
+    bool isPrimary = false,
+  }) {
+    return Semantics(
+      label: label,
+      child: GestureDetector(
+        onTap: onTap,
+        child: Container(
+          constraints: const BoxConstraints(minHeight: 72),
+          padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 16),
+          decoration: BoxDecoration(
+            color: context.colors.surfaceCard,
+            borderRadius: BorderRadius.circular(12),
+            border: isPrimary
+                ? Border(
+                    left: BorderSide(
+                      color: context.colors.accentRed,
+                      width: 4,
+                    ),
+                    top: BorderSide(color: context.colors.border, width: 1),
+                    right: BorderSide(color: context.colors.border, width: 1),
+                    bottom: BorderSide(color: context.colors.border, width: 1),
+                  )
+                : Border.all(color: context.colors.border, width: 1),
+          ),
+          child: Row(
+            children: [
+              Icon(icon, size: 32, color: context.colors.textPrimary),
+              const SizedBox(width: 16),
+              Expanded(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                      label,
+                      style: TextStyle(
+                        fontSize: 15,
+                        fontWeight: FontWeight.w600,
+                        color: context.colors.textPrimary,
+                      ),
+                    ),
+                    const SizedBox(height: 2),
+                    Text(
+                      description,
+                      style: TextStyle(
+                        fontSize: 15,
+                        fontWeight: FontWeight.w400,
+                        color: context.colors.textSecondary,
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+              Icon(
+                Icons.chevron_right,
+                size: 24,
+                color: context.colors.textTertiary,
+              ),
             ],
           ),
         ),
       ),
-        ],
+    );
+  }
+
+  void _navigateToSettings() {
+    Navigator.push(
+      context,
+      MaterialPageRoute(
+        builder: (_) => const SettingsScreen(),
       ),
     );
   }

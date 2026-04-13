@@ -22,7 +22,12 @@
     "analyzingAutoScout": "Analisi annuncio AutoScout24...",
     "analyzingLink": "Analisi link in corso...",
     "photoTips": "Per risultati migliori",
-    "photoTipsDesc": "Inquadra l'auto intera, con buona luce e da pi\u00f9 angolazioni"
+    "photoTipsDesc": "Inquadra l'auto intera, con buona luce e da pi\u00f9 angolazioni",
+    "subtitle": "Il tuo identificatore di auto d'epoca",
+    "snapAndIdentify": "Scatta e identifica",
+    "chooseFromGallery": "Scegli dalla galleria",
+    "gallery": "Galleria",
+    "marketplaceSites": "Subito.it, AutoScout24"
   },
   "garage": {
     "title": "Il tuo Garage",
