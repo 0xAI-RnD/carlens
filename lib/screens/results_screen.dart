@@ -57,6 +57,7 @@ class _ResultScreenState extends State<ResultScreen>
   bool _vinDecoding = false;
   bool _generatingReport = false;
   final TextEditingController _vinController = TextEditingController();
+  final ScrollController _scrollController = ScrollController();
 
   final GeminiService _geminiService = GeminiService();
   final CarDataService _carDataService = CarDataService();
@@ -78,6 +79,7 @@ class _ResultScreenState extends State<ResultScreen>
   void dispose() {
     _vinController.dispose();
     _pulseController.dispose();
+    _scrollController.dispose();
     super.dispose();
   }
 
@@ -878,6 +880,7 @@ class _ResultScreenState extends State<ResultScreen>
         _buildHeaderBack(t.results.title),
         Expanded(
           child: SingleChildScrollView(
+            controller: _scrollController,
             physics: const BouncingScrollPhysics(),
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.stretch,
@@ -1039,12 +1042,12 @@ class _ResultScreenState extends State<ResultScreen>
                         Padding(
                           padding: const EdgeInsets.only(top: 32),
                           child: GestureDetector(
-                            onTap: () => setState(() => _alternativesExpanded = true),
+                            onTap: () => setState(() => _alternativesExpanded = !_alternativesExpanded),
                             child: Padding(
                               padding: const EdgeInsets.symmetric(vertical: 16),
                               child: Center(
                                 child: Semantics(
-                                  label: 'Mostra alternative di identificazione',
+                                  label: t.results.showAlternatives,
                                   child: Text(
                                     t.results.notThisCar,
                                     style: TextStyle(
@@ -2164,10 +2167,20 @@ class _ResultScreenState extends State<ResultScreen>
           _vinController.clear();
           _currentLevel = 1;
           _showVinInput = false;
+          // Reset saved scan so user can save the new primary
+          _scan = null;
           // Collapse alternatives after swap — user must tap "Non e quest'auto?" again
           _alternativesExpanded = false;
           // Refresh car data for new primary
           _carData = _carDataService.findByBrandModel(alt.brand, alt.model);
+        });
+        // Scroll to top so user sees the swapped primary identification
+        WidgetsBinding.instance.addPostFrameCallback((_) {
+          if (_scrollController.hasClients) {
+            _scrollController.animateTo(0,
+                duration: const Duration(milliseconds: 300),
+                curve: Curves.easeOut);
+          }
         });
       },
       child: Container(

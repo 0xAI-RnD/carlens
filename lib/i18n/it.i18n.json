@@ -142,6 +142,7 @@
     "vinReading": "Lettura targhetta in corso...",
     "searchReliability": "Attendibilit\u00e0 ricerca: ${percent}%",
     "notThisCar": "Non \u00e8 quest'auto?",
+    "showAlternatives": "Mostra alternative di identificazione",
     "correctionFeedback": "Grazie per il feedback! Riprova con un'altra foto.",
     "saveError": "Errore nel salvataggio. Riprova.",
     "reportError": "Errore nella generazione del report. Riprova.",

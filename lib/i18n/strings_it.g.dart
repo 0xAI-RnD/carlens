@@ -427,6 +427,9 @@ class TranslationsResultsIt {
 	/// it: 'Non è quest'auto?'
 	String get notThisCar => 'Non è quest\'auto?';
 
+	/// it: 'Mostra alternative di identificazione'
+	String get showAlternatives => 'Mostra alternative di identificazione';
+
 	/// it: 'Grazie per il feedback! Riprova con un'altra foto.'
 	String get correctionFeedback => 'Grazie per il feedback! Riprova con un\'altra foto.';
 
@@ -1133,6 +1136,7 @@ extension on Translations {
 			'results.vinReading' => 'Lettura targhetta in corso...',
 			'results.searchReliability' => ({required Object percent}) => 'Attendibilità ricerca: ${percent}%',
 			'results.notThisCar' => 'Non è quest\'auto?',
+			'results.showAlternatives' => 'Mostra alternative di identificazione',
 			'results.correctionFeedback' => 'Grazie per il feedback! Riprova con un\'altra foto.',
 			'results.saveError' => 'Errore nel salvataggio. Riprova.',
 			'results.reportError' => 'Errore nella generazione del report. Riprova.',
