@@ -2,11 +2,13 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:intl/date_symbol_data_local.dart';
+import 'package:firebase_core/firebase_core.dart';
 import 'package:upgrader/upgrader.dart';
 import 'package:version/version.dart';
 import 'i18n/strings.g.dart';
 import 'theme/app_colors.dart';
 import 'theme/app_theme.dart';
+import 'firebase_options.dart';
 import 'services/database_service.dart';
 import 'services/car_data_service.dart';
 import 'services/notification_service.dart';
@@ -25,6 +27,7 @@ void main() async {
   await initializeDateFormatting('it_IT', null);
   await DatabaseService().init();
   await DatabaseService().seedAchievements();
+  await Firebase.initializeApp(options: DefaultFirebaseOptions.currentPlatform);
 
   runApp(TranslationProvider(child: const CarLensApp()));
 }

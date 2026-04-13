@@ -37,6 +37,7 @@ class _HomeScreenState extends State<HomeScreen> {
               extraImagePaths: images.length > 1
                   ? images.sublist(1).map((x) => x.path).toList()
                   : null,
+              scanSource: 'gallery',
             ),
           ),
         );
@@ -52,7 +53,7 @@ class _HomeScreenState extends State<HomeScreen> {
         Navigator.push(
           context,
           MaterialPageRoute(
-            builder: (_) => ResultScreen(imagePath: image.path),
+            builder: (_) => ResultScreen(imagePath: image.path, scanSource: 'camera'),
           ),
         );
       }
@@ -98,7 +99,7 @@ class _HomeScreenState extends State<HomeScreen> {
             Navigator.push(
               context,
               MaterialPageRoute(
-                builder: (_) => ResultScreen(imagePath: '', listingUrl: url),
+                builder: (_) => ResultScreen(imagePath: '', listingUrl: url, scanSource: 'url'),
               ),
             );
           }
