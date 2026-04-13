@@ -53,6 +53,7 @@ class _ResultScreenState extends State<ResultScreen>
   String? _listingImagePath; // temp file path for listing's first image
 
   bool _showVinInput = false;
+  bool _alternativesExpanded = false;
   bool _vinDecoding = false;
   bool _generatingReport = false;
   final TextEditingController _vinController = TextEditingController();
@@ -949,7 +950,7 @@ class _ResultScreenState extends State<ResultScreen>
                                 size: 13, color: context.colors.textTertiary),
                             const SizedBox(width: 4),
                             Text(
-                              t.results.identifiedWithPercent(percent: percent.toString()),
+                              t.results.identified,
                               style: TextStyle(
                                 fontSize: 12,
                                 color: context.colors.textTertiary,
@@ -1034,13 +1035,44 @@ class _ResultScreenState extends State<ResultScreen>
                         _buildFunFact(id.funFact),
                       ],
 
-                      // Alternative matches
+                      // Alternative matches — hidden behind discrete link per D-08
                       if (_alternatives.isNotEmpty) ...[
                         Padding(
-                          padding: EdgeInsets.symmetric(vertical: 24),
-                          child: Divider(color: context.colors.border, height: 1),
+                          padding: const EdgeInsets.only(top: 32),
+                          child: GestureDetector(
+                            onTap: () => setState(() => _alternativesExpanded = true),
+                            child: Padding(
+                              padding: const EdgeInsets.symmetric(vertical: 16),
+                              child: Center(
+                                child: Semantics(
+                                  label: 'Mostra alternative di identificazione',
+                                  child: Text(
+                                    t.results.notThisCar,
+                                    style: TextStyle(
+                                      fontSize: 15,
+                                      fontWeight: FontWeight.w400,
+                                      color: context.colors.textTertiary,
+                                    ),
+                                  ),
+                                ),
+                              ),
+                            ),
+                          ),
                         ),
-                        _buildAlternativesSection(),
+                        AnimatedSize(
+                          duration: const Duration(milliseconds: 300),
+                          curve: Curves.easeOut,
+                          alignment: Alignment.topCenter,
+                          clipBehavior: Clip.hardEdge,
+                          child: _alternativesExpanded
+                              ? Padding(
+                                  padding: const EdgeInsets.only(top: 8),
+                                  child: Column(
+                                    children: _alternatives.map((alt) => _buildAlternativeCard(alt)).toList(),
+                                  ),
+                                )
+                              : const SizedBox.shrink(),
+                        ),
                       ],
 
                       // VIN invite card
