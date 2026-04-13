@@ -24,6 +24,7 @@ void main() async {
 
   await initializeDateFormatting('it_IT', null);
   await DatabaseService().init();
+  await DatabaseService().seedAchievements();
 
   runApp(TranslationProvider(child: const CarLensApp()));
 }

@@ -523,11 +523,59 @@ class TranslationsAchievementsIt {
 
 	// Translations
 
-	/// it: 'Presto disponibile'
-	String get comingSoon => 'Presto disponibile';
+	/// it: 'Traguardi'
+	String get title => 'Traguardi';
 
-	/// it: 'I tuoi traguardi appariranno qui'
-	String get comingSoonDesc => 'I tuoi traguardi appariranno qui';
+	/// it: 'Scansioni'
+	String get scans => 'Scansioni';
+
+	/// it: 'Marchi'
+	String get brands => 'Marchi';
+
+	/// it: 'Epoche'
+	String get eras => 'Epoche';
+
+	/// it: 'Base'
+	String get base => 'Base';
+
+	/// it: 'Bronzo'
+	String get bronze => 'Bronzo';
+
+	/// it: 'Argento'
+	String get silver => 'Argento';
+
+	/// it: 'Oro'
+	String get gold => 'Oro';
+
+	/// it: '${current}/${target}'
+	String progress({required Object current, required Object target}) => '${current}/${target}';
+
+	/// it: 'Sbloccato il ${date}'
+	String unlockedOn({required Object date}) => 'Sbloccato il ${date}';
+
+	/// it: 'Bloccato'
+	String get locked => 'Bloccato';
+
+	/// it: 'Collezionista'
+	String get scansBadgeName => 'Collezionista';
+
+	/// it: 'Esploratore'
+	String get brandsBadgeName => 'Esploratore';
+
+	/// it: 'Storico'
+	String get erasBadgeName => 'Storico';
+
+	/// it: 'Traguardo sbloccato!'
+	String get badgeUnlocked => 'Traguardo sbloccato!';
+
+	/// it: 'Scansioni totali completate'
+	String get scansDesc => 'Scansioni totali completate';
+
+	/// it: 'Marchi diversi identificati'
+	String get brandsDesc => 'Marchi diversi identificati';
+
+	/// it: 'Epoche diverse esplorate'
+	String get erasDesc => 'Epoche diverse esplorate';
 }
 
 // Path: vin
@@ -1242,8 +1290,24 @@ extension on Translations {
 			'settings.deleteAllConfirm' => 'Elimina tutto',
 			'settings.deleteAllDone' => 'Tutti i dati sono stati eliminati',
 			'settings.cancel' => 'Annulla',
-			'achievements.comingSoon' => 'Presto disponibile',
-			'achievements.comingSoonDesc' => 'I tuoi traguardi appariranno qui',
+			'achievements.title' => 'Traguardi',
+			'achievements.scans' => 'Scansioni',
+			'achievements.brands' => 'Marchi',
+			'achievements.eras' => 'Epoche',
+			'achievements.base' => 'Base',
+			'achievements.bronze' => 'Bronzo',
+			'achievements.silver' => 'Argento',
+			'achievements.gold' => 'Oro',
+			'achievements.progress' => ({required Object current, required Object target}) => '${current}/${target}',
+			'achievements.unlockedOn' => ({required Object date}) => 'Sbloccato il ${date}',
+			'achievements.locked' => 'Bloccato',
+			'achievements.scansBadgeName' => 'Collezionista',
+			'achievements.brandsBadgeName' => 'Esploratore',
+			'achievements.erasBadgeName' => 'Storico',
+			'achievements.badgeUnlocked' => 'Traguardo sbloccato!',
+			'achievements.scansDesc' => 'Scansioni totali completate',
+			'achievements.brandsDesc' => 'Marchi diversi identificati',
+			'achievements.erasDesc' => 'Epoche diverse esplorate',
 			'vin.title' => 'Dove trovo il telaio?',
 			'vin.subtitle' => 'Il VIN (Vehicle Identification Number) può trovarsi in diverse posizioni a seconda del modello e dell\'anno.',
 			'vin.pageTitle' => 'Dove trovo il numero di telaio?',

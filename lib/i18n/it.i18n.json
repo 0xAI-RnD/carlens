@@ -266,8 +266,24 @@
     "cancel": "Annulla"
   },
   "achievements": {
-    "comingSoon": "Presto disponibile",
-    "comingSoonDesc": "I tuoi traguardi appariranno qui"
+    "title": "Traguardi",
+    "scans": "Scansioni",
+    "brands": "Marchi",
+    "eras": "Epoche",
+    "base": "Base",
+    "bronze": "Bronzo",
+    "silver": "Argento",
+    "gold": "Oro",
+    "progress": "${current}/${target}",
+    "unlockedOn": "Sbloccato il ${date}",
+    "locked": "Bloccato",
+    "scansBadgeName": "Collezionista",
+    "brandsBadgeName": "Esploratore",
+    "erasBadgeName": "Storico",
+    "badgeUnlocked": "Traguardo sbloccato!",
+    "scansDesc": "Scansioni totali completate",
+    "brandsDesc": "Marchi diversi identificati",
+    "erasDesc": "Epoche diverse esplorate"
   },
   "vin": {
     "title": "Dove trovo il telaio?",
