@@ -59,6 +59,7 @@ class AppLoader extends StatefulWidget {
 
 class _AppLoaderState extends State<AppLoader> {
   bool _ready = false;
+  Upgrader? _upgrader;
 
   @override
   void initState() {
@@ -78,6 +79,16 @@ class _AppLoaderState extends State<AppLoader> {
       debugPrint('Error initializing notifications: $e');
     }
     if (mounted) {
+      _upgrader = Upgrader(
+        storeController: UpgraderStoreController(
+          onAndroid: () => UpgraderAppcastStore(
+            appcastURL: 'https://gist.githubusercontent.com/0xAI-RnD/7d6904f0d7a2477fa197b03adaa47844/raw/appcast.xml',
+            osVersion: Version(0, 0, 0),
+          ),
+        ),
+        languageCode: 'it',
+        durationUntilAlertAgain: const Duration(hours: 8),
+      );
       setState(() => _ready = true);
     }
   }
@@ -114,22 +125,12 @@ class _AppLoaderState extends State<AppLoader> {
         ),
       );
     }
-    final upgraderInstance = Upgrader(
-      storeController: UpgraderStoreController(
-        onAndroid: () => UpgraderAppcastStore(
-          appcastURL: 'https://gist.githubusercontent.com/0xAI-RnD/7d6904f0d7a2477fa197b03adaa47844/raw/appcast.xml',
-          osVersion: Version(0, 0, 0),
-        ),
-      ),
-      languageCode: 'it',
-      durationUntilAlertAgain: const Duration(hours: 8),
-    );
     return UpgradeAlert(
-      upgrader: upgraderInstance,
+      upgrader: _upgrader,
       // upgrader uses LaunchMode.externalNonBrowserApplication which silently
       // fails for https APK URLs on Android — override with externalApplication.
       onUpdate: () {
-        final url = upgraderInstance.versionInfo?.appStoreListingURL;
+        final url = _upgrader?.versionInfo?.appStoreListingURL;
         if (url != null && url.isNotEmpty) {
           launchUrl(Uri.parse(url), mode: LaunchMode.externalApplication);
         }

@@ -1,6 +1,6 @@
-/// VIN (Vehicle Identification Number) decoder supporting post-1981
-/// standard 17-character VINs, pre-1981 Italian manufacturer formats,
-/// and pre-1981 US manufacturer formats (GM, Ford).
+// VIN (Vehicle Identification Number) decoder supporting post-1981
+// standard 17-character VINs, pre-1981 Italian manufacturer formats,
+// and pre-1981 US manufacturer formats (GM, Ford).
 
 class VinResult {
   final String manufacturer;

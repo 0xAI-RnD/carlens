@@ -232,12 +232,14 @@ class _ResultScreenState extends State<ResultScreen>
 
       try {
         final listing = await UrlScraperService().scrapeListingUrl(widget.listingUrl!);
+        if (!mounted) return;
         _listingData = listing;
 
         // Save first image to temp file for display & storage
         final tempDir = Directory.systemTemp;
         final tempFile = File('${tempDir.path}/carlens_listing_${DateTime.now().millisecondsSinceEpoch}.jpg');
         await tempFile.writeAsBytes(listing.imageBytes.first);
+        if (!mounted) return;
         _listingImagePath = tempFile.path;
 
         // Identify car using scraped images

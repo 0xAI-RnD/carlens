@@ -30,7 +30,7 @@ class _GarageScreenState extends State<GarageScreen> {
   }
 
   Future<void> _loadScans() async {
-    setState(() => _isLoading = true);
+    if (mounted) setState(() => _isLoading = true);
     try {
       final scans = await _db.getScans();
       if (mounted) {
@@ -376,16 +376,20 @@ class _GarageScreenState extends State<GarageScreen> {
       color: context.colors.textPrimary,
       backgroundColor: context.colors.surfaceCard,
       child: _filteredScans.isEmpty
-          ? Center(
-              child: Padding(
-                padding: const EdgeInsets.all(40),
-                child: Text(
-                  _searchQuery.isNotEmpty || _filterBrand != null
-                      ? t.garage.noResults
-                      : '',
-                  style: TextStyle(color: context.colors.textSecondary, fontSize: 14),
+          ? ListView(
+              children: [
+                Padding(
+                  padding: const EdgeInsets.all(40),
+                  child: Center(
+                    child: Text(
+                      _searchQuery.isNotEmpty || _filterBrand != null
+                          ? t.garage.noResults
+                          : '',
+                      style: TextStyle(color: context.colors.textSecondary, fontSize: 14),
+                    ),
+                  ),
                 ),
-              ),
+              ],
             )
           : ListView.builder(
               padding: const EdgeInsets.fromLTRB(24, 4, 24, 24),
@@ -468,7 +472,7 @@ class _GarageScreenState extends State<GarageScreen> {
                       ? Image.file(
                           imageFile,
                           fit: BoxFit.cover,
-                          errorBuilder: (_, _e, _st) =>
+                          errorBuilder: (_, e, st) =>
                               _thumbnailPlaceholder(),
                         )
                       : _thumbnailPlaceholder(),

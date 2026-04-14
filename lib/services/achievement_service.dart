@@ -17,9 +17,6 @@ class AchievementService {
       CarIdentification identification) async {
     final db = DatabaseService();
 
-    // Ensure all 12 achievement definitions exist
-    await db.seedAchievements();
-
     // Get current stats from DB (before current scan is saved)
     final scanCount = await db.getScanCount() + 1; // +1 for unsaved current scan
 
