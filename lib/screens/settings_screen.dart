@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:carlens/services/notification_service.dart';
+import 'package:package_info_plus/package_info_plus.dart';
 import '../i18n/strings.g.dart';
 import '../theme/app_colors.dart';
 
@@ -13,6 +14,7 @@ class SettingsScreen extends StatefulWidget {
 class _SettingsScreenState extends State<SettingsScreen> {
   bool _notificationsEnabled = true;
   bool _loading = true;
+  String _appVersion = '';
 
   @override
   void initState() {
@@ -21,10 +23,14 @@ class _SettingsScreenState extends State<SettingsScreen> {
   }
 
   Future<void> _loadPreferences() async {
-    final enabled = await NotificationService().isEnabled();
+    final results = await Future.wait([
+      NotificationService().isEnabled(),
+      PackageInfo.fromPlatform(),
+    ]);
     if (mounted) {
       setState(() {
-        _notificationsEnabled = enabled;
+        _notificationsEnabled = results[0] as bool;
+        _appVersion = (results[1] as PackageInfo).version;
         _loading = false;
       });
     }
@@ -158,7 +164,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
                           ),
                         ),
                         Text(
-                          '0.13.1',
+                          _appVersion,
                           style: TextStyle(
                             fontSize: 15,
                             color: context.colors.textSecondary,
