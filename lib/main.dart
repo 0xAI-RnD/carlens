@@ -4,6 +4,7 @@ import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:intl/date_symbol_data_local.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:upgrader/upgrader.dart';
+import 'package:url_launcher/url_launcher.dart';
 import 'package:version/version.dart';
 import 'i18n/strings.g.dart';
 import 'theme/app_colors.dart';
@@ -113,17 +114,27 @@ class _AppLoaderState extends State<AppLoader> {
         ),
       );
     }
-    return UpgradeAlert(
-      upgrader: Upgrader(
-        storeController: UpgraderStoreController(
-          onAndroid: () => UpgraderAppcastStore(
-            appcastURL: 'https://gist.githubusercontent.com/0xAI-RnD/7d6904f0d7a2477fa197b03adaa47844/raw/appcast.xml',
-            osVersion: Version(0, 0, 0),
-          ),
+    final upgraderInstance = Upgrader(
+      storeController: UpgraderStoreController(
+        onAndroid: () => UpgraderAppcastStore(
+          appcastURL: 'https://gist.githubusercontent.com/0xAI-RnD/7d6904f0d7a2477fa197b03adaa47844/raw/appcast.xml',
+          osVersion: Version(0, 0, 0),
         ),
-        languageCode: 'it',
-        durationUntilAlertAgain: const Duration(days: 1),
       ),
+      languageCode: 'it',
+      durationUntilAlertAgain: const Duration(hours: 8),
+    );
+    return UpgradeAlert(
+      upgrader: upgraderInstance,
+      // upgrader uses LaunchMode.externalNonBrowserApplication which silently
+      // fails for https APK URLs on Android — override with externalApplication.
+      onUpdate: () {
+        final url = upgraderInstance.versionInfo?.appStoreListingURL;
+        if (url != null && url.isNotEmpty) {
+          launchUrl(Uri.parse(url), mode: LaunchMode.externalApplication);
+        }
+        return false; // false = skip upgrader's own sendUserToAppStore()
+      },
       child: const HomeScreen(),
     );
   }

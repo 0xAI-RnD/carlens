@@ -1,7 +1,7 @@
 name: carlens
 description: "CarLens - Identificazione auto storiche con AI"
 publish_to: 'none'
-version: 0.14.4+32
+version: 0.14.5+33
 
 environment:
   sdk: ^3.11.3
@@ -20,6 +20,7 @@ dependencies:
   intl: ^0.20.2
   google_mlkit_text_recognition: ^0.14.0
   upgrader: ^12.5.0
+  url_launcher: ^6.3.0
   flutter_local_notifications: ^21.0.0
   shared_preferences: ^2.5.5
   slang: ^4.14.0
