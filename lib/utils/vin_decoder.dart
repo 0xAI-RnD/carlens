@@ -384,7 +384,6 @@ class VinDecoder {
   static VinResult _decodeStandard(String vin) {
     final wmi = vin.substring(0, 3);
     final vds = vin.substring(3, 9);
-    final vis = vin.substring(9, 17);
 
     final manufacturer = _wmiManufacturers[wmi] ?? _guessManufacturer(wmi);
     final country = _resolveCountry(vin[0]);

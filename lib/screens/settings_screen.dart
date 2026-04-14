@@ -123,7 +123,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
                         Switch.adaptive(
                           value: _notificationsEnabled,
                           onChanged: _toggleNotifications,
-                          activeColor: context.colors.accentRed,
+                          activeThumbColor: context.colors.accentRed,
                         ),
                       ],
                     ),

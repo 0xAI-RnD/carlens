@@ -57,7 +57,6 @@ class _ResultScreenState extends State<ResultScreen>
   ListingData? _listingData;
   String? _listingImagePath; // temp file path for listing's first image
 
-  bool _showVinInput = false;
   bool _alternativesExpanded = false;
   bool _vinDecoding = false;
   bool _generatingReport = false;
@@ -421,7 +420,7 @@ class _ResultScreenState extends State<ResultScreen>
       if (mounted) {
         if (foundVin != null) {
           _vinController.text = foundVin;
-          setState(() => _showVinInput = true);
+          setState(() {});
           ScaffoldMessenger.of(context).showSnackBar(
             SnackBar(
               content: Text(t.results.vinFound(vin: foundVin)),
@@ -486,7 +485,6 @@ class _ResultScreenState extends State<ResultScreen>
           _vinResult = vinResult;
           _currentLevel = 2;
           _vinDecoding = false;
-          _showVinInput = false;
         });
 
         // Persist VIN to DB if scan is already saved
@@ -702,7 +700,7 @@ class _ResultScreenState extends State<ResultScreen>
 
     // Header
     text.writeln(id.brand.toUpperCase());
-    text.writeln('${id.model}');
+    text.writeln(id.model);
     text.writeln('${id.yearEstimate} \u00b7 ${id.bodyType}');
     text.writeln(t.results.shareText.searchReliability(percent: (id.confidence * 100).round().toString()));
     text.writeln();
@@ -786,7 +784,6 @@ class _ResultScreenState extends State<ResultScreen>
       _originalityReport = null;
       _carData = null;
       _scan = null;
-      _showVinInput = false;
       _vinDecoding = false;
       _generatingReport = false;
       _vinController.clear();
@@ -2364,7 +2361,6 @@ class _ResultScreenState extends State<ResultScreen>
           _originalityReport = null;
           _vinController.clear();
           _currentLevel = 1;
-          _showVinInput = false;
           // Reset saved scan so user can save the new primary
           _scan = null;
           // Collapse alternatives after swap — user must tap "Non e quest'auto?" again
