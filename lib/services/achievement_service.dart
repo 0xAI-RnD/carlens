@@ -1,3 +1,4 @@
+import 'package:flutter/foundation.dart';
 import '../models/achievement.dart';
 import '../services/database_service.dart';
 import '../services/gemini_service.dart';
@@ -67,6 +68,9 @@ class AchievementService {
   /// Parses a decade from a year estimate string.
   /// Handles formats: "1967", "1965-1970", "circa 1960", "anni '60"
   /// Returns decade as e.g. 1960, 1970, etc. or null if parsing fails.
+  @visibleForTesting
+  int? parseDecadeForTest(String yearEstimate) => _parseDecade(yearEstimate);
+
   int? _parseDecade(String yearEstimate) {
     final match = RegExp(r'(1[89]\d{2}|20\d{2})').firstMatch(yearEstimate);
     if (match == null) return null;

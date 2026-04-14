@@ -34,6 +34,12 @@ class NotificationService {
 
     await _plugin.initialize(settings: initSettings);
 
+    // Request POST_NOTIFICATIONS permission (required on Android 13+)
+    final androidPlugin = _plugin
+        .resolvePlatformSpecificImplementation<
+            AndroidFlutterLocalNotificationsPlugin>();
+    await androidPlugin?.requestNotificationsPermission();
+
     await _loadCuriosities();
 
     final enabled = await isEnabled();

@@ -1,4 +1,5 @@
 import 'package:firebase_analytics/firebase_analytics.dart';
+import 'package:flutter/foundation.dart';
 
 class AnalyticsService {
   static final AnalyticsService _instance = AnalyticsService._internal();
@@ -68,7 +69,10 @@ class AnalyticsService {
   }
 
   /// Truncate string to 100 chars max (Firebase Analytics parameter limit).
-  String _truncate(String value) {
+  @visibleForTesting
+  static String truncateForTest(String value) => _truncate(value);
+
+  static String _truncate(String value) {
     return value.length > 100 ? value.substring(0, 100) : value;
   }
 }
