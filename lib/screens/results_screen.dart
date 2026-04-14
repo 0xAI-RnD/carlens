@@ -261,9 +261,6 @@ class _ResultScreenState extends State<ResultScreen>
             _isLoading = false;
           });
 
-          // Check and unlock badges (fire-and-forget)
-          _checkBadges(identification);
-
           // Telegram notification (fire-and-forget)
           TelegramService().notifyMarketplaceScan(
             brand: identification.brand,
@@ -339,9 +336,6 @@ class _ResultScreenState extends State<ResultScreen>
           _carData = carData;
           _isLoading = false;
         });
-
-        // Check and unlock badges (fire-and-forget)
-        _checkBadges(identification);
 
         // Telegram notification (fire-and-forget)
         TelegramService().notifyNewScan(
@@ -652,6 +646,9 @@ class _ResultScreenState extends State<ResultScreen>
       );
 
       final id = await _databaseService.insertScan(scan);
+
+      // Check and unlock badges now that scan is saved (fire-and-forget)
+      _checkBadges(ident);
 
       // Telegram notification (fire-and-forget)
       TelegramService().notifyGarageSave(

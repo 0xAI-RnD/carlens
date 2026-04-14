@@ -11,14 +11,14 @@ class AchievementService {
   /// Checks all badge conditions after a scan and unlocks any newly earned badges.
   /// Returns the list of NEWLY unlocked achievements (for banner display).
   ///
-  /// IMPORTANT: The current scan is NOT yet saved to DB when this runs.
-  /// We must add +1 to counts and check if the current brand/era is new.
+  /// IMPORTANT: This must be called AFTER the scan has been saved to DB so that
+  /// getScanCount() and other stat queries reflect the current scan.
   Future<List<Achievement>> checkAndUnlock(
       CarIdentification identification) async {
     final db = DatabaseService();
 
-    // Get current stats from DB (before current scan is saved)
-    final scanCount = await db.getScanCount() + 1; // +1 for unsaved current scan
+    // Get current stats from DB (scan is already saved at this point)
+    final scanCount = await db.getScanCount();
 
     // Check if current brand is new
     final brandOccurrences =
