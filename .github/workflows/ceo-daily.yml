@@ -1,0 +1,91 @@
+name: CEO Daily Report
+
+on:
+  schedule:
+    # 07:12 UTC = 09:12 Europe/Rome (ora legale) — stesso orario del task locale precedente.
+    - cron: '12 7 * * *'
+  workflow_dispatch:
+
+concurrency:
+  group: ceo-daily
+  cancel-in-progress: false
+
+permissions:
+  contents: write
+
+jobs:
+  report:
+    runs-on: ubuntu-latest
+    timeout-minutes: 25
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 50
+
+      - name: Setup Flutter
+        uses: subosito/flutter-action@v2
+        with:
+          channel: stable
+          flutter-version: '3.22.x'
+          cache: true
+
+      - name: Flutter pub get
+        run: flutter pub get
+
+      - name: Flutter test
+        run: |
+          flutter test 2>&1 | tee /tmp/flutter-test.log || true
+          echo "--- flutter-test.log (tail) ---"
+          tail -20 /tmp/flutter-test.log || true
+
+      - name: Flutter analyze
+        run: |
+          flutter analyze 2>&1 | tee /tmp/flutter-analyze.log || true
+          echo "--- flutter-analyze.log (tail) ---"
+          tail -20 /tmp/flutter-analyze.log || true
+
+      - name: Load CEO prompt
+        id: load_prompt
+        run: |
+          {
+            echo "content<<__PROMPT_EOF__"
+            cat .github/prompts/ceo-daily.md
+            echo ""
+            echo "__PROMPT_EOF__"
+          } >> "$GITHUB_OUTPUT"
+
+      - name: Generate CEO report via Claude
+        uses: anthropics/claude-code-action@v1
+        with:
+          claude_code_oauth_token: ${{ secrets.CLAUDE_CODE_OAUTH_TOKEN }}
+          prompt: ${{ steps.load_prompt.outputs.content }}
+          claude_args: |
+            --allowedTools Read,Write,Edit,Bash,Glob,Grep
+            --max-turns 25
+
+      - name: Commit and push report
+        run: |
+          git config user.name "carlens-ceo-bot"
+          git config user.email "ceo-bot@carlens.app"
+          git add .planning/reports/ 2>/dev/null || true
+          if git diff --cached --quiet; then
+            echo "Nothing to commit."
+          else
+            git commit -m "chore(report): CEO daily $(date -u +%F) [skip ci]"
+            git push
+          fi
+
+      - name: Job summary
+        if: always()
+        run: |
+          echo "## CarLens CEO Daily Report — $(date -u +%F)" >> "$GITHUB_STEP_SUMMARY"
+          echo "" >> "$GITHUB_STEP_SUMMARY"
+          echo "**Flutter test (tail):**" >> "$GITHUB_STEP_SUMMARY"
+          echo '```' >> "$GITHUB_STEP_SUMMARY"
+          tail -30 /tmp/flutter-test.log 2>/dev/null >> "$GITHUB_STEP_SUMMARY" || echo "(missing)" >> "$GITHUB_STEP_SUMMARY"
+          echo '```' >> "$GITHUB_STEP_SUMMARY"
+          echo "**Flutter analyze (tail):**" >> "$GITHUB_STEP_SUMMARY"
+          echo '```' >> "$GITHUB_STEP_SUMMARY"
+          tail -20 /tmp/flutter-analyze.log 2>/dev/null >> "$GITHUB_STEP_SUMMARY" || echo "(missing)" >> "$GITHUB_STEP_SUMMARY"
+          echo '```' >> "$GITHUB_STEP_SUMMARY"
