@@ -66,6 +66,8 @@ jobs:
             --max-turns 25
 
       - name: Commit and push report
+        env:
+          GH_TOKEN: ${{ github.token }}
         run: |
           git config user.name "carlens-ceo-bot"
           git config user.email "ceo-bot@carlens.app"
@@ -74,7 +76,7 @@ jobs:
             echo "Nothing to commit."
           else
             git commit -m "chore(report): CEO daily $(date -u +%F) [skip ci]"
-            git push
+            git push "https://x-access-token:${GH_TOKEN}@github.com/${{ github.repository }}.git" HEAD:main
           fi
 
       - name: Job summary
