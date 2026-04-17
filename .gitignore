@@ -52,3 +52,19 @@ app.*.map.json
 *.keystore
 *.jks
 .claude/worktrees/
+
+# Strategic / business docs (private)
+CARLENS_STRATEGIC_PLAN.md
+CARLENS_STRATEGIC_PLAN.pdf
+CARLENS_PMF_ANALYSIS.pdf
+CARLENS_BETA_FEEDBACK.pdf
+MONETIZATION_AND_GROWTH_STRATEGY.md
+MARKET_RESEARCH_2026.md
+ASO_STRATEGY.md
+UX_RESEARCH_CLASSIC_CAR_MARKET.md
+generate_pdf.py
+generate_pmf_pdf.py
+generate_feedback_form.py
+
+# GSD planning workspace
+.planning/
