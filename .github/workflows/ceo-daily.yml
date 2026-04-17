@@ -2,8 +2,11 @@ name: CEO Daily Report
 
 on:
   schedule:
-    # 07:12 UTC = 09:12 Europe/Rome (ora legale) — stesso orario del task locale precedente.
-    - cron: '12 7 * * *'
+    # 05:57 UTC. Ora italiana arrivo atteso (con 5-30 min jitter GitHub):
+    #   estate (CEST, UTC+2): ~08:05
+    #   inverno (CET, UTC+1): ~07:05
+    # Spostare a '57 6 * * *' in inverno per mantenere 08:05 IT.
+    - cron: '57 5 * * *'
   workflow_dispatch:
 
 concurrency:
