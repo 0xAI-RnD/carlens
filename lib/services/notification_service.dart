@@ -14,6 +14,7 @@ class NotificationService {
   static const String _indexKey = 'curiosity_index';
   static const String _channelId = 'carlens_daily';
   static const String _channelName = 'Curiosità del giorno';
+  static const int _notificationCount = 60;
 
   final FlutterLocalNotificationsPlugin _plugin =
       FlutterLocalNotificationsPlugin();
@@ -65,6 +66,8 @@ class NotificationService {
 
   List<Map<String, dynamic>> get curiosities => _curiosities;
 
+  int get notificationCount => _notificationCount;
+
   Future<bool> isEnabled() async {
     final prefs = await SharedPreferences.getInstance();
     return prefs.getBool(_enabledKey) ?? true; // Default: enabled
@@ -99,46 +102,45 @@ class NotificationService {
 
     await cancelAll();
 
-    final index = await _getAndIncrementIndex();
-    final curiosity = _curiosities[index % _curiosities.length];
-
-    final androidDetails = AndroidNotificationDetails(
-      _channelId,
-      _channelName,
-      channelDescription: 'Curiosità giornaliere sulle auto storiche',
-      importance: Importance.defaultImportance,
-      priority: Priority.defaultPriority,
-      styleInformation: BigTextStyleInformation(
-        curiosity['body'] as String,
-        contentTitle: curiosity['title'] as String,
-      ),
-    );
-
-    final details = NotificationDetails(android: androidDetails);
+    final startIndex = await _getAndIncrementIndex();
 
     final now = tz.TZDateTime.now(tz.local);
-    var scheduledDate = tz.TZDateTime(
+    var firstDate = tz.TZDateTime(
       tz.local,
       now.year,
       now.month,
       now.day,
       10, // 10:00
     );
-
-    // If 10:00 has already passed today, schedule for tomorrow
-    if (scheduledDate.isBefore(now)) {
-      scheduledDate = scheduledDate.add(const Duration(days: 1));
+    if (firstDate.isBefore(now)) {
+      firstDate = firstDate.add(const Duration(days: 1));
     }
 
-    await _plugin.zonedSchedule(
-      id: 0,
-      title: curiosity['title'] as String,
-      body: curiosity['body'] as String,
-      scheduledDate: scheduledDate,
-      notificationDetails: details,
-      androidScheduleMode: AndroidScheduleMode.inexactAllowWhileIdle,
-      matchDateTimeComponents: DateTimeComponents.time,
-    );
+    for (int i = 0; i < _notificationCount; i++) {
+      final curiosity = _curiosities[(startIndex + i) % _curiosities.length];
+      final scheduledDate = firstDate.add(Duration(days: i));
+
+      final androidDetails = AndroidNotificationDetails(
+        _channelId,
+        _channelName,
+        channelDescription: 'Curiosità giornaliere sulle auto storiche',
+        importance: Importance.defaultImportance,
+        priority: Priority.defaultPriority,
+        styleInformation: BigTextStyleInformation(
+          curiosity['body'] as String,
+          contentTitle: curiosity['title'] as String,
+        ),
+      );
+
+      await _plugin.zonedSchedule(
+        id: i,
+        title: curiosity['title'] as String,
+        body: curiosity['body'] as String,
+        scheduledDate: scheduledDate,
+        notificationDetails: NotificationDetails(android: androidDetails),
+        androidScheduleMode: AndroidScheduleMode.inexactAllowWhileIdle,
+      );
+    }
   }
 
   Future<void> cancelAll() async {
