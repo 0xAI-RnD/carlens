@@ -147,4 +147,69 @@ void main() {
       expect(service.curiosities.length, equals(2));
     });
   });
+
+  group('NotificationService scheduling configuration', () {
+    setUp(() {
+      SharedPreferences.setMockInitialValues({});
+    });
+
+    test('notificationCount is at least 60', () {
+      final service = NotificationService();
+      expect(service.notificationCount, greaterThanOrEqualTo(60));
+    });
+
+    test('cycling algorithm produces distinct payloads within rotation window',
+        () {
+      final service = NotificationService();
+      final file = File('assets/data/curiosities.json');
+      final jsonString = file.readAsStringSync();
+      service.loadCuriositiesFromJson(jsonString);
+      final n = service.curiosities.length;
+      expect(n, greaterThanOrEqualTo(30));
+
+      const startIndex = 0;
+      final count = service.notificationCount;
+      // Build the rotation as scheduleDailyNotification would
+      final rotation = List.generate(
+        count,
+        (i) => service.curiosities[(startIndex + i) % n],
+      );
+
+      // First N entries are distinct (full rotation)
+      final firstWindow = rotation.take(n).toList();
+      final firstWindowCars =
+          firstWindow.map((c) => c['car'] as String).toSet();
+      expect(firstWindowCars.length, equals(n),
+          reason: 'First $n entries should all be distinct');
+
+      // Cycling happens: index n should equal index 0
+      if (count > n) {
+        expect(rotation[n]['car'], equals(rotation[0]['car']),
+            reason: 'Index n should cycle back to index 0');
+      }
+
+      // No out-of-bounds: full rotation has `count` items
+      expect(rotation.length, equals(count));
+    });
+
+    test('cycling algorithm starts at provided startIndex', () {
+      final service = NotificationService();
+      const testJson =
+          '[{"title":"A","body":"b","car":"CarA"},'
+          '{"title":"B","body":"b","car":"CarB"},'
+          '{"title":"C","body":"b","car":"CarC"}]';
+      service.loadCuriositiesFromJson(testJson);
+      final n = service.curiosities.length;
+
+      const startIndex = 1;
+      final rotation = List.generate(
+        6,
+        (i) => service.curiosities[(startIndex + i) % n],
+      );
+      expect(rotation[0]['car'], equals('CarB'));
+      expect(rotation[1]['car'], equals('CarC'));
+      expect(rotation[2]['car'], equals('CarA')); // wrap
+      expect(rotation[3]['car'], equals('CarB')); // cycle
+    });
+  });
 }
