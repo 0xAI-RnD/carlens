@@ -11,7 +11,7 @@ App Flutter Android per identificazione auto d'epoca tramite AI. Scatto foto →
 - **DB locale**: SQLite (sqflite)
 - **OCR**: Google ML Kit Text Recognition (VIN)
 - **Distribuzione**: APK diretto (beta tester), no Play Store
-- **Versione**: 0.13.1+27
+- **Versione**: 0.15.0+37
 
 ## Struttura
 
