@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:image_picker/image_picker.dart';
 import '../i18n/strings.g.dart';
+import '../services/scan_limit_service.dart';
 import '../theme/app_colors.dart';
 import '../widgets/photo_tips_card.dart';
 import 'achievements_placeholder_screen.dart';
@@ -19,8 +20,31 @@ class HomeScreen extends StatefulWidget {
 class _HomeScreenState extends State<HomeScreen> {
   int _currentIndex = 0;
   final ImagePicker _picker = ImagePicker();
+  int _remaining = ScanLimitService.batchSize;
+
+  @override
+  void initState() {
+    super.initState();
+    _loadRemaining();
+  }
+
+  Future<void> _loadRemaining() async {
+    final remaining = await ScanLimitService().remaining();
+    if (mounted) {
+      setState(() => _remaining = remaining);
+    }
+  }
 
   Future<void> _pickImage(ImageSource source) async {
+    if (!await ScanLimitService().canScan()) {
+      if (mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(content: Text(t.home.scansExhausted)),
+        );
+      }
+      await _loadRemaining();
+      return;
+    }
     if (source == ImageSource.gallery) {
       final List<XFile> images = await _picker.pickMultiImage(
         maxWidth: 1920,
@@ -29,6 +53,9 @@ class _HomeScreenState extends State<HomeScreen> {
         limit: 3,
       );
       if (images.isNotEmpty && mounted) {
+        await ScanLimitService().consume();
+        await _loadRemaining();
+        if (!mounted) return;
         Navigator.push(
           context,
           MaterialPageRoute(
@@ -50,6 +77,9 @@ class _HomeScreenState extends State<HomeScreen> {
         imageQuality: 85,
       );
       if (image != null && mounted) {
+        await ScanLimitService().consume();
+        await _loadRemaining();
+        if (!mounted) return;
         Navigator.push(
           context,
           MaterialPageRoute(
@@ -61,6 +91,15 @@ class _HomeScreenState extends State<HomeScreen> {
   }
 
   Future<void> _pasteLink() async {
+    if (!await ScanLimitService().canScan()) {
+      if (mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(content: Text(t.home.scansExhausted)),
+        );
+      }
+      await _loadRemaining();
+      return;
+    }
     final clipboardData = await Clipboard.getData(Clipboard.kTextPlain);
     final text = clipboardData?.text?.trim() ?? '';
 
@@ -69,6 +108,8 @@ class _HomeScreenState extends State<HomeScreen> {
     final url = urlMatch?.group(0);
 
     if (url != null && url.isNotEmpty) {
+      await ScanLimitService().consume();
+      await _loadRemaining();
       if (mounted) {
         final host = Uri.tryParse(url)?.host.toLowerCase() ?? '';
         String message;
@@ -377,6 +418,48 @@ class _HomeScreenState extends State<HomeScreen> {
                           ),
                         ],
                       ),
+                      const SizedBox(height: 16),
+
+                      // Remaining scans label
+                      Text(
+                        t.home.scansRemaining(n: _remaining),
+                        style: TextStyle(
+                          fontSize: 13,
+                          fontWeight: FontWeight.w400,
+                          color: context.colors.textSecondary,
+                        ),
+                      ),
+
+                      // Refill button when batch is exhausted
+                      if (_remaining == 0) ...[
+                        const SizedBox(height: 12),
+                        SizedBox(
+                          width: double.infinity,
+                          child: ElevatedButton.icon(
+                            onPressed: () async {
+                              await ScanLimitService().refill();
+                              await _loadRemaining();
+                            },
+                            icon: const Icon(Icons.add, size: 20),
+                            label: Text(
+                              t.home.addScans,
+                              style: const TextStyle(
+                                fontSize: 15,
+                                fontWeight: FontWeight.w600,
+                              ),
+                            ),
+                            style: ElevatedButton.styleFrom(
+                              backgroundColor: context.colors.textPrimary,
+                              foregroundColor: context.colors.surfaceCard,
+                              padding:
+                                  const EdgeInsets.symmetric(vertical: 14),
+                              shape: RoundedRectangleBorder(
+                                borderRadius: BorderRadius.circular(12),
+                              ),
+                            ),
+                          ),
+                        ),
+                      ],
                       const SizedBox(height: 16),
 
                       // Photo tips card
