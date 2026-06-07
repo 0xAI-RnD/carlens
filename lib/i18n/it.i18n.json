@@ -27,7 +27,10 @@
     "snapAndIdentify": "Scatta e identifica",
     "chooseFromGallery": "Scegli dalla galleria",
     "gallery": "Galleria",
-    "marketplaceSites": "Subito.it, AutoScout24"
+    "marketplaceSites": "Subito.it, AutoScout24",
+    "scansRemaining": "${n} scansioni rimaste",
+    "scansExhausted": "Hai finito le scansioni di questo giro",
+    "addScans": "+5 scansioni"
   },
   "garage": {
     "title": "Il tuo Garage",

@@ -147,6 +147,15 @@ class TranslationsHomeIt {
 
 	/// it: 'Subito.it, AutoScout24'
 	String get marketplaceSites => 'Subito.it, AutoScout24';
+
+	/// it: '${n} scansioni rimaste'
+	String scansRemaining({required Object n}) => '${n} scansioni rimaste';
+
+	/// it: 'Hai finito le scansioni di questo giro'
+	String get scansExhausted => 'Hai finito le scansioni di questo giro';
+
+	/// it: '+5 scansioni'
+	String get addScans => '+5 scansioni';
 }
 
 // Path: garage
@@ -1078,6 +1087,9 @@ extension on Translations {
 			'home.chooseFromGallery' => 'Scegli dalla galleria',
 			'home.gallery' => 'Galleria',
 			'home.marketplaceSites' => 'Subito.it, AutoScout24',
+			'home.scansRemaining' => ({required Object n}) => '${n} scansioni rimaste',
+			'home.scansExhausted' => 'Hai finito le scansioni di questo giro',
+			'home.addScans' => '+5 scansioni',
 			'garage.title' => 'Il tuo Garage',
 			'garage.empty' => 'Il tuo garage è vuoto',
 			'garage.emptySubtitle' => 'Scansiona la tua prima auto storica\nper iniziare la tua collezione',
