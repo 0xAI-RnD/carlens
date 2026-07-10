@@ -22,7 +22,7 @@
 ### C2 — "Noi del Toret" post-beta + espansione "Noi del…"
 - Dopo la beta la community conosce già l'app. Proporre agli organizzatori (bozza DM/email di Claude): post/story di lancio + eventuale "CarLens challenge" a un evento (chi scansiona l'auto più rara vince lifetime).
 - **Espansione**: mappare le community omologhe nelle altre città (il format "community locale motori/lifestyle su IG" esiste ovunque: Milano, Bologna, Roma…). Task ricorrente Claude: ricerca 2 community/mese, bozza outreach, David invia. Replicare il playbook Toret dove risponde.
-- Caveat dal beta test: se i dati Fase 1 mostrano retention bassa del segmento Toret (generalista) vs appassionati, declassare C2 a canale awareness e concentrare la spesa di tempo su C3/C4 (appassionati puri).
+- Caveat dal beta test: se i dati della Fase 0 mostrano retention bassa del segmento Toret (generalista) vs appassionati, declassare C2 a canale awareness e concentrare la spesa di tempo su C3/C4 (appassionati puri).
 
 ### C3 — Gruppi Facebook auto d'epoca (canale dominante per la demografia 50+ IT)
 - Claude mappa i 15-20 gruppi IT più grandi (auto storiche, marchi specifici: Alfa, Lancia, Fiat 500, youngtimer…), con regole di ogni gruppo.

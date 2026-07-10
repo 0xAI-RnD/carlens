@@ -1,7 +1,12 @@
 # FASE 2 — Lancio su Google Play
 
 **Obiettivo:** app pubblica in produzione con billing attivo, ASO ottimizzata, beta tester premiati coi codici omaggio. Live entro fine settembre 2026 (buffer sulla review Google) per arrivare a Bologna (fine ottobre) con l'app rodata.
-**Prerequisiti:** Fase 1 chiusa con gate PMF superati; `BETA_RESULTS.md` esistente con pricing confermato.
+**Prerequisiti:** Fase 1 (production hardening) completa. Il gate PMF è già stato superato in Fase 0 (`BETA_RESULTS.md`).
+
+### L0 — Closed testing tecnico su Play (2 settimane, PRIMA della produzione)
+- Caricare l'AAB di produzione sul track Closed testing e invitare i beta tester della Fase 0 (già arruolati, migrano da APK diretto a Play).
+- Scopo: rodare billing sandbox/reale, update via store, Crashlytics su parco device reale. NON è una nuova beta di prodotto: il PMF è già validato.
+- Done: 2 settimane senza crash critici, ≥1 acquisto license-tester end-to-end, ≥12 tester attivi (soglia qualità).
 
 ## Azioni del founder (David): 2
 1. Approvare store listing (testi + screenshot) prima della submission

@@ -14,7 +14,8 @@
 | **Piattaforma** | Solo Android + Google Play Store. No iOS per ora | Vincolo low-effort del founder |
 | **Pricing** | Free: 5 scan/mese (reset automatico) · Pro mensile **€9,99** · Pro annuale **€39,99** · Lifetime **€99,99** | Mensile caro per neutralizzare l'arbitraggio stagionale (stagione mag-set: 5×9,99=€50 > 39,99) |
 | **Account Google Play** | Nuovo, intestato a **Web3 SRL** | Ricavi in SRL, no obbligo 12-tester, credibilità |
-| **Beta** | Tutto gratis illimitato durante la beta; promo code Play Store in omaggio DOPO il lancio ai tester che danno feedback | Scelta founder 10/07 |
+| **Beta = validazione PRE-produzione, NO Play Store** | Fake-door test su APK diretto: landing (intento download) → trial → paywall finto a 3 piani che registra l'intento e regala +20 scan. La produzione (Fase 1) parte SOLO se il gate è verde | Scelta founder 10/07 — valida domanda e CAC prima di investire |
+| **Beta gratis, omaggi dopo** | App illimitata di fatto in beta (refill/reward); promo code Play Store in omaggio DOPO il lancio ai tester che completano il questionario | Scelta founder 10/07 |
 | **Primo pool beta** | Community "Noi del Toret" (IG Torino, ~10K follower, migliaia agli eventi) + cerchia attuale + gruppi FB | Nota: community generalista, non auto d'epoca → serve anche come proxy del mercato allargato |
 | **Posizionamento** | "Il registro digitale del collezionista: identifica, valuta, archivia" — NON "app che riconosce le auto" | Il moat è scheda tecnica+valore+garage, l'ID lo fa anche Google Lens |
 | **Deadline lancio** | Produzione live PRIMA di Auto e Moto d'Epoca Bologna (fine ottobre 2026) | Evento con 100K+ appassionati = momento GTM massimo |
@@ -24,16 +25,20 @@
 ## Timeline
 
 ```
-Luglio 2026        FASE 0 — Production hardening (~2 settimane lavoro)
-Ago-Set 2026       FASE 1 — Beta testing (6 settimane, pool Noi del Toret)
-Fine Set 2026      FASE 2 — Lancio Play Store + ASO + billing ON
+Lug-Ago 2026       FASE 0 — Beta & validazione domanda (6 settimane, NO Play Store,
+                             landing + APK + fake-door, pool Noi del Toret)
+                             → GATE GO/NO-GO
+Set 2026           FASE 1 — Production hardening (~2 settimane, solo se GO)
+Fine Set/Ott 2026  FASE 2 — Lancio Play Store + ASO + billing ON
 Ottobre 2026 →     FASE 3 — GTM organica (Bologna, FB groups, club ASI, paid test)
 ```
+Nota timeline: la deadline Bologna (fine ottobre) resta raggiungibile ma è tirata; se la Fase 0 slitta, Bologna diventa evento di *validazione/reclutamento* invece che di lancio — accettabile.
+⚠️ Unica azione da anticipare comunque durante la Fase 0: **registrazione account Play Web3 SRL (D-U-N-S)** — costa $25 e 1-2 settimane di attesa; farla partire presto rimuove il long pole dalla Fase 1 (se NO-GO si perdono solo $25).
 
 ## Stato fasi
 
-- [ ] **FASE 0** — Production hardening → `FASE-0-PRODUZIONE.md`
-- [ ] **FASE 1** — Beta testing → `FASE-1-BETA.md`
+- [ ] **FASE 0** — Beta & validazione → `FASE-0-BETA-VALIDAZIONE.md` → output: `BETA_RESULTS.md` + GO/PIVOT/NO-GO
+- [ ] **FASE 1** — Production hardening → `FASE-1-PRODUZIONE.md` (solo se GO)
 - [ ] **FASE 2** — Lancio → `FASE-2-LANCIO.md`
 - [ ] **FASE 3** — GTM → `FASE-3-GTM.md`
 

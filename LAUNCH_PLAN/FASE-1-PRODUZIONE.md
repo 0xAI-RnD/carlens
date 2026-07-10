@@ -1,8 +1,8 @@
-# FASE 0 — Production Hardening
+# FASE 1 — Production Hardening
 
 **Obiettivo:** portare CarLens da beta-ready a production-ready per Google Play. Nessuna feature nuova (eccetto billing e redeem infra), solo chiusura dei gap bloccanti.
-**Durata stimata:** ~2 settimane calendario (5-6 giorni effettivi di lavoro).
-**Prerequisiti:** nessuno. Si parte da v0.15.0+37 su `main`.
+**Durata stimata:** ~2 settimane calendario (4-5 giorni effettivi di lavoro).
+**Prerequisiti:** **Fase 0 chiusa con verdetto GO** (`BETA_RESULTS.md` esistente). Il paywall reale eredita schermata ed eventi dal fake-door della Fase 0 e usa il tier-mix emerso dai dati. **T2 (envied) è GIÀ FATTO in Fase 0** — verificare soltanto. Se l'account Play (T6) è stato avviato durante la Fase 0 come raccomandato nel master, qui è già verificato.
 
 ## Azioni del founder (David): 3
 1. **T1** — Salvare il keystore in 3 posti separati (password manager + cloud + supporto fisico)
@@ -21,11 +21,9 @@ Tutto il resto lo esegue Claude (via GSD workflow: `/gsd:quick` per task piccole
 - Nota: con Play App Signing, Google custodisce la chiave app e il keystore locale diventa upload key (reimpostabile) — attivarlo alla creazione dell'app in Console (riduce il rischio catastrofico).
 - Done: APK release firmato con chiave di produzione, keystore backuppato, `key.properties` in `.gitignore`.
 
-### T2 — API key sicure (envied)
-- Migrare GEMINI_API_KEY, GROQ_API_KEY da `--dart-define` a `envied` con `obfuscate: true` (dipendenze e razionale già in CLAUDE.md § Recommended Additions). Aggiornare `build_apk.sh`.
-- Le chiavi restano nel `.env` locale (mai committato). Verificare che `strings` sull'APK non riveli le chiavi in chiaro.
-- Limite residuo accettato: obfuscation ≠ sicurezza assoluta; mitigazione = billing alert sui provider (David ha già billing Gemini Tier 1 monitorato).
-- Done: `flutter test` verde, APK senza chiavi in chiaro, build script funzionante.
+### T2 — API key sicure (envied) — GIÀ FATTO IN FASE 0
+- Eseguito come T0 della Fase 0 (prerequisito distribuzione landing). Qui solo verifica: `strings` sull'AAB non rivela chiavi, budget alert attivi su Gemini/Groq.
+- Done: verifica ok.
 
 ### T3 — Telegram logging: rimozione PII (GDPR) ⚠️ BLOCCANTE LEGALE
 - `lib/services/telegram_service.dart` invia attività utente a un canale Telegram del founder. In produzione = trattamento dati non dichiarato.
@@ -51,11 +49,11 @@ Tutto il resto lo esegue Claude (via GSD workflow: `/gsd:quick` per task piccole
 
 ### T7 — Billing (il task più grosso: 2-3 giorni)
 - Implementare Google Play Billing via plugin ufficiale `in_app_purchase` (preferito a RevenueCat: no dipendenza SaaS esterna, coerente con vincolo low-effort e single-store).
-- Prodotti da creare in Console: `pro_monthly` €9,99 · `pro_yearly` €39,99 · `pro_lifetime` €99,99 (one-time).
+- Prodotti da creare in Console: `pro_monthly` €9,99 · `pro_yearly` €39,99 · `pro_lifetime` €99,99 (one-time) — **salvo revisione da `BETA_RESULTS.md`** (se il fake-door mostra un tier-mix diverso, adeguare qui).
 - Nuovo `SubscriptionService` (singleton, pattern repo) che espone `isPro` (stream/notifier); persistenza stato + restore purchases.
 - Integrazione con `ScanLimitService`: se `isPro` → scan illimitati; se free → 5 scan/mese con **reset automatico mensile** (sostituire la logica batch attuale: il bottone "+5 scansioni" diventa CTA paywall "Passa a Pro").
 - **Flag `BETA_MODE`** (dart-define): in beta l'app è illimitata e il paywall è invisibile. Il flag si spegne al lancio (Fase 2).
-- Schermata paywall minimale: 3 opzioni prezzo, copy posizionamento ("scansioni illimitate, schede complete, il tuo garage"), link privacy/termini. Stile esistente (context.colors), i18n slang.
+- Schermata paywall: **riusare la schermata fake-door della Fase 0** (già costruita, già i18n, con eventi GA4) collegandola al billing reale al posto del reward; copy posizionamento ("scansioni illimitate, schede complete, il tuo garage"), link privacy/termini.
 - Unit test per la logica (mock del billing), test manuali con license tester in Console.
 - Done: acquisto sandbox funzionante end-to-end, restore ok, flag BETA_MODE operativo, `flutter test` verde.
 
